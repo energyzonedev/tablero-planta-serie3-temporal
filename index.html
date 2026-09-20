@@ -94,7 +94,6 @@ header{position:sticky;top:env(safe-area-inset-top,0px);z-index:40;background:va
 .ind-head p{margin:4px 0 0;font-size:13px;color:var(--ink-muted)}
 #dash>section{margin-top:0;padding-top:22px;border-top:1px solid var(--line)}
 #dash>section+section{margin-top:30px}
-#dash>#demoBanner .banner{margin:0 0 18px}
 @media(max-width:1180px){
   .menu{order:3;flex-basis:100%;margin-right:0;border-top:1px solid var(--line)}
   .menu a{min-height:44px}
@@ -584,16 +583,13 @@ dialog.wide{width:min(860px,calc(100vw - 32px))}
   <div id="dash">
 
   <div class="ind-head">
-    <h2 id="indTitle">Indicadores del Serie 3</h2>
-    <p>Indicadores del CEDIS, calidad, ritmo y flujo, capacidad del almacén y registros en un solo panel.</p>
+    <h2 id="indTitle">Indicadores del CEDIS</h2>
   </div>
-
-  <div id="demoBanner"></div>
 
   <!-- ============ 1. INDICADORES ============ -->
   <section id="secKpi">
     <div class="shead">
-      <h2 id="kpiTitle">Indicadores del CEDIS</h2>
+      <h2 id="kpiTitle">Operación diaria</h2>
       <p id="kpiSub"></p>
       <div class="right">
         <div class="seg" role="group" aria-label="Periodo" id="periodo">
@@ -649,7 +645,7 @@ dialog.wide{width:min(860px,calc(100vw - 32px))}
         <div class="legend" id="taktLeg"></div>
       </div>
       <div class="card">
-        <div class="chead"><h3>Cobertura del inventario</h3></div>
+        <div class="chead"><h3>Cobertura del inventario por clase ABC</h3></div>
         <p class="csub" id="leadSub"></p>
         <div class="ch" id="chLead"></div>
         <div class="legend" id="leadLeg"></div>
@@ -847,6 +843,10 @@ var HIST=[{a:2021,v:63280},{a:2022,v:43967},{a:2023,v:74824},{a:2024,v:55998},{a
 var FCST=[{a:2027,v:59020},{a:2028,v:59940},{a:2029,v:58841},{a:2030,v:59097},
           {a:2031,v:59202},{a:2032,v:59196}];
 var CEDIS={superficie:17020,almacen:11220,reserva:2205,contenedoresMes:31290,largo:185,ancho:92,abc:'3 / 5 / 10'};
+/* política de inventarios del documento: días de cobertura por clase */
+var ABC=[{k:"A",dias:3,l:"Clase A · alta rotación"},
+         {k:"B",dias:5,l:"Clase B · rotación media"},
+         {k:"C",dias:10,l:"Clase C · baja rotación"}];
 var DEF={demanda:59020,dias:300,turnos:3,horas:7,descanso:0,oportunidades:22,
          consumoUM:1251.6,sigmaObj:4,cobMin:3,cobMax:10};
 var SIGTAB=[{s:1,d:690000,y:"30.85"},{s:2,d:308000,y:"69.20"},{s:3,d:66800,y:"93.32"},
@@ -1076,19 +1076,6 @@ function generarDemo(){
 }
 
 /* ================= aviso de datos de ejemplo ================= */
-function renderDemoBanner(){
-  var el=document.getElementById("demoBanner");
-  if(!demoOn){ el.innerHTML=""; return; }
-  var txt=reales.length
-    ? 'Tus '+reales.length+' registro'+(reales.length>1?'s':'')+' reales vuelven al quitarlos.'
-    : 'Cuando el CEDIS cargue sus registros reales, el tablero cambia a esos datos.';
-  el.innerHTML='<div class="banner demo"><span><b>Estás viendo un año de días de ejemplo.</b> '+
-    'Muestran cómo se comporta el tablero; no son datos de la operación y no se guardan. '+txt+'</span>'+
-    (reales.length?'<button class="btn sm" id="demoOff">Ver mis registros</button>':'')+
-    (db?'<button class="btn sm pri" id="demoNew">Subir archivo</button>':'')+'</div>';
-  var off=document.getElementById("demoOff"); if(off)off.addEventListener("click",toggleDemo);
-  var dn=document.getElementById("demoNew"); if(dn) dn.addEventListener("click",abrirSubir);
-}
 
 /* ================= resumen ejecutivo ================= */
 function evaluar(){
@@ -1221,7 +1208,7 @@ function kpisDe(scope){
     return;
   }
 
-  document.getElementById("kpiTitle").textContent="Indicadores del CEDIS";
+  document.getElementById("kpiTitle").textContent="Operación diaria";
   document.getElementById("kpiSub").textContent= ult
     ? ("Último día: "+fechaLarga(ult.fecha)+(demoOn?" (ejemplo)":"")+" · la línea chica muestra el periodo")
     : "Sin días en la serie: se muestran solo los valores de diseño";
@@ -1546,24 +1533,33 @@ function renderCharts(){
     '<span><i class="sq" style="background:var(--crit)"></i>por encima del takt</span>'+
     '<span><i style="background:var(--s2)"></i>takt objetivo</span>';
 
-  /* cobertura */
+  /* cobertura contra la política ABC */
   var leads=last.map(function(r){return calcDia(r,P).lead;}).filter(isFinite);
   document.getElementById("leadSub").textContent= leads.length
-    ? ("Días que cubre el inventario (ley de Little). Promedio del periodo: "+n(media(leads),2)+
-       " días; banda objetivo "+n(P.cobMin,1)+" – "+n(P.cobMax,1)+".")
-    : "Días de cobertura del inventario, por la ley de Little.";
+    ? ("Días que cubre el inventario (ley de Little), contra los días que pide cada clase del ABC. "+
+       "Promedio del periodo: "+n(media(leads),2)+" días.")
+    : "Días de cobertura del inventario contra la política ABC (3, 5 y 10 días).";
   lineChart(document.getElementById("chLead"),
     [{name:"Cobertura",c:css("--axis"),pts:last.map(function(r){
        return {l:fechaCorta(r.fecha),v:calcDia(r,P).lead};})}],
-    {h:230,w:640,R:64,ticks:6,fmt:function(v){return n(v,2)+" d";},
-     band:{lo:P.cobMin,hi:P.cobMax},
-     refs:[{v:P.cobMin,c:css("--crit"),l:"mín.",dash:"4 3"}],
-     dotColor:function(v){return v<P.cobMin?css("--crit"):(v>P.cobMax?css("--warn"):css("--s3"));},
-     vacio:"Sin inventario en la serie no hay cobertura que calcular."});
+    {h:230,w:640,R:78,ticks:6,fmt:function(v){return n(v,2)+" d";},
+     band:{lo:ABC[0].dias,hi:ABC[2].dias},
+     refs:[{v:ABC[0].dias,c:css("--crit"),l:"A · "+ABC[0].dias+" d",dash:"4 3"},
+           {v:ABC[1].dias,c:css("--s2"),l:"B · "+ABC[1].dias+" d",dash:"4 3"},
+           {v:ABC[2].dias,c:css("--s1"),l:"C · "+ABC[2].dias+" d",dash:"4 3"}],
+     dotColor:function(v){
+       if(v<ABC[0].dias)return css("--crit");
+       if(v>ABC[2].dias)return css("--warn");
+       return css("--s3"); },
+     vacio:"La política ABC pide "+ABC[0].dias+", "+ABC[1].dias+" y "+ABC[2].dias+
+           " días de inventario. Registra días para comparar la cobertura real."});
   document.getElementById("leadLeg").innerHTML=
-    '<span><i class="sq" style="background:var(--s3)"></i>dentro de la banda</span>'+
-    '<span><i class="sq" style="background:var(--warn)"></i>inventario de más</span>'+
-    '<span><i class="sq" style="background:var(--crit)"></i>bajo el mínimo</span>';
+    '<span><i class="sq" style="background:var(--s3)"></i>cubre lo que pide la clase A</span>'+
+    '<span><i class="sq" style="background:var(--crit)"></i>por debajo de los '+ABC[0].dias+' días de la clase A</span>'+
+    '<span><i class="sq" style="background:var(--warn)"></i>arriba de los '+ABC[2].dias+' días de la clase C</span>'+
+    '<span><i style="background:var(--crit)"></i>A</span>'+
+    '<span><i style="background:var(--s2)"></i>B</span>'+
+    '<span><i style="background:var(--s1)"></i>C</span>';
 }
 
 /* ================= tabla ================= */
@@ -1641,7 +1637,6 @@ function aplicarModelo(){
   ["s3Thumbs"].forEach(function(id){ document.getElementById(id).hidden=!m.proyecto; });
   document.getElementById("fOut").hidden=m.proyecto;
   renderCarac(m);
-  document.getElementById("indTitle").textContent="Indicadores del "+m.nombre;
   if(!m.proyecto) document.getElementById("fOutP").textContent=
     "El proyecto dimensiona el CEDIS solo para el Serie 3, con el 320i de referencia. Para medir el surtido del "+m.nombre+
     " harían falta su demanda anual, su lista de materiales y su consumo diario de contenedores.";
@@ -1685,7 +1680,7 @@ function renderCreditos(){
 }
 
 /* ================= render global ================= */
-function renderAll(){ renderModelos(); renderDemoBanner(); renderKpis(); renderSigmaRef();
+function renderAll(){ renderModelos(); renderKpis(); renderSigmaRef();
   renderCharts(); renderTabla(); syncBotones(); }
 function syncBotones(){
   var enAlcance=modeloActual().proyecto&&app==="modelo";
