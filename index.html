@@ -368,11 +368,6 @@ section{margin-top:26px}
   text-transform:uppercase}
 .sig>div{text-align:center}
 .sig .n{font-size:26px;font-weight:600;margin:2px 0 1px}
-.sig>div.lo{border-color:var(--crit);background:color-mix(in srgb,var(--crit) 9%,var(--surface))}
-.sig>div.lo .n{color:var(--crit-ink)}
-.sig>div.mes{box-shadow:inset 0 0 0 2px var(--good)}
-.sig>div.lo.mes{box-shadow:inset 0 0 0 2px var(--crit)}
-.sig>div.mes .k{color:var(--ink);font-weight:700}
 .sig>div.hi .n{color:var(--good-ink)}
 .sig .y{font-size:10.5px;color:var(--ink-2)}
 
@@ -647,8 +642,6 @@ dialog.wide{width:min(860px,calc(100vw - 32px))}
         <div class="legend" id="ccLeg"></div>
         <div class="meta" id="metaSig"></div>
         <div style="height:12px"></div>
-        <div class="meta" id="sigmaMes"></div>
-        <div style="height:10px"></div>
         <div class="sig" id="sigmaRef"></div>
       </div>
       <div class="card">
@@ -1305,18 +1298,10 @@ function kpisDe(scope){
 
 /* ================= escala sigma ================= */
 function renderSigmaRef(){
-  var meses=agrupaMes(vista());
-  var ult=meses.length?meses[meses.length-1]:null;
-  var nivel=(ult&&ult.sigma!==null)?Math.max(1,Math.min(6,Math.floor(ult.sigma))):null;
-  document.getElementById("sigmaMes").innerHTML= ult&&ult.sigma!==null
-    ? '<span class="t">Este mes · '+esc(ult.l)+(demoOn?' · ejemplo':'')+'</span>'+
-      '<div class="hi"><b>'+ult.sigma.toFixed(2)+' σ</b>nivel sigma del mes</div>'
-    : '<span class="t">Este mes</span><div><b>—</b>sin autos registrados en el mes</div>';
   document.getElementById("sigmaRef").innerHTML=SIGTAB.map(function(t){
-    var cls=(t.s===P.sigmaObj?"hi":"")+(nivel===t.s?(t.s>=P.sigmaObj?" mes":" lo mes"):"");
-    return '<div class="'+cls.trim()+'">'+
+    return '<div class="'+(t.s===P.sigmaObj?'hi':'')+'">'+
       '<div class="n mono">'+t.s+' σ</div>'+
-      '<div class="k">'+(nivel===t.s?'este mes':(t.s===P.sigmaObj?'objetivo':'&nbsp;'))+'</div></div>';
+      '<div class="k">'+(t.s===P.sigmaObj?'objetivo':'&nbsp;')+'</div></div>';
   }).join("");
 }
 
