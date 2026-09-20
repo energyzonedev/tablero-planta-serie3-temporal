@@ -1,6 +1,6 @@
 # Tablero Planta Serie 3 (uso temporal)
 
-Copia estática del tablero de producción del proyecto académico de Gestión de Proyectos
+Copia estática del tablero del CEDIS del proyecto académico de Gestión de Proyectos
 (ITT / TecNM Toluca, Ingeniería en Logística). Se publica solo para la presentación y se
 puede borrar después.
 
