@@ -1072,9 +1072,9 @@ function generarDemo(){
   }
   var pesos=[.38,.24,.18,.12,.08];
   fechas.reverse().forEach(function(fecha,i){
-    var tarde=i>=fechas.length-40;           /* deriva en los últimos dos meses */
+    var tarde=i>=fechas.length-25;           /* ligero repunte en el último mes */
     var veh=Math.round(195+rnd()*8-(tarde?4:0));
-    var dpmoObj=2400+rnd()*3400+(tarde?3200:0);
+    var dpmoObj=2400+rnd()*3400+(tarde?1500:0);
     var def=Math.max(0,Math.round(dpmoObj*veh/1e6));
     var causas={}, rest=def;
     CAUSAS.forEach(function(c,j){
@@ -1306,6 +1306,11 @@ function renderSigmaRef(){
 }
 
 /* ================= gráficas ================= */
+function redondo(x){
+  if(!isFinite(x)||x<=0)return NaN;
+  var e=Math.pow(10,Math.floor(Math.log(x)/Math.LN10)), f=x/e;
+  return (f<=1?1:f<=2?2:f<=2.5?2.5:f<=5?5:10)*e;
+}
 function svgEl(w,h){var s=document.createElementNS(NS,"svg");
   s.setAttribute("viewBox","0 0 "+w+" "+h);s.setAttribute("role","img");
   s.setAttribute("preserveAspectRatio","xMidYMid meet");return s;}
@@ -1381,6 +1386,8 @@ function lineChart(host,series,opts){
   (opts.band?[opts.band.lo,opts.band.hi]:[]).forEach(function(v){ if(isFinite(v))all.push(v); });
   var mx=Math.max.apply(null,all), mn=Math.min.apply(null,all);
   var pad=(mx-mn)*0.18||Math.max(Math.abs(mx)*0.2,1); mx+=pad; mn=Math.max(0,mn-pad);
+  var paso=redondo((mx-mn)/4);
+  if(isFinite(paso)&&paso>0){ mn=Math.max(0,Math.floor(mn/paso)*paso); mx=Math.ceil(mx/paso)*paso; }
   var nl=Math.max(1,series[0].pts.length);
   function X(i){return nl===1?L+iw/2:L+iw*(i/(nl-1));}
   function Y(v){return T+ih-ih*((v-mn)/(mx-mn||1));}
@@ -1388,10 +1395,13 @@ function lineChart(host,series,opts){
     var y1=Y(Math.min(mx,opts.band.hi)), y2=Y(Math.max(mn,opts.band.lo));
     s.appendChild(mk("rect",{x:L,y:y1,width:iw,height:Math.max(0,y2-y1),fill:css("--s3"),"fill-opacity":.09}));
   }
-  [0,.5,1].forEach(function(f){
-    var y=T+ih-ih*f;
+  var marcas=[];
+  if(isFinite(paso)&&paso>0&&(mx-mn)/paso<=8){ for(var v=mn;v<=mx+paso/2;v+=paso)marcas.push(v); }
+  else marcas=[mn,(mn+mx)/2,mx];
+  marcas.forEach(function(v){
+    var y=T+ih-ih*((v-mn)/(mx-mn||1));
     s.appendChild(mk("line",{x1:L,x2:W-R,y1:y,y2:y,stroke:css("--line"),"stroke-width":1}));
-    txt(s,L-8,y+4,opts.fmt?opts.fmt(mn+(mx-mn)*f):n(mn+(mx-mn)*f,0),{"text-anchor":"end","font-size":10.5,fill:css("--ink-muted")});
+    txt(s,L-8,y+4,opts.fmt?opts.fmt(v):n(v,0),{"text-anchor":"end","font-size":10.5,fill:css("--ink-muted")});
   });
   var rl=(opts.refs||[]).filter(function(r){return isFinite(r.v)&&r.v<=mx&&r.v>=mn;})
           .map(function(r){return {r:r,y:Y(r.v),ly:Y(r.v)};});
@@ -1483,7 +1493,7 @@ function renderCharts(){
     refs.push({v:limM.media,c:css("--ink-muted"),l:"media",dash:"2 3"});
   }
   lineChart(document.getElementById("chCtrl"),
-    [{name:"Defectos por millón de autos",c:css("--axis"),
+    [{name:"Defectos por millón de autos",c:css("--s1"),
       pts:meses.map(function(m){return {l:m.l,v:m.dpmo};})}],
     {h:230,w:1100,R:62,refs:refs,ticks:14,
      dotColor:function(v){
