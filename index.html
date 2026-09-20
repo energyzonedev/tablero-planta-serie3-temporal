@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="robots" content="noindex">
 <style>:root{box-sizing:border-box}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
-<title>Presentación CEDIS BMW 320i</title>
+<title>Presentación del CEDIS</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
 <style>
 :root{
@@ -485,7 +485,7 @@ dialog.wide{width:min(860px,calc(100vw - 32px))}
         <rect x="1" y="1" width="40" height="40" rx="11" fill="var(--ink)"/>
         <text x="21" y="25.6" text-anchor="middle" fill="#ffffff" font-family="IBM Plex Sans, system-ui, sans-serif" font-size="13" font-weight="600" letter-spacing=".4">BMW</text>
       </svg>
-      <b>CEDIS BMW 320i<small>Proyecto académico · Logistik II, San Luis Potosí</small></b>
+      <b>CEDIS BMW Serie 3<small>Proyecto académico · Logistik II, San Luis Potosí</small></b>
     </a>
     <div class="hd-r">
       <div class="sync"><span class="dot" id="dot"></span><span id="syncTxt">Conectando…</span></div>
@@ -604,7 +604,7 @@ dialog.wide{width:min(860px,calc(100vw - 32px))}
   <section id="secCal">
     <div class="shead">
       <h2>Calidad</h2>
-      <p>Cada día contra el objetivo sigma, y las causas que concentran los defectos</p>
+      <p>Cada día contra el objetivo sigma, y los juegos surtidos contra la demanda diaria</p>
     </div>
     <div class="stack">
       <div class="card">
@@ -612,21 +612,10 @@ dialog.wide{width:min(860px,calc(100vw - 32px))}
           <h3>Carta de control de defectos (I-MR)</h3>
           <span class="tag" id="ccTag"></span>
         </div>
-        <p class="csub" id="ccSub"></p>
         <div class="ch" id="chCtrl"></div>
         <div class="legend" id="ccLeg"></div>
       </div>
-      <div class="grid2b">
-        <div class="card">
-          <div class="chead"><h3>Pareto de causas de defecto</h3></div>
-          <p class="csub" id="parSub"></p>
-          <div class="ch" id="chPar"></div>
-          <div class="legend">
-            <span><i class="sq" style="background:var(--s1)"></i>pocos vitales (hasta 80 % acumulado)</span>
-            <span><i class="sq" style="background:var(--axis)"></i>muchos triviales</span>
-          </div>
-        </div>
-        <div class="card">
+      <div class="card">
           <div class="chead"><h3>Cumplimiento del surtido diario</h3></div>
           <p class="csub" id="cumSub"></p>
           <div class="ch" id="chCum"></div>
@@ -635,7 +624,6 @@ dialog.wide{width:min(860px,calc(100vw - 32px))}
             <span><i class="sq" style="background:var(--warn)"></i>quedó corto</span>
             <span><i style="background:var(--s2)"></i>demanda diaria</span>
           </div>
-        </div>
       </div>
     </div>
   </section>
@@ -666,7 +654,7 @@ dialog.wide{width:min(860px,calc(100vw - 32px))}
   <section id="secPlanta">
     <div class="shead">
       <h2>Capacidad del CEDIS</h2>
-      <p>Dimensionamiento del proyecto: demanda del Serie 3, componentes y superficie del almacén</p>
+      <p>Cifras tomadas del documento del proyecto: demanda del Serie 3, componentes y superficie del almacén</p>
     </div>
     <div class="kpis" id="kpisPlanta"></div>
     <div style="height:12px"></div>
@@ -955,6 +943,15 @@ function sigmaFromDpmo(d){
   if(d<=0)return 6; if(d>=1e6)return 0;
   return Math.min(6,normsinv(1-d/1e6)+1.5);
 }
+/* error máximo que admite el nivel sigma objetivo, llevado a la demanda anual */
+function limiteSigma(p){
+  var d=dpmoFromSigma(p.sigmaObj);
+  if(!d) return null;
+  var pc=d/1e6;
+  var juego=1-Math.pow(1-pc,p.oportunidades);
+  return {dpmo:d,errComp:pc*100,errJuego:juego*100,juegosAnio:juego*p.demanda,
+          defectosAnio:pc*p.oportunidades*p.demanda};
+}
 function dpmoFromSigma(s){
   var t=SIGTAB.filter(function(x){return x.s===Math.round(s);})[0];
   return t?t.d:null;
@@ -1103,11 +1100,6 @@ function evaluar(){
     "La cobertura del "+fechaCorta(ult.fecha)+" es de <b>"+n(cu.lead,2)+" días</b>, bajo el mínimo de "+n(P.cobMin,1)+".");
   else if(bajos) push("wn","Cobertura bajo el mínimo",bajos+" día"+(bajos>1?"s":"")+" del periodo con menos de "+n(P.cobMin,1)+" días de inventario.");
   if(altos) push("wn","Inventario de más",altos+" día"+(altos>1?"s":"")+" con más de "+n(P.cobMax,1)+" días de cobertura: capital inmovilizado y espacio ocupado.");
-  /* 6. causa dominante */
-  var par=pareto(lista);
-  if(par.total>0&&par.rows[0].v/par.total>=0.35) push("wn","Una causa concentra los defectos",
-    "<b>"+esc(par.rows[0].l)+"</b> explica el "+n(par.rows[0].v/par.total*100,0)+" % de los "+n(par.total)+
-    " defectos del periodo. Es el primer frente para un análisis de causa raíz.");
 
   if(res.alertas.some(function(a){return a.sev==="cr";})) res.nivel="cr";
   else if(res.alertas.length) res.nivel="wn";
@@ -1176,7 +1168,7 @@ function kpisDe(scope){
   var lista=ventana();
   var ult=lista.length?lista[lista.length-1]:null;
   var c=ult?calcDia(ult,P):null;
-  var takt=taktSeg(P), metaD=dpmoFromSigma(P.sigmaObj);
+  var takt=taktSeg(P), metaD=dpmoFromSigma(P.sigmaObj), lim4=limiteSigma(P);
   var cuando=ult?(fechaCorta(ult.fecha)+(demoOn?" (ejemplo)":"")):"";
 
   if(scope==="planta"){
@@ -1249,8 +1241,9 @@ function kpisDe(scope){
       cls:(c&&c.sigma!==null)?(c.sigma>=P.sigmaObj?"ok":"cr"):"",
       pill:dSig?dSig.txt:null,pillCls:dSig?(dSig.d>=0?"ok":"cr"):"",
       spark:ult?"sigma":"",
-      sub:c&&isFinite(c.dpmo)?(n(c.dpmo,0)+" DPMO · "+n(c.errComp,3)+" % de error por componente · límite "+
-          n(metaD)+" DPMO ("+P.sigmaObj+" σ)"):("Objetivo del proyecto: "+P.sigmaObj+" σ"),
+      sub:c&&isFinite(c.dpmo)?(n(c.dpmo,0)+" DPMO · "+n(c.errComp,3)+" % de error por componente · máximo a "+
+          P.sigmaObj+"σ: "+n(lim4.dpmo)+" DPMO ("+n(lim4.errComp,3)+" %)"):
+          ("Máximo a "+P.sigmaObj+"σ: "+n(lim4.dpmo)+" DPMO ("+n(lim4.errComp,3)+" % por componente)"),
       why:"<code>Φ⁻¹(1 − DPMO/10⁶) + 1.5</code><br>"+
            (c&&c.sigma!==null?(n(c.dpmo,0)+" DPMO → "+c.sigma.toFixed(2)+" σ")
                              :"Falta el registro del día")+
@@ -1258,8 +1251,9 @@ function kpisDe(scope){
 
     kpi({lb:"Error proyectado",v:c&&isFinite(c.errJuego)?n(c.errJuego,2):"—",u:"% de los juegos",
       cls:c&&isFinite(c.errJuego)?(c.sigma>=P.sigmaObj?"ok":"cr"):"", spark:ult?"errJuego":"",
-      sub:c&&isFinite(c.errJuego)?("≈ "+n(c.errJuego/100*P.demanda,0)+" juegos con defecto al año sobre la demanda de "+n(P.demanda)):
-          "Se calcula sobre la demanda anual de "+n(P.demanda)+" vehículos"})+
+      sub:c&&isFinite(c.errJuego)?("≈ "+n(c.errJuego/100*P.demanda,0)+" juegos al año de "+n(P.demanda)+
+          " · máximo a "+P.sigmaObj+"σ: "+n(lim4.juegosAnio,0)+" juegos ("+n(lim4.errJuego,2)+" %)"):
+          ("Máximo a "+P.sigmaObj+"σ: "+n(lim4.juegosAnio,0)+" juegos al año de "+n(P.demanda))})+
 
     kpi({lb:"Cobertura",v:c&&isFinite(c.lead)?n(c.lead,2):"—",u:"días",
       cls:c&&isFinite(c.lead)?((c.lead<P.cobMin)?"cr":(c.lead>P.cobMax?"wn":"ok")):"", spark:ult?"lead":"",
@@ -1288,10 +1282,11 @@ function kpisDe(scope){
 /* ================= escala sigma ================= */
 function renderSigmaRef(){
   document.getElementById("sigmaRef").innerHTML=SIGTAB.map(function(t){
+    var juegos=(1-Math.pow(1-t.d/1e6,P.oportunidades))*P.demanda;
     return '<div class="'+(t.s===P.sigmaObj?'hi':'')+'">'+
       '<div class="k">'+t.s+' sigma'+(t.s===P.sigmaObj?' · objetivo':'')+'</div>'+
       '<div class="n mono">'+n(t.d,t.d<10?1:0)+'</div>'+
-      '<div class="y">DPMO · '+t.y+' %</div></div>';
+      '<div class="y">DPMO · '+t.y+' %<br>≈ '+n(juegos,0)+' juegos/año</div></div>';
   }).join("");
 }
 
@@ -1420,41 +1415,6 @@ function lineChart(host,series,opts){
   host.appendChild(s);
 }
 
-function pareto(lista){
-  var tot={}; CAUSAS.forEach(function(c){tot[c.k]=0;});
-  var sinClas=0;
-  lista.forEach(function(r){
-    var sum=0;
-    if(r.causas) CAUSAS.forEach(function(c){ var v=+r.causas[c.k]||0; tot[c.k]+=v; sum+=v; });
-    sinClas+=Math.max(0,(r.defectos||0)-sum);
-  });
-  var rows=CAUSAS.map(function(c){return {k:c.k,l:c.l,v:tot[c.k]};});
-  if(sinClas>0) rows.push({k:"nc",l:"Sin clasificar",v:sinClas});
-  rows=rows.filter(function(r){return r.v>0;}).sort(function(a,b){return b.v-a.v;});
-  var total=rows.reduce(function(a,r){return a+r.v;},0), acc=0;
-  rows.forEach(function(r){ var antes=acc; acc+=r.v; r.acum=total?acc/total*100:0; r.vital=total?antes/total*100<80:false; });
-  return {rows:rows,total:total};
-}
-function paretoChart(host,par){
-  if(!par.total){ vacio(host,"Sin defectos clasificados en el periodo."); return; }
-  host.innerHTML="";
-  var rowH=38, W=620, L=150, R=150, T=6, H=T+par.rows.length*rowH+4;
-  var s=svgEl(W,H), iw=W-L-R, max=par.rows[0].v;
-  par.rows.forEach(function(r,i){
-    var y=T+i*rowH, bh=16, by=y+(rowH-bh)/2, w=Math.max(3,iw*(r.v/max));
-    txt(s,L-10,by+12,r.l,{"text-anchor":"end","font-size":12,fill:css("--ink")});
-    var p=mk("path",{d:"M"+L+" "+by+"H"+(L+w-4)+"Q"+(L+w)+" "+by+" "+(L+w)+" "+(by+4)+"V"+(by+bh-4)+"Q"+(L+w)+" "+(by+bh)+" "+(L+w-4)+" "+(by+bh)+"H"+L+"Z",
-      fill:r.vital?css("--s1"):css("--axis")});
-    p.addEventListener("mousemove",function(e){showTip(e,r.l+": "+n(r.v)+" defectos · "+n(r.v/par.total*100,1)+" %");});
-    p.addEventListener("mouseleave",hideTip);
-    s.appendChild(p);
-    txt(s,L+w+8,by+12,n(r.v),{"font-size":12,"font-weight":600,fill:css("--ink"),"font-family":"IBM Plex Mono, monospace"});
-    txt(s,W-4,by+12,n(r.v/par.total*100,0)+" % · acum. "+n(r.acum,0)+" %",
-      {"text-anchor":"end","font-size":11,fill:css("--ink-muted"),"font-family":"IBM Plex Mono, monospace"});
-  });
-  s.appendChild(mk("line",{x1:L,x2:L,y1:T,y2:H-4,stroke:css("--axis"),"stroke-width":1}));
-  host.appendChild(s);
-}
 
 function cumplChart(host,lista){
   if(!lista.length){ vacio(host,"Sin días en la serie."); return; }
@@ -1499,11 +1459,6 @@ function renderCharts(){
 
   /* carta de control */
   document.getElementById("ccTag").textContent=demoOn?"datos de ejemplo":"";
-  document.getElementById("ccSub").textContent= lim
-    ? ("Media "+n(lim.media,0)+" DPMO. Límites de control "+n(lim.lic,0)+" – "+n(lim.lsc,0)+
-       " DPMO (media ± 2.66 × rango móvil promedio de "+n(lim.mr,0)+"), sobre "+lim.n+" días. "+
-       "Objetivo "+P.sigmaObj+"σ = "+n(metaD)+" DPMO.")
-    : ("Objetivo "+P.sigmaObj+"σ = "+n(metaD)+" DPMO. Con menos de tres días no hay con qué estimar los límites de control.");
   var refs=[{v:metaD,c:css("--s2"),l:"meta "+P.sigmaObj+"σ",dash:"5 4",w:2}];
   if(lim){
     refs.push({v:lim.lsc,c:css("--crit"),l:"LSC"});
@@ -1525,12 +1480,6 @@ function renderCharts(){
     '<span><i style="background:var(--s2)"></i>meta sigma</span>'+
     '<span><i style="background:var(--crit)"></i>límites LSC / LIC</span>';
 
-  /* pareto */
-  var par=pareto(last);
-  document.getElementById("parSub").textContent= par.total
-    ? (n(par.total)+" defectos en el periodo. Las barras azules son las causas que suman el primer 80 %: ahí rinde más cada acción.")
-    : "Sin defectos en el periodo.";
-  paretoChart(document.getElementById("chPar"),par);
 
   /* cumplimiento */
   var dd=demandaDia(P);
