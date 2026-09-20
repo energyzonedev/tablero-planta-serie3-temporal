@@ -701,7 +701,7 @@ dialog.wide{width:min(860px,calc(100vw - 32px))}
       <table class="reg">
         <thead><tr>
           <th>Fecha</th><th class="r">Vehículos</th><th class="r">Cumpl.</th><th class="r">Personal</th>
-          <th class="r">Defectos</th><th>Causa principal</th><th class="r">Inventario UM</th><th class="r">Paro</th>
+          <th class="r">Defectos</th><th>Causa principal</th><th class="r">Contenedores</th><th class="r">Paro</th>
           <th class="r">Ciclo</th><th class="r">Cobertura</th><th class="r">DPMO</th><th class="r">Sigma</th>
           <th>Estado</th><th></th>
         </tr></thead>
@@ -736,7 +736,9 @@ dialog.wide{width:min(860px,calc(100vw - 32px))}
         <div class="fld"><label for="f-fecha">Fecha</label><input id="f-fecha" type="date" required></div>
         <div class="fld"><label for="f-veh">Juegos surtidos</label><input id="f-veh" type="number" min="0" step="1" inputmode="numeric" required><small>Juegos de componentes entregados al ensamble</small></div>
         <div class="fld"><label for="f-per">Personal</label><input id="f-per" type="number" min="0" step="1" inputmode="numeric"><small>Personas en el CEDIS</small></div>
-        <div class="fld"><label for="f-inv">Inventario al cierre</label><input id="f-inv" type="number" min="0" step="1" inputmode="numeric"><small>Unidades de manejo (UM)</small></div>
+        <div class="fld"><label for="f-invA">Inventario clase A</label><input id="f-invA" data-inv="A" type="number" min="0" step="1" inputmode="numeric"><small>Contenedores al cierre</small></div>
+        <div class="fld"><label for="f-invB">Inventario clase B</label><input id="f-invB" data-inv="B" type="number" min="0" step="1" inputmode="numeric"><small>Contenedores al cierre</small></div>
+        <div class="fld"><label for="f-invC">Inventario clase C</label><input id="f-invC" data-inv="C" type="number" min="0" step="1" inputmode="numeric"><small>Contenedores al cierre</small></div>
         <div class="fld"><label for="f-paro">Paro no planeado</label><input id="f-paro" type="number" min="0" step="1" inputmode="numeric"><small>Minutos</small></div>
       </fieldset>
       <fieldset>
@@ -780,7 +782,7 @@ dialog.wide{width:min(860px,calc(100vw - 32px))}
           <tr><td>fecha</td><td>Obligatoria. AAAA-MM-DD, DD/MM/AAAA o fecha de Excel.</td></tr>
           <tr><td>vehiculos</td><td>Obligatoria. Juegos de componentes surtidos en el día (entero mayor que cero).</td></tr>
           <tr><td>personal</td><td>Personas del CEDIS en el día.</td></tr>
-          <tr><td>inventario_um</td><td>Inventario al cierre, en unidades de manejo.</td></tr>
+          <tr><td>inventario_a · inventario_b · inventario_c</td><td>Contenedores al cierre de cada clase del ABC. Si solo hay un total, usa inventario_total.</td></tr>
           <tr><td>paro_min</td><td>Minutos de paro no planeado.</td></tr>
           <tr><td>defectos</td><td>Autos con defecto en el día. Si falta, se suma de las causas.</td></tr>
           <tr><td>faltante · secuencia · danado · etiqueta · otro</td><td>Autos con defecto por causa (también se aceptan def_faltante, def_secuencia, etc.).</td></tr>
@@ -854,9 +856,10 @@ var FCST=[{a:2027,v:59020},{a:2028,v:59940},{a:2029,v:58841},{a:2030,v:59097},
           {a:2031,v:59202},{a:2032,v:59196}];
 var CEDIS={superficie:17020,almacen:11220,reserva:2205,contenedoresMes:31290,largo:185,ancho:92,abc:'3 / 5 / 10'};
 /* política de inventarios del documento: días de cobertura por clase */
-var ABC=[{k:"A",dias:3,l:"Clase A · alta rotación"},
-         {k:"B",dias:5,l:"Clase B · rotación media"},
-         {k:"C",dias:10,l:"Clase C · baja rotación"}];
+var ABC=[{k:"A",dias:3,parte:0.45,l:"Clase A · alta rotación"},
+         {k:"B",dias:5,parte:0.30,l:"Clase B · rotación media"},
+         {k:"C",dias:10,parte:0.25,l:"Clase C · baja rotación"}];
+function consumoClase(a,p){ return p.consumoUM*a.parte; }
 var DEF={demanda:59020,dias:300,turnos:3,horas:7,descanso:0,oportunidades:22,
          consumoUM:1251.6,sigmaObj:4,cobMin:3,cobMax:10};
 var SIGTAB=[{s:1,d:690000,y:"30.85"},{s:2,d:308000,y:"69.20"},{s:3,d:66800,y:"93.32"},
@@ -1008,11 +1011,18 @@ function calcDia(r,p){
   var opor=r.vehiculos;                                   /* una oportunidad por auto terminado */
   var dpmo=opor>0?(r.defectos/opor)*1e6:NaN;
   var sig=isFinite(dpmo)?sigmaFromDpmo(dpmo):null;
-  var lead=(r.inventario>0&&p.consumoUM>0)?r.inventario/p.consumoUM:NaN;
+  var invCl=ABC.reduce(function(t,a){ return t+(+r["inv"+a.k]||0); },0);
+  var inv=invCl>0?invCl:(r.inventario||0);
+  var lead=(inv>0&&p.consumoUM>0)?inv/p.consumoUM:NaN;
+  var leadCl={};
+  ABC.forEach(function(a){
+    var i=+r["inv"+a.k]||0, cons=consumoClase(a,p);
+    leadCl[a.k]=(i>0&&cons>0)?i/cons:NaN;
+  });
   var dd=demandaDia(p);
   var errComp=isFinite(dpmo)?dpmo/1e4:NaN;                 /* % de autos con defecto */
   var errJuego=errComp;
-  return {ciclo:ciclo,dpmo:dpmo,sigma:sig,lead:lead,opor:opor,errComp:errComp,errJuego:errJuego,
+  return {ciclo:ciclo,dpmo:dpmo,sigma:sig,lead:lead,leadCl:leadCl,inv:inv,opor:opor,errComp:errComp,errJuego:errJuego,
           cumpl:dd>0?r.vehiculos/dd*100:NaN,
           disp:disp>0?neto/disp*100:NaN,
           prod:r.personal>0?r.vehiculos/r.personal:NaN,
@@ -1079,7 +1089,9 @@ function generarDemo(){
       causas[c.k]=v; rest-=v; });
     out.push({fecha:fecha,vehiculos:veh,defectos:def,causas:causas,
       personal:Math.round(62+rnd()*8),
-      inventario:Math.round(5200+rnd()*1600-(tarde?900:0)),
+      invA:Math.round(consumoClase(ABC[0],DEF)*(2.7+rnd()*1.1-(tarde?0.5:0))),
+      invB:Math.round(consumoClase(ABC[1],DEF)*(4.4+rnd()*1.4-(tarde?0.7:0))),
+      invC:Math.round(consumoClase(ABC[2],DEF)*(8.6+rnd()*2.2-(tarde?1.2:0))),
       paro:rnd()<0.4?Math.round(5+rnd()*28):0, demo:true});
   });
   return out;
@@ -1268,19 +1280,23 @@ function kpisDe(scope){
            "<em>Personal propio del CEDIS, no de la planta cliente.</em>"})+
 
     ABC.map(function(a){
-      var cubre=c&&isFinite(c.lead)?c.lead>=a.dias:null;
+      var d=c?c.leadCl[a.k]:NaN;
+      var cubre=isFinite(d)?d>=a.dias:null;
       return kpi({lb:"Inventario clase "+a.k,
-        v:c&&isFinite(c.lead)?n(c.lead,2):"—",u:"días",
+        v:isFinite(d)?n(d,2):"—",u:"días",
         cls:cubre===null?"":(cubre?"ok":"cr"),
-        pill:cubre===null?null:(cubre?"cubre los "+a.dias+" días":"faltan "+n(a.dias-c.lead,2)+" días"),
+        pill:cubre===null?null:(cubre?"cubre los "+a.dias+" días":"faltan "+n(a.dias-d,2)+" días"),
         pillCls:cubre===null?"":(cubre?"ok":"cr"),
-        spark:ult?"lead":"",
-        sub:a.l+" · la política pide "+a.dias+" días de inventario"});
+        spark:ult?("lead"+a.k):"",
+        sub:isFinite(d)
+          ? (a.l+" · pide "+a.dias+" días · "+(ult?n(ult["inv"+a.k],0):"—")+" contenedores el "+cuando)
+          : (a.l+" · pide "+a.dias+" días · sin inventario capturado para esta clase")});
     }).join("");
 
   /* sparklines */
   var fns={ciclo:function(x){return x.ciclo;},cumpl:function(x){return x.cumpl;},disp:function(x){return x.disp;},
-           sigma:function(x){return x.sigma===null?NaN:x.sigma;},errJuego:function(x){return x.errJuego;},lead:function(x){return x.lead;},prod:function(x){return x.prod;}};
+           sigma:function(x){return x.sigma===null?NaN:x.sigma;},errJuego:function(x){return x.errJuego;},lead:function(x){return x.lead;},prod:function(x){return x.prod;},
+           leadA:function(x){return x.leadCl.A;},leadB:function(x){return x.leadCl.B;},leadC:function(x){return x.leadCl.C;}};
   document.querySelectorAll("#kpis [data-spark]").forEach(function(h){
     var k=h.getAttribute("data-spark"); if(!k||!fns[k]){h.remove();return;}
     sparkline(h,lista.map(function(r){return {l:fechaCorta(r.fecha),v:fns[k](calcDia(r,P))};}));
@@ -1294,10 +1310,7 @@ function renderSigmaRef(){
   var nivel=(ult&&ult.sigma!==null)?Math.max(1,Math.min(6,Math.floor(ult.sigma))):null;
   document.getElementById("sigmaMes").innerHTML= ult&&ult.sigma!==null
     ? '<span class="t">Este mes · '+esc(ult.l)+(demoOn?' · ejemplo':'')+'</span>'+
-      '<div class="hi"><b>'+ult.sigma.toFixed(2)+' σ</b>nivel sigma del mes</div>'+
-      '<div><b>'+n(ult.dpmo,0)+'</b>autos con defecto por millón</div>'+
-      '<div><b>'+n(ult.defectos)+' de '+n(ult.vehiculos)+'</b>autos del mes</div>'+
-      '<div><b>'+(ult.sigma>=P.sigmaObj?'en meta':'bajo la meta')+'</b>objetivo '+P.sigmaObj+' σ</div>'
+      '<div class="hi"><b>'+ult.sigma.toFixed(2)+' σ</b>nivel sigma del mes</div>'
     : '<span class="t">Este mes</span><div><b>—</b>sin autos registrados en el mes</div>';
   document.getElementById("sigmaRef").innerHTML=SIGTAB.map(function(t){
     var cls=(t.s===P.sigmaObj?"hi":"")+(nivel===t.s?(t.s>=P.sigmaObj?" mes":" lo mes"):"");
@@ -1534,33 +1547,24 @@ function renderCharts(){
     '<span><i class="sq" style="background:var(--crit)"></i>por encima del takt</span>'+
     '<span><i style="background:var(--s2)"></i>takt objetivo</span>';
 
-  /* cobertura contra la política ABC */
-  var leads=last.map(function(r){return calcDia(r,P).lead;}).filter(isFinite);
-  document.getElementById("leadSub").textContent= leads.length
-    ? ("Días que cubre el inventario (ley de Little), contra los días que pide cada clase del ABC. "+
-       "Promedio del periodo: "+n(media(leads),2)+" días.")
-    : "Días de cobertura del inventario contra la política ABC (3, 5 y 10 días).";
-  lineChart(document.getElementById("chLead"),
-    [{name:"Cobertura",c:css("--axis"),pts:last.map(function(r){
-       return {l:fechaCorta(r.fecha),v:calcDia(r,P).lead};})}],
+  /* cobertura: una línea por clase */
+  var colABC={A:css("--crit"),B:css("--s2"),C:css("--s1")};
+  var hayCl=last.some(function(r){ return ABC.some(function(a){ return (+r["inv"+a.k]||0)>0; }); });
+  var series=hayCl
+    ? ABC.map(function(a){ return {name:"Clase "+a.k,c:colABC[a.k],
+        pts:last.map(function(r){ return {l:fechaCorta(r.fecha),v:calcDia(r,P).leadCl[a.k]}; })}; })
+    : [{name:"Cobertura",c:css("--axis"),pts:last.map(function(r){
+        return {l:fechaCorta(r.fecha),v:calcDia(r,P).lead}; })}];
+  document.getElementById("leadSub").textContent= hayCl
+    ? "Días que cubre el inventario de cada clase contra lo que pide la política ABC: 3, 5 y 10 días."
+    : "Días de cobertura del inventario total. Captura el inventario por clase para ver una línea por cada una.";
+  lineChart(document.getElementById("chLead"),series,
     {h:230,w:640,R:78,ticks:6,fmt:function(v){return n(v,2)+" d";},
-     band:{lo:ABC[0].dias,hi:ABC[2].dias},
-     refs:[{v:ABC[0].dias,c:css("--crit"),l:"A · "+ABC[0].dias+" d",dash:"4 3"},
-           {v:ABC[1].dias,c:css("--s2"),l:"B · "+ABC[1].dias+" d",dash:"4 3"},
-           {v:ABC[2].dias,c:css("--s1"),l:"C · "+ABC[2].dias+" d",dash:"4 3"}],
-     dotColor:function(v){
-       if(v<ABC[0].dias)return css("--crit");
-       if(v>ABC[2].dias)return css("--warn");
-       return css("--s3"); },
-     vacio:"La política ABC pide "+ABC[0].dias+", "+ABC[1].dias+" y "+ABC[2].dias+
-           " días de inventario. Registra días para comparar la cobertura real."});
+     refs:ABC.map(function(a){ return {v:a.dias,c:colABC[a.k],l:a.k+" · "+a.dias+" d",dash:"4 3"}; }),
+     vacio:"La política ABC pide 3, 5 y 10 días de inventario. Registra días para comparar la cobertura real."});
   document.getElementById("leadLeg").innerHTML=
-    '<span><i class="sq" style="background:var(--s3)"></i>cubre lo que pide la clase A</span>'+
-    '<span><i class="sq" style="background:var(--crit)"></i>por debajo de los '+ABC[0].dias+' días de la clase A</span>'+
-    '<span><i class="sq" style="background:var(--warn)"></i>arriba de los '+ABC[2].dias+' días de la clase C</span>'+
-    '<span><i style="background:var(--crit)"></i>A</span>'+
-    '<span><i style="background:var(--s2)"></i>B</span>'+
-    '<span><i style="background:var(--s1)"></i>C</span>';
+    ABC.map(function(a){ return '<span><i style="background:'+colABC[a.k]+'"></i>'+a.l+' · pide '+a.dias+' d</span>'; }).join("")+
+    '<span style="color:var(--ink-muted)">la línea punteada de cada color es su objetivo</span>';
 }
 
 /* ================= tabla ================= */
@@ -1588,7 +1592,7 @@ function renderTabla(){
       '<td class="num r">'+(r.personal?n(r.personal):"—")+'</td>'+
       '<td class="num r">'+n(r.defectos)+'</td>'+
       '<td>'+(cp?esc(causaLabel(cp.k))+' <span class="num" style="color:var(--ink-muted)">('+n(cp.v)+')</span>':'—')+'</td>'+
-      '<td class="num r">'+(r.inventario?n(r.inventario):"—")+'</td>'+
+      '<td class="num r">'+(c.inv?n(c.inv):"—")+'</td>'+
       '<td class="num r">'+(r.paro?n(r.paro)+" min":"—")+'</td>'+
       '<td class="num r'+(isFinite(c.ciclo)&&c.ciclo>takt?' al':'')+'">'+seg(c.ciclo)+'</td>'+
       '<td class="num r'+(isFinite(c.lead)&&c.lead<P.cobMin?' al':'')+'">'+(isFinite(c.lead)?n(c.lead,2)+" d":"—")+'</td>'+
@@ -1711,13 +1715,17 @@ function toggleDemo(){
 var dlgDia=document.getElementById("dlgDia"), frmDia=document.getElementById("frmDia");
 function valNum(id){ var v=document.getElementById(id).value; return v===""?null:+v; }
 function actualizarCalc(){
-  var veh=valNum("f-veh")||0, paro=valNum("f-paro")||0, inv=valNum("f-inv")||0;
+  var veh=valNum("f-veh")||0, paro=valNum("f-paro")||0;
+  var invs={}; ABC.forEach(function(a){ invs["inv"+a.k]=valNum("f-inv"+a.k)||0; });
+  var inv=ABC.reduce(function(t,a){ return t+invs["inv"+a.k]; },0);
   var def=0; frmDia.querySelectorAll("[data-causa]").forEach(function(i){def+=(+i.value||0);});
-  var c=calcDia({vehiculos:veh,defectos:def,inventario:inv,paro:paro,personal:valNum("f-per")||0},P);
+  var reg={vehiculos:veh,defectos:def,inventario:inv,paro:paro,personal:valNum("f-per")||0};
+  ABC.forEach(function(a){ reg["inv"+a.k]=invs["inv"+a.k]; });
+  var c=calcDia(reg,P);
   document.getElementById("f-calc").innerHTML= veh>0
     ? ('Total <b>'+n(def)+'</b> autos con defecto · <b>'+n(c.dpmo,0)+'</b> por millón → <b>'+(c.sigma!==null?c.sigma.toFixed(2):"—")+' σ</b> · '+
        'ciclo <b>'+seg(c.ciclo)+'</b> (takt '+seg(taktSeg(P))+') · cumplimiento <b>'+n(c.cumpl,1)+' %</b>'+
-       (inv?' · cobertura <b>'+n(c.lead,2)+' d</b>':''))
+       (inv?' · cobertura A <b>'+n(c.leadCl.A,2)+' d</b> · B <b>'+n(c.leadCl.B,2)+' d</b> · C <b>'+n(c.leadCl.C,2)+' d</b>':''))
     : 'Captura los juegos surtidos para ver el cálculo del día.';
 }
 function abrirDia(fecha){
@@ -1727,7 +1735,9 @@ function abrirDia(fecha){
   document.getElementById("f-fecha").value=r?r.fecha:hoyISO();
   document.getElementById("f-veh").value=r?r.vehiculos:"";
   document.getElementById("f-per").value=r&&r.personal?r.personal:"";
-  document.getElementById("f-inv").value=r&&r.inventario?r.inventario:"";
+  ABC.forEach(function(a){
+    document.getElementById("f-inv"+a.k).value=(r&&r["inv"+a.k])?r["inv"+a.k]:"";
+  });
   document.getElementById("f-paro").value=r&&r.paro?r.paro:"";
   frmDia.querySelectorAll("[data-causa]").forEach(function(i){
     var k=i.getAttribute("data-causa");
@@ -1756,8 +1766,9 @@ frmDia.addEventListener("submit",async function(e){
   frmDia.querySelectorAll("[data-causa]").forEach(function(i){ var v=Math.round(+i.value||0); causas[i.getAttribute("data-causa")]=v; def+=v; });
   if(def>veh*P.oportunidades){ msg.textContent="Hay más defectos que oportunidades ("+n(veh*P.oportunidades)+"). Revisa la captura."; return; }
   var doc={fecha:fecha,vehiculos:veh,defectos:def,causas:causas,
-    personal:Math.round(valNum("f-per")||0),inventario:Math.round(valNum("f-inv")||0),
+    personal:Math.round(valNum("f-per")||0),inventario:Math.round(inv),
     paro:Math.round(valNum("f-paro")||0),actualizado:new Date().toISOString()};
+  ABC.forEach(function(a){ doc["inv"+a.k]=Math.round(invs["inv"+a.k]); });
   if(userId)doc.autor=userId;
   btn.disabled=true; msg.textContent="";
   try{
@@ -1825,7 +1836,10 @@ var COLS=[
   {k:"fecha",l:"fecha",req:true,al:["fecha","dia","date","fecha de operacion"]},
   {k:"vehiculos",l:"vehiculos",req:true,al:["vehiculos","vehiculos ensamblados","vehiculos producidos","produccion","unidades producidas","unidades ensambladas","veh","vehiculo","vehiculos surtidos"]},
   {k:"personal",l:"personal",al:["personal","personal de cedis","personal en turno","operarios","asociados"]},
-  {k:"inventario",l:"inventario_um",al:["inventario","inventario um","inventario al cierre","inventario cierre"]},
+  {k:"inventario",l:"inventario_total",al:["inventario","inventario um","inventario total","inventario al cierre","inventario cierre"]},
+  {k:"invA",l:"inventario_a",al:["inventario a","inventario clase a","inv a","clase a"]},
+  {k:"invB",l:"inventario_b",al:["inventario b","inventario clase b","inv b","clase b"]},
+  {k:"invC",l:"inventario_c",al:["inventario c","inventario clase c","inv c","clase c"]},
   {k:"paro",l:"paro_min",al:["paro","paro min","paro no planeado","minutos de paro","paros"]},
   {k:"defectos",l:"defectos",al:["defectos","defectos totales","total defectos","total de defectos"]},
   {k:"faltante",l:"faltante",causa:true,al:["faltante","faltantes","def faltante"]},
@@ -1915,7 +1929,7 @@ async function leerArchivo(file){
     var veh=aNum(val("vehiculos"));
     if(veh===null||!(veh>0)||veh%1) prob.push("vehículos debe ser un entero mayor que cero");
     var d={};
-    ["personal","inventario","paro","defectos"].concat(CAUSAS.map(function(c){return c.k;})).forEach(function(k){
+    ["personal","inventario","invA","invB","invC","paro","defectos"].concat(CAUSAS.map(function(c){return c.k;})).forEach(function(k){
       var x=aNum(val(k));
       if(x!==null&&(isNaN(x)||x<0)) prob.push(k+" no es un número válido");
       d[k]=x===null||isNaN(x)?0:Math.round(x);
@@ -1927,8 +1941,9 @@ async function leerArchivo(file){
     if(veh>0&&total>veh*P.oportunidades) prob.push("más defectos ("+total+") que oportunidades ("+(veh*P.oportunidades)+")");
     if(prob.length){ errores.push("Fila "+nf+": "+prob.join("; ")); continue; }
     if(porFecha[fecha]) avisos.push("La fecha "+fecha+" aparece más de una vez; se usa la última fila ("+nf+").");
+    var invCl=d.invA+d.invB+d.invC;
     porFecha[fecha]={fecha:fecha,vehiculos:veh,defectos:total,causas:causas,personal:d.personal,
-      inventario:d.inventario,paro:d.paro};
+      inventario:invCl>0?invCl:d.inventario,invA:d.invA,invB:d.invB,invC:d.invC,paro:d.paro};
   }
   upListo=Object.keys(porFecha).sort().map(function(k){return porFecha[k];});
   if(upListo.length>1000){ msg.textContent="El archivo trae "+n(upListo.length)+" días; sube como máximo 1,000 por archivo."; upListo=[]; }
@@ -1952,7 +1967,7 @@ async function leerArchivo(file){
   if(upListo.length){
     var prev=document.getElementById("upPrev");
     prev.innerHTML='<table class="reg"><thead><tr><th>Fecha</th><th class="r">Vehículos</th><th class="r">Personal</th>'+
-      '<th class="r">Defectos</th><th class="r">Inventario UM</th><th class="r">Paro</th><th class="r">DPMO</th><th class="r">Sigma</th></tr></thead><tbody>'+
+      '<th class="r">Defectos</th><th class="r">Contenedores</th><th class="r">Paro</th><th class="r">DPMO</th><th class="r">Sigma</th></tr></thead><tbody>'+
       upListo.slice(0,6).map(function(x){ var c=calcDia(x,P);
         return '<tr><td>'+esc(fechaLarga(x.fecha))+'</td><td class="num r">'+n(x.vehiculos)+'</td><td class="num r">'+(x.personal?n(x.personal):"—")+
           '</td><td class="num r">'+n(x.defectos)+'</td><td class="num r">'+(x.inventario?n(x.inventario):"—")+'</td><td class="num r">'+
@@ -1976,7 +1991,7 @@ async function cargarDias(){
     while(i<lista.length&&!fallo){
       var x=lista[i++];
       var doc={fecha:x.fecha,vehiculos:x.vehiculos,defectos:x.defectos,personal:x.personal,
-        inventario:x.inventario,paro:x.paro,actualizado:ahora,origen:"archivo"};
+        inventario:x.inventario,invA:x.invA,invB:x.invB,invC:x.invC,paro:x.paro,actualizado:ahora,origen:"archivo"};
       if(x.causas) doc.causas=x.causas;
       if(userId) doc.autor=userId;
       try{ await db.collection("registros").doc(x.fecha).set(doc); hechos++; }
@@ -2009,7 +2024,7 @@ async function descargarPlantilla(){
   if(!dl) return;
   var X;
   try{ X=await cargarLib(); }catch(e){ toast("No se pudo preparar la plantilla. Revisa tu conexión."); return; }
-  var enc=["fecha","vehiculos","personal","inventario_um","paro_min","faltante","secuencia","danado","etiqueta","otro"];
+  var enc=["fecha","vehiculos","personal","inventario_a","inventario_b","inventario_c","paro_min","faltante","secuencia","danado","etiqueta","otro"];
   var hoja=X.utils.aoa_to_sheet([enc]);
   hoja["!cols"]=enc.map(function(h){ return {wch:Math.max(12,h.length+2)}; });
   var ins=X.utils.aoa_to_sheet([
@@ -2017,7 +2032,7 @@ async function descargarPlantilla(){
     ["fecha","Obligatoria. Día de operación (AAAA-MM-DD o DD/MM/AAAA)."],
     ["vehiculos","Obligatoria. Juegos de componentes surtidos en el día."],
     ["personal","Personas del CEDIS en el día."],
-    ["inventario_um","Inventario al cierre, en unidades de manejo."],
+    ["inventario_a, inventario_b, inventario_c","Contenedores al cierre de cada clase del ABC."],
     ["paro_min","Minutos de paro no planeado."],
     ["faltante, secuencia, danado, etiqueta, otro","Autos con defecto del día, por causa. El total se calcula solo."],
     ["",""],
@@ -2051,12 +2066,14 @@ async function exportarCsv(){
   if(!dl)return;
   var lista=vista();
   var cab=["fecha","vehiculos","cumplimiento_pct","personal","defectos"].concat(CAUSAS.map(function(c){return "def_"+c.k;}))
-    .concat(["inventario_um","paro_min","ciclo_s","takt_s","cobertura_dias","dpmo","sigma","disponibilidad_pct"]);
+    .concat(["inventario_a","inventario_b","inventario_c","inventario_total","paro_min","ciclo_s","takt_s",
+             "cobertura_a_dias","cobertura_b_dias","cobertura_c_dias","dpmo","sigma","disponibilidad_pct"]);
   var filas=lista.map(function(r){ var c=calcDia(r,P);
     function f(v,d){ return isFinite(v)?(+v).toFixed(d):""; }
     return [r.fecha,r.vehiculos,f(c.cumpl,2),r.personal||"",r.defectos]
       .concat(CAUSAS.map(function(k){return r.causas?(r.causas[k.k]||0):"";}))
-      .concat([r.inventario||"",r.paro||0,f(c.ciclo,1),f(taktSeg(P),1),f(c.lead,3),f(c.dpmo,0),
+      .concat([r.invA||"",r.invB||"",r.invC||"",r.inventario||"",r.paro||0,f(c.ciclo,1),f(taktSeg(P),1),
+               f(c.leadCl.A,3),f(c.leadCl.B,3),f(c.leadCl.C,3),f(c.dpmo,0),
                c.sigma!==null?c.sigma.toFixed(3):"",f(c.disp,2)]).join(",");
   });
   var csv="﻿"+cab.join(",")+"\n"+filas.join("\n")+"\n";
@@ -2155,8 +2172,10 @@ setSync(false,"Vista sin conexión");
     reales=snap.docs.map(function(dd){var o=dd.data()||{};
       var causas=null;
       if(o.causas&&typeof o.causas==="object"){ causas={}; CAUSAS.forEach(function(k){causas[k.k]=+o.causas[k.k]||0;}); }
-      return {fecha:String(o.fecha||dd.id),vehiculos:+o.vehiculos||0,defectos:+o.defectos||0,causas:causas,
-              personal:+o.personal||0,inventario:+o.inventario||0,paro:+o.paro||0};})
+      var reg={fecha:String(o.fecha||dd.id),vehiculos:+o.vehiculos||0,defectos:+o.defectos||0,causas:causas,
+              personal:+o.personal||0,inventario:+o.inventario||0,paro:+o.paro||0};
+      ABC.forEach(function(a){ reg["inv"+a.k]=+o["inv"+a.k]||0; });
+      return reg;})
       .filter(function(r){return /^\d{4}-\d{2}-\d{2}$/.test(r.fecha);});
     ordenar(reales);
     if(!cargado){ cargado=true; if(reales.length&&!demoForzado)demoOn=false; }
