@@ -220,6 +220,8 @@ header{position:sticky;top:env(safe-area-inset-top,0px);z-index:40;background:va
   flex-basis:100%}
 .meta div b{display:block;font-family:var(--mono);font-size:17px;font-weight:600;color:var(--ink);
   font-variant-numeric:tabular-nums}
+.meta div.hi{padding-right:20px;border-right:1px solid var(--line);margin-right:4px}
+.meta div.hi b{font-size:34px;line-height:1.05;color:var(--accent)}
 .credit{font-size:11px;color:var(--sr-muted);margin-top:8px}
 .credit a{color:var(--sr-ink-2)}
 
@@ -1252,32 +1254,6 @@ function kpisDe(scope){
            (ult?("("+n(tiempoDisponibleSeg(P)/60)+" − "+n(ult.paro||0)+") ÷ "+n(tiempoDisponibleSeg(P)/60)+" min"):"Falta el registro del día")+
            "<em>Componente de disponibilidad del OEE.</em>"})+
 
-    kpi({lb:"Calidad",v:c&&c.sigma!==null?c.sigma.toFixed(2):"—",u:"σ",
-      cls:(c&&c.sigma!==null)?(c.sigma>=P.sigmaObj?"ok":"cr"):"",
-      pill:dSig?dSig.txt:null,pillCls:dSig?(dSig.d>=0?"ok":"cr"):"",
-      spark:ult?"sigma":"",
-      sub:c&&isFinite(c.dpmo)?(n(c.dpmo,0)+" defectos por millón de autos · "+n(c.errComp,3)+
-          " % de los autos · máximo a "+P.sigmaObj+"σ: "+n(lim4.dpmo)+" ("+n(lim4.errComp,3)+" %)"):
-          ("Máximo a "+P.sigmaObj+"σ: "+n(lim4.dpmo)+" defectos por millón de autos ("+n(lim4.errComp,3)+" %)"),
-      why:"<code>Φ⁻¹(1 − DPMO/10⁶) + 1.5</code><br>"+
-           (c&&c.sigma!==null?(n(c.dpmo,0)+" DPMO → "+c.sigma.toFixed(2)+" σ")
-                             :"Falta el registro del día")+
-           "<em>Corrimiento de 1.5σ, convención estándar de Six Sigma.</em>"})+
-
-    kpi({lb:"Error proyectado",v:c&&isFinite(c.errJuego)?n(c.errJuego,3):"—",u:"% de los autos",
-      cls:c&&isFinite(c.errJuego)?(c.sigma>=P.sigmaObj?"ok":"cr"):"", spark:ult?"errJuego":"",
-      sub:c&&isFinite(c.errJuego)?("≈ "+n(c.errJuego/100*P.demanda,0)+" autos con defecto al año de "+n(P.demanda)+
-          " · máximo a "+P.sigmaObj+"σ: "+n(lim4.juegosAnio,0)+" autos"):
-          ("Máximo a "+P.sigmaObj+"σ: "+n(lim4.juegosAnio,0)+" autos al año de "+n(P.demanda))})+
-
-    kpi({lb:"Cobertura",v:c&&isFinite(c.lead)?n(c.lead,2):"—",u:"días",
-      cls:c&&isFinite(c.lead)?((c.lead<P.cobMin)?"cr":(c.lead>P.cobMax?"wn":"ok")):"", spark:ult?"lead":"",
-      sub:"Banda objetivo "+n(P.cobMin,1)+" – "+n(P.cobMax,1)+" días",
-      why:"<code>inventario ÷ consumo diario</code> (ley de Little)<br>"+
-           (ult&&c&&isFinite(c.lead)?(n(ult.inventario)+" UM ÷ "+n(P.consumoUM,1)+" UM/día = "+
-             n(c.lead,2)+" días"):"Falta el inventario del día")+
-           "<em>Consumo de "+n(P.consumoUM,1)+" UM/día: cálculo de empaque del proyecto.</em>"})+
-
     kpi({lb:"Productividad",v:c&&isFinite(c.prod)?n(c.prod,2):"—",u:"juegos por persona",
       spark:ult?"prod":"",
       sub:ult&&ult.personal?(n(ult.personal)+" personas en el CEDIS el "+cuando):"Sin personal registrado",
@@ -1495,9 +1471,8 @@ function renderCharts(){
   document.getElementById("metaSig").innerHTML= L4
     ? '<span class="t">Máximo de error que permite el objetivo de '+P.sigmaObj+
       ' sigma, sobre los autos terminados</span>'+
-      '<div><b>'+n(L4.dpmo)+'</b>defectos por millón de autos</div>'+
-      '<div><b>'+n(L4.errComp,3)+' %</b>de los autos con defecto</div>'+
-      '<div><b>'+n(L4.juegosAnio,0)+'</b>autos al año sobre la demanda de '+n(P.demanda)+'</div>'+
+      '<div class="hi"><b>'+n(L4.juegosAnio,0)+'</b>autos con defecto al año, de la demanda de '+n(P.demanda)+'</div>'+
+      '<div><b>'+n(L4.errComp,3)+' %</b>de los autos</div>'+
       '<div><b>'+n(L4.juegosAnio/P.dias,2)+'</b>autos al día de '+n(demandaDia(P),1)+'</div>'
     : "";
   document.getElementById("ccLeg").innerHTML=
