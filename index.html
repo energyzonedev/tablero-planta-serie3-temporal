@@ -734,7 +734,7 @@ dialog.wide{width:min(860px,calc(100vw - 32px))}
         <div class="fld"><label for="f-paro">Paro no planeado</label><input id="f-paro" type="number" min="0" step="1" inputmode="numeric"><small>Minutos</small></div>
       </fieldset>
       <fieldset>
-        <legend>Defectos por causa</legend>
+        <legend>Autos con defecto, por causa</legend>
         <div class="fld"><label for="f-c-faltante">Faltante</label><input id="f-c-faltante" data-causa="faltante" type="number" min="0" step="1" inputmode="numeric"></div>
         <div class="fld"><label for="f-c-secuencia">Fuera de secuencia</label><input id="f-c-secuencia" data-causa="secuencia" type="number" min="0" step="1" inputmode="numeric"></div>
         <div class="fld"><label for="f-c-danado">Pieza dañada</label><input id="f-c-danado" data-causa="danado" type="number" min="0" step="1" inputmode="numeric"></div>
@@ -776,8 +776,8 @@ dialog.wide{width:min(860px,calc(100vw - 32px))}
           <tr><td>personal</td><td>Personas del CEDIS en el día.</td></tr>
           <tr><td>inventario_um</td><td>Inventario al cierre, en unidades de manejo.</td></tr>
           <tr><td>paro_min</td><td>Minutos de paro no planeado.</td></tr>
-          <tr><td>defectos</td><td>Total de defectos. Si falta, se suma de las causas.</td></tr>
-          <tr><td>faltante · secuencia · danado · etiqueta · otro</td><td>Defectos por causa (también se aceptan def_faltante, def_secuencia, etc.).</td></tr>
+          <tr><td>defectos</td><td>Autos con defecto en el día. Si falta, se suma de las causas.</td></tr>
+          <tr><td>faltante · secuencia · danado · etiqueta · otro</td><td>Autos con defecto por causa (también se aceptan def_faltante, def_secuencia, etc.).</td></tr>
         </table>
       </details>
     </div>
@@ -950,14 +950,12 @@ function sigmaFromDpmo(d){
   if(d<=0)return 6; if(d>=1e6)return 0;
   return Math.min(6,normsinv(1-d/1e6)+1.5);
 }
-/* error máximo que admite el nivel sigma objetivo, llevado a la demanda anual */
+/* error máximo que admite el nivel sigma objetivo, sobre los autos terminados del año */
 function limiteSigma(p){
   var d=dpmoFromSigma(p.sigmaObj);
   if(!d) return null;
-  var pc=d/1e6;
-  var juego=1-Math.pow(1-pc,p.oportunidades);
-  return {dpmo:d,errComp:pc*100,errJuego:juego*100,juegosAnio:juego*p.demanda,
-          defectosAnio:pc*p.oportunidades*p.demanda};
+  var pc=d/1e6;                                            /* proporción de autos con defecto */
+  return {dpmo:d,errComp:pc*100,errJuego:pc*100,juegosAnio:pc*p.demanda};
 }
 function dpmoFromSigma(s){
   var t=SIGTAB.filter(function(x){return x.s===Math.round(s);})[0];
@@ -997,13 +995,13 @@ function calcDia(r,p){
   var disp=tiempoDisponibleSeg(p);
   var neto=disp-(r.paro||0)*60;
   var ciclo=r.vehiculos>0?neto/r.vehiculos:NaN;
-  var opor=r.vehiculos*p.oportunidades;
+  var opor=r.vehiculos;                                   /* una oportunidad por auto terminado */
   var dpmo=opor>0?(r.defectos/opor)*1e6:NaN;
   var sig=isFinite(dpmo)?sigmaFromDpmo(dpmo):null;
   var lead=(r.inventario>0&&p.consumoUM>0)?r.inventario/p.consumoUM:NaN;
   var dd=demandaDia(p);
-  var errComp=isFinite(dpmo)?dpmo/1e4:NaN;                 /* % de error por componente */
-  var errJuego=isFinite(dpmo)?(1-Math.pow(1-dpmo/1e6,p.oportunidades))*100:NaN;  /* % de juegos con al menos un defecto */
+  var errComp=isFinite(dpmo)?dpmo/1e4:NaN;                 /* % de autos con defecto */
+  var errJuego=errComp;
   return {ciclo:ciclo,dpmo:dpmo,sigma:sig,lead:lead,opor:opor,errComp:errComp,errJuego:errJuego,
           cumpl:dd>0?r.vehiculos/dd*100:NaN,
           disp:disp>0?neto/disp*100:NaN,
@@ -1039,9 +1037,8 @@ function generarDemo(){
   fechas.reverse().forEach(function(fecha,i){
     var tarde=i>=22;                         /* deriva en los últimos 8 días */
     var veh=Math.round(195+rnd()*8-(tarde?4:0));
-    var opor=veh*DEF.oportunidades;
-    var dpmoObj=4300+rnd()*2400+(tarde?1300:0);
-    var def=Math.max(0,Math.round(dpmoObj*opor/1e6));
+    var dpmoObj=2400+rnd()*3400+(tarde?3200:0);
+    var def=Math.max(0,Math.round(dpmoObj*veh/1e6));
     var causas={}, rest=def;
     CAUSAS.forEach(function(c,j){
       var v=j===CAUSAS.length-1?rest:Math.min(rest,Math.round(def*pesos[j]*(0.75+rnd()*0.5)));
@@ -1248,19 +1245,19 @@ function kpisDe(scope){
       cls:(c&&c.sigma!==null)?(c.sigma>=P.sigmaObj?"ok":"cr"):"",
       pill:dSig?dSig.txt:null,pillCls:dSig?(dSig.d>=0?"ok":"cr"):"",
       spark:ult?"sigma":"",
-      sub:c&&isFinite(c.dpmo)?(n(c.dpmo,0)+" DPMO · "+n(c.errComp,3)+" % de error por componente · máximo a "+
-          P.sigmaObj+"σ: "+n(lim4.dpmo)+" DPMO ("+n(lim4.errComp,3)+" %)"):
-          ("Máximo a "+P.sigmaObj+"σ: "+n(lim4.dpmo)+" DPMO ("+n(lim4.errComp,3)+" % por componente)"),
+      sub:c&&isFinite(c.dpmo)?(n(c.dpmo,0)+" defectos por millón de autos · "+n(c.errComp,3)+
+          " % de los autos · máximo a "+P.sigmaObj+"σ: "+n(lim4.dpmo)+" ("+n(lim4.errComp,3)+" %)"):
+          ("Máximo a "+P.sigmaObj+"σ: "+n(lim4.dpmo)+" defectos por millón de autos ("+n(lim4.errComp,3)+" %)"),
       why:"<code>Φ⁻¹(1 − DPMO/10⁶) + 1.5</code><br>"+
            (c&&c.sigma!==null?(n(c.dpmo,0)+" DPMO → "+c.sigma.toFixed(2)+" σ")
                              :"Falta el registro del día")+
            "<em>Corrimiento de 1.5σ, convención estándar de Six Sigma.</em>"})+
 
-    kpi({lb:"Error proyectado",v:c&&isFinite(c.errJuego)?n(c.errJuego,2):"—",u:"% de los juegos",
+    kpi({lb:"Error proyectado",v:c&&isFinite(c.errJuego)?n(c.errJuego,3):"—",u:"% de los autos",
       cls:c&&isFinite(c.errJuego)?(c.sigma>=P.sigmaObj?"ok":"cr"):"", spark:ult?"errJuego":"",
-      sub:c&&isFinite(c.errJuego)?("≈ "+n(c.errJuego/100*P.demanda,0)+" juegos al año de "+n(P.demanda)+
-          " · máximo a "+P.sigmaObj+"σ: "+n(lim4.juegosAnio,0)+" juegos ("+n(lim4.errJuego,2)+" %)"):
-          ("Máximo a "+P.sigmaObj+"σ: "+n(lim4.juegosAnio,0)+" juegos al año de "+n(P.demanda))})+
+      sub:c&&isFinite(c.errJuego)?("≈ "+n(c.errJuego/100*P.demanda,0)+" autos con defecto al año de "+n(P.demanda)+
+          " · máximo a "+P.sigmaObj+"σ: "+n(lim4.juegosAnio,0)+" autos"):
+          ("Máximo a "+P.sigmaObj+"σ: "+n(lim4.juegosAnio,0)+" autos al año de "+n(P.demanda))})+
 
     kpi({lb:"Cobertura",v:c&&isFinite(c.lead)?n(c.lead,2):"—",u:"días",
       cls:c&&isFinite(c.lead)?((c.lead<P.cobMin)?"cr":(c.lead>P.cobMax?"wn":"ok")):"", spark:ult?"lead":"",
@@ -1289,11 +1286,11 @@ function kpisDe(scope){
 /* ================= escala sigma ================= */
 function renderSigmaRef(){
   document.getElementById("sigmaRef").innerHTML=SIGTAB.map(function(t){
-    var juegos=(1-Math.pow(1-t.d/1e6,P.oportunidades))*P.demanda;
+    var juegos=t.d/1e6*P.demanda;
     return '<div class="'+(t.s===P.sigmaObj?'hi':'')+'">'+
       '<div class="k">'+t.s+' sigma'+(t.s===P.sigmaObj?' · objetivo':'')+'</div>'+
       '<div class="n mono">'+n(t.d,t.d<10?1:0)+'</div>'+
-      '<div class="y">DPMO · '+t.y+' %<br>≈ '+n(juegos,0)+' juegos/año</div></div>';
+      '<div class="y">por millón de autos · '+t.y+' %<br>≈ '+n(juegos,0)+' autos/año</div></div>';
   }).join("");
 }
 
@@ -1482,11 +1479,12 @@ function renderCharts(){
      vacio:"El límite de "+P.sigmaObj+" sigma son "+n(metaD)+" DPMO. Registra días para ver la serie contra ese límite."});
   var L4=limiteSigma(P);
   document.getElementById("metaSig").innerHTML= L4
-    ? '<span class="t">Máximo de error que permite el objetivo de '+P.sigmaObj+' sigma</span>'+
-      '<div><b>'+n(L4.dpmo)+'</b>DPMO por componente</div>'+
-      '<div><b>'+n(L4.errComp,3)+' %</b>de error por componente</div>'+
-      '<div><b>'+n(L4.errJuego,2)+' %</b>de los juegos con defecto</div>'+
-      '<div><b>'+n(L4.juegosAnio,0)+'</b>juegos al año sobre la demanda de '+n(P.demanda)+'</div>'
+    ? '<span class="t">Máximo de error que permite el objetivo de '+P.sigmaObj+
+      ' sigma, sobre los autos terminados</span>'+
+      '<div><b>'+n(L4.dpmo)+'</b>defectos por millón de autos</div>'+
+      '<div><b>'+n(L4.errComp,3)+' %</b>de los autos con defecto</div>'+
+      '<div><b>'+n(L4.juegosAnio,0)+'</b>autos al año sobre la demanda de '+n(P.demanda)+'</div>'+
+      '<div><b>'+n(L4.juegosAnio/P.dias,2)+'</b>autos al día de '+n(demandaDia(P),1)+'</div>'
     : "";
   document.getElementById("ccLeg").innerHTML=
     '<span><i class="sq" style="background:var(--s1)"></i>dentro del objetivo</span>'+
@@ -1692,7 +1690,7 @@ function actualizarCalc(){
   var def=0; frmDia.querySelectorAll("[data-causa]").forEach(function(i){def+=(+i.value||0);});
   var c=calcDia({vehiculos:veh,defectos:def,inventario:inv,paro:paro,personal:valNum("f-per")||0},P);
   document.getElementById("f-calc").innerHTML= veh>0
-    ? ('Total <b>'+n(def)+'</b> defectos · <b>'+n(c.dpmo,0)+'</b> DPMO → <b>'+(c.sigma!==null?c.sigma.toFixed(2):"—")+' σ</b> · '+
+    ? ('Total <b>'+n(def)+'</b> autos con defecto · <b>'+n(c.dpmo,0)+'</b> por millón → <b>'+(c.sigma!==null?c.sigma.toFixed(2):"—")+' σ</b> · '+
        'ciclo <b>'+seg(c.ciclo)+'</b> (takt '+seg(taktSeg(P))+') · cumplimiento <b>'+n(c.cumpl,1)+' %</b>'+
        (inv?' · cobertura <b>'+n(c.lead,2)+' d</b>':''))
     : 'Captura los juegos surtidos para ver el cálculo del día.';
@@ -1996,7 +1994,7 @@ async function descargarPlantilla(){
     ["personal","Personas del CEDIS en el día."],
     ["inventario_um","Inventario al cierre, en unidades de manejo."],
     ["paro_min","Minutos de paro no planeado."],
-    ["faltante, secuencia, danado, etiqueta, otro","Defectos del día por causa. El total se calcula solo."],
+    ["faltante, secuencia, danado, etiqueta, otro","Autos con defecto del día, por causa. El total se calcula solo."],
     ["",""],
     ["Nota","Una fila por día. Si subes una fecha que ya existe, se reemplaza."]]);
   ins["!cols"]=[{wch:42},{wch:70}];
