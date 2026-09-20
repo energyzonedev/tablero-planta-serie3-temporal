@@ -201,14 +201,38 @@ tl.from("#s6-sub", { autoAlpha: 0, y: 18, duration: 0.5, ease: "power2.out" }, 1
 tl.from("#s6-foot", { autoAlpha: 0, y: 14, duration: 0.5, ease: "power2.out" }, 14.15);
 tl.to("#s6-stat", { y: -8, duration: 0.6, ease: "sine.inOut", yoyo: true, repeat: 1 }, 14.5);
 
-window.HyperShader.init({
-  bgColor: "#1e2a38",
-  scenes: ["s5", "s6"],
-  timeline: tl,
-  transitions: [{ time: 12.75, shader: "cinematic-zoom", duration: 0.5 }]
-});
+if (window.HyperShader) {
+  window.HyperShader.init({
+    bgColor: "#1e2a38",
+    scenes: ["s5", "s6"],
+    timeline: tl,
+    transitions: [{ time: 12.75, shader: "cinematic-zoom", duration: 0.5 }]
+  });
+} else {
+  /* Sin el shader: corte seco para que el cierre siempre se vea */
+  tl.set("#s5", { opacity: 0 }, 13);
+  tl.set("#s6", { opacity: 1 }, 13);
+}
 
 window.__timelines["main"] = tl;
+
+/* Reproduccion autonoma al abrir la pagina directamente en el navegador.
+   Si algun dia se importa a HyperFrames, su runtime toma el control. */
+(function () {
+  var driven = !!(window.HyperFrame || window.Hyperframe || window.__hyperframeRuntime);
+  if (driven) { return; }
+  var started = false;
+  function start() {
+    if (started) { return; }
+    started = true;
+    tl.play(0);
+  }
+  if (document.fonts && document.fonts.ready && document.fonts.ready.then) {
+    document.fonts.ready.then(start);
+  }
+  window.addEventListener("load", start);
+  document.addEventListener("click", function () { tl.play(0); });
+})();
 </script>
 </body>
 </html>
