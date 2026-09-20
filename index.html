@@ -610,12 +610,12 @@ dialog.wide{width:min(860px,calc(100vw - 32px))}
   <section id="secCal">
     <div class="shead">
       <h2>Calidad</h2>
-      <p>Cada día contra el objetivo sigma, y los juegos surtidos contra la demanda diaria</p>
+      <p>Cada mes contra el objetivo sigma, y los juegos surtidos contra la demanda diaria</p>
     </div>
     <div class="stack">
       <div class="card">
         <div class="chead">
-          <h3>Carta de control de defectos (I-MR)</h3>
+          <h3>Calidad por mes · carta de control (I-MR)</h3>
           <span class="tag" id="ccTag"></span>
         </div>
         <div class="ch" id="chCtrl"></div>
@@ -1009,6 +1009,30 @@ function calcDia(r,p){
           yield:isFinite(dpmo)?(1-dpmo/1e6)*100:NaN};
 }
 /* Carta I-MR: límites con el rango móvil promedio (d2 = 1.128 → 2.66·MR̄) */
+var MESL=["ene","feb","mar","abr","may","jun","jul","ago","sep","oct","nov","dic"];
+function agrupaMes(lista){
+  var mapa={}, orden=[];
+  lista.forEach(function(r){
+    var k=String(r.fecha).slice(0,7);
+    if(!mapa[k]){ mapa[k]={mes:k,vehiculos:0,defectos:0,dias:0,
+      l:MESL[+k.slice(5,7)-1]+" "+k.slice(2,4)}; orden.push(k); }
+    mapa[k].vehiculos+=r.vehiculos||0; mapa[k].defectos+=r.defectos||0; mapa[k].dias++;
+  });
+  orden.sort();
+  return orden.map(function(k){
+    var m=mapa[k];
+    m.dpmo=m.vehiculos>0?(m.defectos/m.vehiculos)*1e6:NaN;
+    m.sigma=isFinite(m.dpmo)?sigmaFromDpmo(m.dpmo):null;
+    return m;
+  });
+}
+function limitesDe(valores){
+  var d=valores.filter(isFinite);
+  if(d.length<3)return null;
+  var mr=[]; for(var i=1;i<d.length;i++)mr.push(Math.abs(d[i]-d[i-1]));
+  var m=media(d), mrb=media(mr);
+  return {media:m,lsc:m+2.66*mrb,lic:Math.max(0,m-2.66*mrb),mr:mrb,n:d.length};
+}
 function limites(lista){
   var d=lista.map(function(r){return calcDia(r,P).dpmo;}).filter(isFinite);
   if(d.length<3)return null;
@@ -1028,14 +1052,14 @@ function generarDemo(){
   function rnd(){ semilla=(semilla*1103515245+12345)%2147483648; return semilla/2147483648; }
   var f=new Date(); f=new Date(Date.UTC(f.getFullYear(),f.getMonth(),f.getDate()-1));
   var fechas=[];
-  while(fechas.length<30){
+  while(fechas.length<300){                 /* un año: 25 días al mes, de lunes a sábado */
     var dw=f.getUTCDay();
-    if(dw!==0&&dw!==6) fechas.push(f.toISOString().slice(0,10));
+    if(dw!==0) fechas.push(f.toISOString().slice(0,10));
     f=new Date(f.getTime()-86400000);
   }
   var pesos=[.38,.24,.18,.12,.08];
   fechas.reverse().forEach(function(fecha,i){
-    var tarde=i>=22;                         /* deriva en los últimos 8 días */
+    var tarde=i>=fechas.length-40;           /* deriva en los últimos dos meses */
     var veh=Math.round(195+rnd()*8-(tarde?4:0));
     var dpmoObj=2400+rnd()*3400+(tarde?3200:0);
     var def=Math.max(0,Math.round(dpmoObj*veh/1e6));
@@ -1058,7 +1082,7 @@ function renderDemoBanner(){
   var txt=reales.length
     ? 'Tus '+reales.length+' registro'+(reales.length>1?'s':'')+' reales vuelven al quitarlos.'
     : 'Cuando el CEDIS cargue sus registros reales, el tablero cambia a esos datos.';
-  el.innerHTML='<div class="banner demo"><span><b>Estás viendo 30 días de ejemplo.</b> '+
+  el.innerHTML='<div class="banner demo"><span><b>Estás viendo un año de días de ejemplo.</b> '+
     'Muestran cómo se comporta el tablero; no son datos de la operación y no se guardan. '+txt+'</span>'+
     (reales.length?'<button class="btn sm" id="demoOff">Ver mis registros</button>':'')+
     (db?'<button class="btn sm pri" id="demoNew">Subir archivo</button>':'')+'</div>';
@@ -1461,22 +1485,25 @@ function renderCharts(){
   var last=ventana();
   var metaD=dpmoFromSigma(P.sigmaObj), lim=limites(last), takt=taktSeg(P);
 
-  /* carta de control */
+  /* carta de control por mes */
   document.getElementById("ccTag").textContent=demoOn?"datos de ejemplo":"";
+  var meses=agrupaMes(vista());
+  var limM=limitesDe(meses.map(function(m){return m.dpmo;}));
   var refs=[{v:metaD,c:css("--s2"),l:"meta "+P.sigmaObj+"σ",dash:"5 4",w:2}];
-  if(lim){
-    refs.push({v:lim.lsc,c:css("--crit"),l:"LSC"});
-    refs.push({v:lim.lic,c:css("--crit"),l:"LIC"});
-    refs.push({v:lim.media,c:css("--ink-muted"),l:"media",dash:"2 3"});
+  if(limM){
+    refs.push({v:limM.lsc,c:css("--crit"),l:"LSC"});
+    refs.push({v:limM.lic,c:css("--crit"),l:"LIC"});
+    refs.push({v:limM.media,c:css("--ink-muted"),l:"media",dash:"2 3"});
   }
   lineChart(document.getElementById("chCtrl"),
-    [{name:"DPMO",c:css("--axis"),pts:last.map(function(r){
-      return {l:fechaCorta(r.fecha),v:calcDia(r,P).dpmo};})}],
-    {h:230,w:1100,R:62,refs:refs,ticks:15,
+    [{name:"Defectos por millón de autos",c:css("--axis"),
+      pts:meses.map(function(m){return {l:m.l,v:m.dpmo};})}],
+    {h:230,w:1100,R:62,refs:refs,ticks:14,
      dotColor:function(v){
-       if(lim&&(v>lim.lsc||v<lim.lic))return css("--crit");
+       if(limM&&(v>limM.lsc||v<limM.lic))return css("--crit");
        return v>metaD?css("--warn"):css("--s1"); },
-     vacio:"El límite de "+P.sigmaObj+" sigma son "+n(metaD)+" DPMO. Registra días para ver la serie contra ese límite."});
+     vacio:"El límite de "+P.sigmaObj+" sigma son "+n(metaD)+" defectos por millón de autos. "+
+           "Registra días para ver los meses contra ese límite."});
   var L4=limiteSigma(P);
   document.getElementById("metaSig").innerHTML= L4
     ? '<span class="t">Máximo de error que permite el objetivo de '+P.sigmaObj+
@@ -1487,6 +1514,8 @@ function renderCharts(){
       '<div><b>'+n(L4.juegosAnio/P.dias,2)+'</b>autos al día de '+n(demandaDia(P),1)+'</div>'
     : "";
   document.getElementById("ccLeg").innerHTML=
+    (meses.length?'<span style="color:var(--ink-2)">'+meses.length+' mes'+(meses.length>1?'es':'')+
+      ' · cada punto suma los autos y los defectos del mes</span>':'')+
     '<span><i class="sq" style="background:var(--s1)"></i>dentro del objetivo</span>'+
     '<span><i class="sq" style="background:var(--warn)"></i>sobre la meta de '+P.sigmaObj+'σ</span>'+
     '<span><i class="sq" style="background:var(--crit)"></i>fuera de control</span>'+
