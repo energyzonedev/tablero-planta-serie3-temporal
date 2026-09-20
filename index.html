@@ -586,7 +586,30 @@ dialog.wide{width:min(860px,calc(100vw - 32px))}
     <h2 id="indTitle">Indicadores del CEDIS</h2>
   </div>
 
-  <!-- ============ 1. INDICADORES ============ -->
+  <!-- ============ 1. CAPACIDAD DEL CEDIS ============ -->
+  <section id="secPlanta">
+    <div class="shead">
+      <h2>Capacidad del CEDIS</h2>
+      <p>Cifras tomadas del documento del proyecto: demanda del Serie 3, componentes y superficie del almacén</p>
+    </div>
+    <div class="kpis" id="kpisPlanta"></div>
+    <div style="height:12px"></div>
+    <div class="card">
+      <div class="chead"><h3>Producción del Serie 3 en la planta cliente</h3><span class="tag">2021–2032</span></div>
+      <p class="csub">Producción histórica del Serie 3 entre 2021 y 2025 y el pronóstico del proyecto
+      para 2027–2032, calculado con promedio móvil ponderado. Ese volumen define el consumo de
+      componentes del CEDIS.</p>
+      <div class="ch" id="chProd"></div>
+      <div class="legend">
+        <span><i class="sq" style="background:var(--s1)"></i>Producción reportada</span>
+        <span><i class="sq" style="background:var(--s2)"></i>Pronóstico del proyecto</span>
+      </div>
+    </div>
+    <div style="height:12px"></div>
+    <div class="sig" id="sigmaRef"></div>
+  </section>
+
+  <!-- ============ 2. OPERACIÓN DIARIA ============ -->
   <section id="secKpi">
     <div class="shead">
       <h2 id="kpiTitle">Operación diaria</h2>
@@ -651,29 +674,6 @@ dialog.wide{width:min(860px,calc(100vw - 32px))}
         <div class="legend" id="leadLeg"></div>
       </div>
     </div>
-  </section>
-
-  <!-- ============ 4. CAPACIDAD DEL CEDIS ============ -->
-  <section id="secPlanta">
-    <div class="shead">
-      <h2>Capacidad del CEDIS</h2>
-      <p>Cifras tomadas del documento del proyecto: demanda del Serie 3, componentes y superficie del almacén</p>
-    </div>
-    <div class="kpis" id="kpisPlanta"></div>
-    <div style="height:12px"></div>
-    <div class="card">
-      <div class="chead"><h3>Producción del Serie 3 en la planta cliente</h3><span class="tag">2021–2032</span></div>
-      <p class="csub">Producción histórica del Serie 3 entre 2021 y 2025 y el pronóstico del proyecto
-      para 2027–2032, calculado con promedio móvil ponderado. Ese volumen define el consumo de
-      componentes del CEDIS.</p>
-      <div class="ch" id="chProd"></div>
-      <div class="legend">
-        <span><i class="sq" style="background:var(--s1)"></i>Producción reportada</span>
-        <span><i class="sq" style="background:var(--s2)"></i>Pronóstico del proyecto</span>
-      </div>
-    </div>
-    <div style="height:12px"></div>
-    <div class="sig" id="sigmaRef"></div>
   </section>
 
   <!-- ============ 5. REGISTROS ============ -->
