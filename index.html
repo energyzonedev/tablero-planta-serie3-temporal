@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="robots" content="noindex">
 <style>:root{box-sizing:border-box}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
-<title>Presentación Planta Serie 3</title>
+<title>Presentación CEDIS BMW 320i</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
 <style>
 :root{
@@ -295,7 +295,7 @@ section{margin-top:26px}
 .alerts .d b{font-weight:600;color:var(--ink)}
 
 /* ---------- KPI ---------- */
-.kpis{display:grid;grid-template-columns:repeat(2,1fr);grid-auto-rows:minmax(178px,1fr);gap:12px}
+.kpis{display:grid;grid-template-columns:repeat(2,1fr);grid-auto-rows:minmax(202px,1fr);gap:12px}
 @media(min-width:720px){.kpis{grid-template-columns:repeat(3,1fr)}}
 @media(min-width:1100px){.kpis{grid-template-columns:repeat(4,1fr)}}
 .kpi{height:100%}
@@ -485,7 +485,7 @@ dialog.wide{width:min(860px,calc(100vw - 32px))}
         <rect x="1" y="1" width="40" height="40" rx="11" fill="var(--ink)"/>
         <text x="21" y="25.6" text-anchor="middle" fill="#ffffff" font-family="IBM Plex Sans, system-ui, sans-serif" font-size="13" font-weight="600" letter-spacing=".4">BMW</text>
       </svg>
-      <b>Planta San Luis Potosí<small>Proyecto académico Serie 3 · Villa de Reyes, S.L.P.</small></b>
+      <b>CEDIS BMW 320i<small>Proyecto académico · Logistik II, San Luis Potosí</small></b>
     </a>
     <div class="hd-r">
       <div class="sync"><span class="dot" id="dot"></span><span id="syncTxt">Conectando…</span></div>
@@ -509,8 +509,8 @@ dialog.wide{width:min(860px,calc(100vw - 32px))}
   <canvas id="gridfx" aria-hidden="true"></canvas>
   <div class="hero-in">
     <div>
-      <h1>Tablero de producción de la planta</h1>
-      <p>Elige un modelo para ver su ficha y cómo va la producción de la planta.</p>
+      <h1>Tablero de operación del CEDIS</h1>
+      <p>Elige un modelo para ver su ficha y cómo va el surtido de componentes al ensamble.</p>
     </div>
   </div>
 </div>
@@ -518,8 +518,8 @@ dialog.wide{width:min(860px,calc(100vw - 32px))}
 <div class="showroom">
   <section class="sr-in" id="secModelo">
     <div class="sr-head">
-      <h2 id="mTitle">Modelos que se fabrican en la planta</h2>
-      <p>El proyecto se enfoca en el Serie 3</p>
+      <h2 id="mTitle">Modelos de la planta cliente</h2>
+      <p>El CEDIS surte el Serie 3; el 320i es el vehículo de referencia</p>
     </div>
     <div class="models">
       <aside class="filters" aria-label="Filtros de modelo">
@@ -579,7 +579,7 @@ dialog.wide{width:min(860px,calc(100vw - 32px))}
 
   <div class="ind-head">
     <h2 id="indTitle">Indicadores del Serie 3</h2>
-    <p>Indicadores de producción, calidad, ritmo y flujo, capacidad de la planta y registros en un solo panel.</p>
+    <p>Indicadores del CEDIS, calidad, ritmo y flujo, capacidad del almacén y registros en un solo panel.</p>
   </div>
 
   <div id="demoBanner"></div>
@@ -587,7 +587,7 @@ dialog.wide{width:min(860px,calc(100vw - 32px))}
   <!-- ============ 1. INDICADORES ============ -->
   <section id="secKpi">
     <div class="shead">
-      <h2 id="kpiTitle">Indicadores de producción</h2>
+      <h2 id="kpiTitle">Indicadores del CEDIS</h2>
       <p id="kpiSub"></p>
       <div class="right">
         <div class="seg" role="group" aria-label="Periodo" id="periodo">
@@ -627,13 +627,13 @@ dialog.wide{width:min(860px,calc(100vw - 32px))}
           </div>
         </div>
         <div class="card">
-          <div class="chead"><h3>Cumplimiento del programa de producción</h3></div>
+          <div class="chead"><h3>Cumplimiento del surtido diario</h3></div>
           <p class="csub" id="cumSub"></p>
           <div class="ch" id="chCum"></div>
           <div class="legend">
-            <span><i class="sq" style="background:var(--s1)"></i>cumplió el programa diario</span>
+            <span><i class="sq" style="background:var(--s1)"></i>cubrió la demanda diaria</span>
             <span><i class="sq" style="background:var(--warn)"></i>quedó corto</span>
-            <span><i style="background:var(--s2)"></i>programa diario</span>
+            <span><i style="background:var(--s2)"></i>demanda diaria</span>
           </div>
         </div>
       </div>
@@ -644,7 +644,7 @@ dialog.wide{width:min(860px,calc(100vw - 32px))}
   <section id="secFlujo">
     <div class="shead">
       <h2>Ritmo y flujo</h2>
-      <p>El ciclo real de la línea de ensamble contra el takt, y días de cobertura de materiales</p>
+      <p>El ciclo real del CEDIS contra el takt de la línea, y los días de cobertura del inventario</p>
     </div>
     <div class="grid2b">
       <div class="card">
@@ -654,7 +654,7 @@ dialog.wide{width:min(860px,calc(100vw - 32px))}
         <div class="legend" id="taktLeg"></div>
       </div>
       <div class="card">
-        <div class="chead"><h3>Cobertura de materiales</h3></div>
+        <div class="chead"><h3>Cobertura del inventario</h3></div>
         <p class="csub" id="leadSub"></p>
         <div class="ch" id="chLead"></div>
         <div class="legend" id="leadLeg"></div>
@@ -662,22 +662,23 @@ dialog.wide{width:min(860px,calc(100vw - 32px))}
     </div>
   </section>
 
-  <!-- ============ 4. CAPACIDAD DE LA PLANTA ============ -->
+  <!-- ============ 4. CAPACIDAD DEL CEDIS ============ -->
   <section id="secPlanta">
     <div class="shead">
-      <h2>Capacidad de la planta</h2>
-      <p>Cifras publicadas de la planta San Luis Potosí y el volumen de Serie 3 con el que se dimensiona el proyecto</p>
+      <h2>Capacidad del CEDIS</h2>
+      <p>Dimensionamiento del proyecto: demanda del Serie 3, componentes y superficie del almacén</p>
     </div>
     <div class="kpis" id="kpisPlanta"></div>
     <div style="height:12px"></div>
     <div class="card">
-      <div class="chead"><h3>Producción de la planta</h3><span class="tag">2021–2032</span></div>
-      <p class="csub">Unidades que la planta produjo entre 2021 y 2025, y el volumen que nuestro
-      proyecto asume para 2027–2032. Ese es el volumen que tiene que ensamblar la línea.</p>
+      <div class="chead"><h3>Producción del Serie 3 en la planta cliente</h3><span class="tag">2021–2032</span></div>
+      <p class="csub">Producción histórica del Serie 3 entre 2021 y 2025 y el pronóstico del proyecto
+      para 2027–2032, calculado con promedio móvil ponderado. Ese volumen define el consumo de
+      componentes del CEDIS.</p>
       <div class="ch" id="chProd"></div>
       <div class="legend">
         <span><i class="sq" style="background:var(--s1)"></i>Producción reportada</span>
-        <span><i class="sq" style="background:var(--s2)"></i>Volumen planeado del proyecto</span>
+        <span><i class="sq" style="background:var(--s2)"></i>Pronóstico del proyecto</span>
       </div>
     </div>
     <div style="height:12px"></div>
@@ -687,7 +688,7 @@ dialog.wide{width:min(860px,calc(100vw - 32px))}
   <!-- ============ 5. REGISTROS ============ -->
   <section id="secReg">
     <div class="shead">
-      <h2>Registros de producción</h2>
+      <h2>Registros de operación del CEDIS</h2>
       <p id="cnt"></p>
       <div class="right">
         <button class="btn sm pri" id="btnSubir2" hidden>Subir archivo</button>
@@ -732,8 +733,8 @@ dialog.wide{width:min(860px,calc(100vw - 32px))}
       <fieldset>
         <legend>Operación</legend>
         <div class="fld"><label for="f-fecha">Fecha</label><input id="f-fecha" type="date" required></div>
-        <div class="fld"><label for="f-veh">Vehículos ensamblados</label><input id="f-veh" type="number" min="0" step="1" inputmode="numeric" required><small>Unidades que salieron de línea</small></div>
-        <div class="fld"><label for="f-per">Personal</label><input id="f-per" type="number" min="0" step="1" inputmode="numeric"><small>Personas en la planta</small></div>
+        <div class="fld"><label for="f-veh">Juegos surtidos</label><input id="f-veh" type="number" min="0" step="1" inputmode="numeric" required><small>Juegos de componentes entregados al ensamble</small></div>
+        <div class="fld"><label for="f-per">Personal</label><input id="f-per" type="number" min="0" step="1" inputmode="numeric"><small>Personas en el CEDIS</small></div>
         <div class="fld"><label for="f-inv">Inventario al cierre</label><input id="f-inv" type="number" min="0" step="1" inputmode="numeric"><small>Unidades de manejo (UM)</small></div>
         <div class="fld"><label for="f-paro">Paro no planeado</label><input id="f-paro" type="number" min="0" step="1" inputmode="numeric"><small>Minutos</small></div>
       </fieldset>
@@ -776,8 +777,8 @@ dialog.wide{width:min(860px,calc(100vw - 32px))}
         <summary>Columnas que reconoce el tablero</summary>
         <table>
           <tr><td>fecha</td><td>Obligatoria. AAAA-MM-DD, DD/MM/AAAA o fecha de Excel.</td></tr>
-          <tr><td>vehiculos</td><td>Obligatoria. Vehículos ensamblados en el día (entero mayor que cero).</td></tr>
-          <tr><td>personal</td><td>Personas de la planta en el día.</td></tr>
+          <tr><td>vehiculos</td><td>Obligatoria. Juegos de componentes surtidos en el día (entero mayor que cero).</td></tr>
+          <tr><td>personal</td><td>Personas del CEDIS en el día.</td></tr>
           <tr><td>inventario_um</td><td>Inventario al cierre, en unidades de manejo.</td></tr>
           <tr><td>paro_min</td><td>Minutos de paro no planeado.</td></tr>
           <tr><td>defectos</td><td>Total de defectos. Si falta, se suma de las causas.</td></tr>
@@ -847,11 +848,12 @@ function hidratarImgs(root){ (root||document).querySelectorAll("img[data-img]").
 
 /* ================= datos verificados del proyecto ================= */
 var HIST=[{a:2021,v:63280},{a:2022,v:43967},{a:2023,v:74824},{a:2024,v:55998},{a:2025,v:57746}];
-var FCST=[{a:2027,v:59548},{a:2028,v:59645},{a:2029,v:59741},{a:2030,v:59837},
-          {a:2031,v:59933},{a:2032,v:60030}];
-var PLANTA={personal:3700,capacidad:175000};
-var DEF={demanda:59548,dias:250,turnos:2,horas:8,descanso:30,oportunidades:26,
-         consumoUM:2043.8,sigmaObj:4,cobMin:1.5,cobMax:3};
+/* pronóstico por promedio móvil ponderado del documento del proyecto */
+var FCST=[{a:2027,v:59020},{a:2028,v:59940},{a:2029,v:58841},{a:2030,v:59097},
+          {a:2031,v:59202},{a:2032,v:59196}];
+var CEDIS={superficie:17020,almacen:11220,reserva:2205,contenedoresMes:31290,largo:185,ancho:92,abc:'3 / 5 / 10'};
+var DEF={demanda:59020,dias:300,turnos:3,horas:7,descanso:0,oportunidades:22,
+         consumoUM:1251.6,sigmaObj:4,cobMin:3,cobMax:10};
 var SIGTAB=[{s:1,d:690000,y:"30.85"},{s:2,d:308000,y:"69.20"},{s:3,d:66800,y:"93.32"},
             {s:4,d:6210,y:"99.38"},{s:5,d:233,y:"99.977"},{s:6,d:3.4,y:"99.99966"}];
 var CAUSAS=[{k:"faltante",l:"Material faltante"},{k:"secuencia",l:"Fuera de secuencia"},
@@ -859,7 +861,7 @@ var CAUSAS=[{k:"faltante",l:"Material faltante"},{k:"secuencia",l:"Fuera de secu
             {k:"otro",l:"Otra causa"}];
 function causaLabel(k){ for(var i=0;i<CAUSAS.length;i++)if(CAUSAS[i].k===k)return CAUSAS[i].l; return "Sin clasificar"; }
 
-/* modelos que se fabrican en la planta; el proyecto se enfoca en el Serie 3 */
+/* modelos de la planta cliente; el CEDIS del proyecto surte el Serie 3 */
 var MODELOS=[
   {k:"serie3",nombre:"Serie 3",cat:"sedan",serie:"3",tipo:"Sedán",desc:"Modelo del proyecto",proyecto:true,
    img:"s3_frente",pos:"50% 74%",alt:"BMW Serie 3 Sedán azul, vista frontal"},
@@ -887,7 +889,8 @@ var CARAC={
     ["Motorizaciones","Gasolina, diésel e híbrida enchufable (330e), según el mercado"],
     ["Tracción","Trasera o integral xDrive"],
     ["Transmisión","Automática de 8 velocidades"],
-    ["Planta de fabricación","Villa de Reyes, San Luis Potosí · inaugurada en junio de 2019"]],
+    ["Vehículo de referencia del proyecto","320i 2026, según la ficha técnica de BMW México"],
+    ["Planta que abastece el CEDIS","BMW Group Planta San Luis Potosí, en Villa de Reyes"]],
    fuentes:[["BMW Group PressClub México","https://www.press.bmwgroup.com/mexico/article/detail/T0309300ES/bmw-group-planta-san-luis-potos%C3%AD-celebra-su-primer-aniversario-en-m%C3%A9xico?language=es"],
             ["Wikipedia, BMW 3 Series (G20)","https://en.wikipedia.org/wiki/BMW_3_Series_(G20)"]]},
   serie2:{filas:[["Carrocería","Coupé de 2 puertas"],["Generación","G42"],["Relación con el proyecto","Fuera del alcance"]]},
@@ -995,7 +998,9 @@ function calcDia(r,p){
   var sig=isFinite(dpmo)?sigmaFromDpmo(dpmo):null;
   var lead=(r.inventario>0&&p.consumoUM>0)?r.inventario/p.consumoUM:NaN;
   var dd=demandaDia(p);
-  return {ciclo:ciclo,dpmo:dpmo,sigma:sig,lead:lead,opor:opor,
+  var errComp=isFinite(dpmo)?dpmo/1e4:NaN;                 /* % de error por componente */
+  var errJuego=isFinite(dpmo)?(1-Math.pow(1-dpmo/1e6,p.oportunidades))*100:NaN;  /* % de juegos con al menos un defecto */
+  return {ciclo:ciclo,dpmo:dpmo,sigma:sig,lead:lead,opor:opor,errComp:errComp,errJuego:errJuego,
           cumpl:dd>0?r.vehiculos/dd*100:NaN,
           disp:disp>0?neto/disp*100:NaN,
           prod:r.personal>0?r.vehiculos/r.personal:NaN,
@@ -1029,7 +1034,7 @@ function generarDemo(){
   var pesos=[.38,.24,.18,.12,.08];
   fechas.reverse().forEach(function(fecha,i){
     var tarde=i>=22;                         /* deriva en los últimos 8 días */
-    var veh=Math.round(236+rnd()*13-(tarde?5:0));
+    var veh=Math.round(195+rnd()*8-(tarde?4:0));
     var opor=veh*DEF.oportunidades;
     var dpmoObj=4300+rnd()*2400+(tarde?1300:0);
     var def=Math.max(0,Math.round(dpmoObj*opor/1e6));
@@ -1038,8 +1043,8 @@ function generarDemo(){
       var v=j===CAUSAS.length-1?rest:Math.min(rest,Math.round(def*pesos[j]*(0.75+rnd()*0.5)));
       causas[c.k]=v; rest-=v; });
     out.push({fecha:fecha,vehiculos:veh,defectos:def,causas:causas,
-      personal:Math.round(3660+rnd()*45),
-      inventario:Math.round(4500+rnd()*800-(tarde?600:0)),
+      personal:Math.round(62+rnd()*8),
+      inventario:Math.round(5200+rnd()*1600-(tarde?900:0)),
       paro:rnd()<0.4?Math.round(5+rnd()*28):0, demo:true});
   });
   return out;
@@ -1051,7 +1056,7 @@ function renderDemoBanner(){
   if(!demoOn){ el.innerHTML=""; return; }
   var txt=reales.length
     ? 'Tus '+reales.length+' registro'+(reales.length>1?'s':'')+' reales vuelven al quitarlos.'
-    : 'Cuando la planta cargue sus registros reales, el tablero cambia a esos datos.';
+    : 'Cuando el CEDIS cargue sus registros reales, el tablero cambia a esos datos.';
   el.innerHTML='<div class="banner demo"><span><b>Estás viendo 30 días de ejemplo.</b> '+
     'Muestran cómo se comporta el tablero; no son datos de la operación y no se guardan. '+txt+'</span>'+
     (reales.length?'<button class="btn sm" id="demoOff">Ver mis registros</button>':'')+
@@ -1088,9 +1093,9 @@ function evaluar(){
     " DPMO) contra "+P.sigmaObj+" σ ("+n(metaD)+" DPMO).");
   /* 4. días sobre el takt */
   var sobreTakt=calc.filter(function(c){return c.ciclo>takt;}).length;
-  if(sobreTakt) push(sobreTakt/calc.length>0.3?"cr":"wn","Ritmo por debajo del consumo de la planta",
+  if(sobreTakt) push(sobreTakt/calc.length>0.3?"cr":"wn","Ritmo por debajo del consumo de la línea",
     sobreTakt+" de "+calc.length+" días con ciclo mayor al takt de "+seg(takt)+" min:s. "+
-    "Son días en que la línea ensambló más lento de lo que exige la demanda.");
+    "Son días en que la línea consumió más rápido de lo que surtió el CEDIS.");
   /* 5. cobertura fuera de banda */
   var bajos=calc.filter(function(c){return isFinite(c.lead)&&c.lead<P.cobMin;}).length;
   var altos=calc.filter(function(c){return isFinite(c.lead)&&c.lead>P.cobMax;}).length;
@@ -1175,22 +1180,28 @@ function kpisDe(scope){
   var cuando=ult?(fechaCorta(ult.fecha)+(demoOn?" (ejemplo)":"")):"";
 
   if(scope==="planta"){
-    var util=P.demanda/PLANTA.capacidad*100;
     el.innerHTML=
-      kpi({lb:"Personal de la planta",v:n(PLANTA.personal),u:"asociados",
-        sub:"Plantilla publicada de la planta San Luis Potosí"})+
-      kpi({lb:"Capacidad instalada",v:n(PLANTA.capacidad),u:"veh/año",
-        sub:"Techo anual de producción de la planta"})+
-      kpi({lb:"Volumen del proyecto",v:n(P.demanda),u:"veh/año",
-        sub:"Serie 3 planeados para el año base 2027"})+
-      kpi({lb:"Utilización de la capacidad",v:n(util,1),u:"%",
-        cls:util>90?"cr":(util>75?"wn":"ok"),
-        sub:"Holgura de "+n(PLANTA.capacidad-P.demanda)+" veh/año sobre el volumen del proyecto"});
+      kpi({lb:"Demanda 2027",v:n(P.demanda),u:"veh/año",
+        sub:"Pronóstico del Serie 3 por promedio móvil ponderado"})+
+      kpi({lb:"Demanda diaria",v:n(demandaDia(P),1),u:"veh/día",
+        sub:n(P.dias)+" días operativos al año, de lunes a sábado"})+
+      kpi({lb:"Componentes por vehículo",v:n(P.oportunidades),u:"conjuntos",
+        sub:"Lista de materiales (BOM) del 320i de referencia"})+
+      kpi({lb:"Contenedores por mes",v:n(CEDIS.contenedoresMes),u:"contenedores",
+        sub:"Flujo mensual considerado en el estudio de localización"})+
+      kpi({lb:"Superficie construida",v:n(CEDIS.superficie),u:"m²",
+        sub:CEDIS.largo+" × "+CEDIS.ancho+" m en el Parque Industrial Logistik II"})+
+      kpi({lb:"Almacenamiento con pasillos",v:n(CEDIS.almacen),u:"m²",
+        sub:"Racks, calles y circulación de montacargas"})+
+      kpi({lb:"Reserva de crecimiento",v:n(CEDIS.reserva),u:"m²",
+        sub:"15 % del subtotal, para ampliación futura"})+
+      kpi({lb:"Inventario ABC",v:CEDIS.abc,u:"días",
+        sub:"Cobertura de las clases A, B y C del análisis ABC"});
     document.querySelectorAll("#kpisPlanta .spark").forEach(function(s){s.remove();});
     return;
   }
 
-  document.getElementById("kpiTitle").textContent="Indicadores de producción de la planta";
+  document.getElementById("kpiTitle").textContent="Indicadores del CEDIS";
   document.getElementById("kpiSub").textContent= ult
     ? ("Último día: "+fechaLarga(ult.fecha)+(demoOn?" (ejemplo)":"")+" · la línea chica muestra el periodo")
     : "Sin días en la serie: se muestran solo los valores de diseño";
@@ -1213,16 +1224,16 @@ function kpisDe(scope){
       cls:atraso===null?"":(atraso>0?"cr":"ok"),
       pill:atraso===null?null:(atraso>0?"▲ ":"▼ ")+Math.abs(atraso).toFixed(0)+" s contra takt",
       pillCls:atraso===null?"":(atraso>0?"cr":"ok"), spark:ult?"ciclo":"",
-      sub:ult?("Ritmo real de la línea el "+cuando):"Sin días en la serie",
+      sub:ult?("Ritmo real del CEDIS el "+cuando):"Sin días en la serie",
       why:"<code>(tiempo disponible − paro) ÷ vehículos del día</code><br>"+
            (ult?("("+n(tiempoDisponibleSeg(P))+" s − "+n((ult.paro||0)*60)+" s) ÷ "+
                  n(ult.vehiculos)+" veh = "+n(c.ciclo,1)+" s"):"Falta el registro del día")+
            "<em>Por encima del takt, vamos atrasados contra el consumo de la línea.</em>"})+
 
-    kpi({lb:"Cumplimiento del programa",v:c?n(c.cumpl,1):"—",u:"%",
+    kpi({lb:"Cumplimiento del surtido",v:c?n(c.cumpl,1):"—",u:"%",
       cls:c?(c.cumpl>=100?"ok":(c.cumpl>=97?"wn":"cr")):"",
       pill:dCum?dCum.txt:null,pillCls:dCum?(dCum.d>=0?"ok":"cr"):"", spark:ult?"cumpl":"",
-      sub:ult?("Vehículos ensamblados contra el programa diario el "+cuando):"Sin días en la serie",
+      sub:ult?("Juegos surtidos contra la demanda diaria el "+cuando):"Sin días en la serie",
       why:"<code>vehículos ensamblados ÷ programa diario</code><br>"+
            (ult?(n(ult.vehiculos)+" ÷ "+n(demandaDia(P),2)+" = "+n(c.cumpl,1)+" %"):"Falta el registro del día")+
            "<em>Verde desde 100 %, ámbar de 97 a 100 %, rojo debajo de 97 %.</em>"})+
@@ -1238,12 +1249,17 @@ function kpisDe(scope){
       cls:(c&&c.sigma!==null)?(c.sigma>=P.sigmaObj?"ok":"cr"):"",
       pill:dSig?dSig.txt:null,pillCls:dSig?(dSig.d>=0?"ok":"cr"):"",
       spark:ult?"sigma":"",
-      sub:c&&isFinite(c.dpmo)?(n(c.dpmo,0)+" DPMO · límite "+n(metaD)+" DPMO ("+P.sigmaObj+" σ)"):
-          ("Objetivo del proyecto: "+P.sigmaObj+" σ"),
+      sub:c&&isFinite(c.dpmo)?(n(c.dpmo,0)+" DPMO · "+n(c.errComp,3)+" % de error por componente · límite "+
+          n(metaD)+" DPMO ("+P.sigmaObj+" σ)"):("Objetivo del proyecto: "+P.sigmaObj+" σ"),
       why:"<code>Φ⁻¹(1 − DPMO/10⁶) + 1.5</code><br>"+
            (c&&c.sigma!==null?(n(c.dpmo,0)+" DPMO → "+c.sigma.toFixed(2)+" σ")
                              :"Falta el registro del día")+
            "<em>Corrimiento de 1.5σ, convención estándar de Six Sigma.</em>"})+
+
+    kpi({lb:"Error proyectado",v:c&&isFinite(c.errJuego)?n(c.errJuego,2):"—",u:"% de los juegos",
+      cls:c&&isFinite(c.errJuego)?(c.sigma>=P.sigmaObj?"ok":"cr"):"", spark:ult?"errJuego":"",
+      sub:c&&isFinite(c.errJuego)?("≈ "+n(c.errJuego/100*P.demanda,0)+" juegos con defecto al año sobre la demanda de "+n(P.demanda)):
+          "Se calcula sobre la demanda anual de "+n(P.demanda)+" vehículos"})+
 
     kpi({lb:"Cobertura",v:c&&isFinite(c.lead)?n(c.lead,2):"—",u:"días",
       cls:c&&isFinite(c.lead)?((c.lead<P.cobMin)?"cr":(c.lead>P.cobMax?"wn":"ok")):"", spark:ult?"lead":"",
@@ -1253,16 +1269,16 @@ function kpisDe(scope){
              n(c.lead,2)+" días"):"Falta el inventario del día")+
            "<em>Consumo de "+n(P.consumoUM,1)+" UM/día: cálculo de empaque del proyecto.</em>"})+
 
-    kpi({lb:"Productividad",v:c&&isFinite(c.prod)?n(c.prod*100,2):"—",u:"veh por cada 100 personas",
+    kpi({lb:"Productividad",v:c&&isFinite(c.prod)?n(c.prod,2):"—",u:"juegos por persona",
       spark:ult?"prod":"",
-      sub:ult&&ult.personal?(n(ult.personal)+" personas en la planta el "+cuando):"Sin personal registrado",
+      sub:ult&&ult.personal?(n(ult.personal)+" personas en el CEDIS el "+cuando):"Sin personal registrado",
       why:"<code>vehículos ensamblados ÷ personal × 100</code><br>"+
            (ult&&ult.personal?(n(ult.vehiculos)+" ÷ "+n(ult.personal)+" = "+n(c.prod,2)):"Falta el personal del día")+
-           "<em>Plantilla publicada de referencia: "+n(PLANTA.personal)+" asociados.</em>"});
+           "<em>Personal propio del CEDIS, no de la planta cliente.</em>"});
 
   /* sparklines */
   var fns={ciclo:function(x){return x.ciclo;},cumpl:function(x){return x.cumpl;},disp:function(x){return x.disp;},
-           sigma:function(x){return x.sigma===null?NaN:x.sigma;},lead:function(x){return x.lead;},prod:function(x){return x.prod;}};
+           sigma:function(x){return x.sigma===null?NaN:x.sigma;},errJuego:function(x){return x.errJuego;},lead:function(x){return x.lead;},prod:function(x){return x.prod;}};
   document.querySelectorAll("#kpis [data-spark]").forEach(function(h){
     var k=h.getAttribute("data-spark"); if(!k||!fns[k]){h.remove();return;}
     sparkline(h,lista.map(function(r){return {l:fechaCorta(r.fecha),v:fns[k](calcDia(r,P))};}));
@@ -1520,13 +1536,13 @@ function renderCharts(){
   var dd=demandaDia(P);
   var cortos=last.filter(function(r){return r.vehiculos<dd;}).length;
   document.getElementById("cumSub").textContent= last.length
-    ? ("Vehículos ensamblados por día contra el programa de "+n(dd,1)+" veh/día. "+cortos+" de "+last.length+" días quedaron cortos.")
-    : "Vehículos ensamblados por día contra el programa diario.";
+    ? ("Juegos surtidos por día contra la demanda de "+n(dd,1)+" veh/día. "+cortos+" de "+last.length+" días quedaron cortos.")
+    : "Juegos surtidos por día contra la demanda diaria.";
   cumplChart(document.getElementById("chCum"),last);
 
   /* ciclo vs takt */
   document.getElementById("taktSub").textContent=
-    "Takt de la línea "+seg(takt)+" min:s. Por encima de la línea punteada, la planta ensambló más lento de lo que exige la demanda.";
+    "Takt de la línea "+seg(takt)+" min:s. Por encima de la línea punteada, el CEDIS fue más lento que el consumo del ensamble.";
   lineChart(document.getElementById("chTakt"),
     [{name:"Ciclo real",c:css("--axis"),pts:last.map(function(r){
        return {l:fechaCorta(r.fecha),v:calcDia(r,P).ciclo};})}],
@@ -1608,15 +1624,15 @@ function renderModelos(){
   }).join("");
   document.getElementById("fClear").hidden=!(fCat||fSerie);
   var lista=MODELOS.filter(function(m){ return (!fCat||m.cat===fCat)&&(!fSerie||m.serie===fSerie); });
-  document.getElementById("mTitle").textContent="Modelos que se fabrican en la planta ("+lista.length+")";
+  document.getElementById("mTitle").textContent="Modelos de la planta cliente ("+lista.length+")";
   var dd=demandaDia(P);
   document.getElementById("mGrid").innerHTML= lista.length ? lista.map(function(m){
     var facts= m.proyecto
       ? '<span><b>'+n(P.demanda)+'</b>veh/año planeados</span><span><b>'+n(dd,1)+'</b>veh/día</span>'+
         '<span><b>'+seg(taktSeg(P))+'</b>takt min:s</span><span><b>'+n(P.oportunidades)+'</b>componentes por vehículo</span>'
-      : '<span class="full">Se fabrica en la planta, fuera del alcance del proyecto.</span>';
+      : '<span class="full">Se fabrica en la planta cliente; el CEDIS no lo surte.</span>';
     return '<button class="mcard" data-modelo="'+m.k+'" aria-pressed="'+(m.k===modelo)+'">'+
-      '<span class="mc-top"><span class="tags"><span>'+m.tipo+'</span>'+(m.proyecto?'<span class="dark">En producción</span>':'')+'</span>'+
+      '<span class="mc-top"><span class="tags"><span>'+m.tipo+'</span>'+(m.proyecto?'<span class="dark">En surtido</span>':'')+'</span>'+
       '<span class="nm">'+m.nombre+'</span><span class="ds">'+m.desc+'</span></span>'+
       '<span class="ph"><img src="'+IMG[m.img]+'" alt="'+esc(m.alt)+'" loading="lazy" style="object-position:'+m.pos+'"></span>'+
       '<span class="facts">'+facts+'</span></button>';
@@ -1626,9 +1642,9 @@ function renderModelos(){
 function aplicarModelo(){
   var m=modeloActual();
   document.getElementById("subName").textContent=m.nombre;
-  document.getElementById("subTipo").textContent=m.tipo+(m.proyecto?" · proyecto de producción":" · fuera del alcance del proyecto");
+  document.getElementById("subTipo").textContent=m.tipo+(m.proyecto?" · en surtido":" · fuera del alcance del CEDIS");
   document.getElementById("fTags").innerHTML='<span>'+m.tipo+'</span>'+(m.proyecto
-    ? '<span>Generación G20</span><span class="dark">En producción</span>'
+    ? '<span>Generación G20</span><span class="dark">En surtido</span>'
     : '<span>'+esc(FOTOS[m.k].d)+'</span>');
   document.getElementById("fName").textContent=m.nombre;
   ["s3Thumbs"].forEach(function(id){ document.getElementById(id).hidden=!m.proyecto; });
@@ -1636,8 +1652,8 @@ function aplicarModelo(){
   renderCarac(m);
   document.getElementById("indTitle").textContent="Indicadores del "+m.nombre;
   if(!m.proyecto) document.getElementById("fOutP").textContent=
-    "El proyecto dimensiona la planta solo para el Serie 3 Sedán. Para medir la producción del "+m.nombre+
-    " harían falta su demanda anual, su lista de materiales (las oportunidades de defecto) y su consumo diario de unidades de manejo.";
+    "El proyecto dimensiona el CEDIS solo para el Serie 3, con el 320i de referencia. Para medir el surtido del "+m.nombre+
+    " harían falta su demanda anual, su lista de materiales y su consumo diario de contenedores.";
   document.querySelectorAll("#tabs [data-tab]").forEach(function(b){ b.hidden=!m.proyecto&&b.getAttribute("data-tab")!=="ficha"; });
   if(!m.proyecto) tab="ficha";
   if(m.proyecto){ if(vistaS3==="serie2"||vistaS3==="m2") ponerVista("frente"); }
@@ -1715,7 +1731,7 @@ function actualizarCalc(){
     ? ('Total <b>'+n(def)+'</b> defectos · <b>'+n(c.dpmo,0)+'</b> DPMO → <b>'+(c.sigma!==null?c.sigma.toFixed(2):"—")+' σ</b> · '+
        'ciclo <b>'+seg(c.ciclo)+'</b> (takt '+seg(taktSeg(P))+') · cumplimiento <b>'+n(c.cumpl,1)+' %</b>'+
        (inv?' · cobertura <b>'+n(c.lead,2)+' d</b>':''))
-    : 'Captura los vehículos ensamblados para ver el cálculo del día.';
+    : 'Captura los juegos surtidos para ver el cálculo del día.';
 }
 function abrirDia(fecha){
   if(!db){ toast("La captura necesita el almacenamiento del tablero; ábrelo desde claude.ai."); return; }
@@ -1744,7 +1760,7 @@ frmDia.addEventListener("submit",async function(e){
   var errores=[];
   frmDia.querySelectorAll("input").forEach(function(i){i.removeAttribute("aria-invalid");});
   if(!/^\d{4}-\d{2}-\d{2}$/.test(fecha)){ errores.push("la fecha"); document.getElementById("f-fecha").setAttribute("aria-invalid","true"); }
-  if(veh===null||veh<=0||veh%1){ errores.push("los vehículos ensamblados (entero mayor que cero)"); document.getElementById("f-veh").setAttribute("aria-invalid","true"); }
+  if(veh===null||veh<=0||veh%1){ errores.push("los juegos surtidos (entero mayor que cero)"); document.getElementById("f-veh").setAttribute("aria-invalid","true"); }
   frmDia.querySelectorAll('input[type="number"]').forEach(function(i){
     if(i.value!==""&&(+i.value<0||!isFinite(+i.value))){ i.setAttribute("aria-invalid","true"); errores.push(i.labels[0].textContent.toLowerCase()); }
   });
@@ -1821,7 +1837,7 @@ function normH(h){ return String(h==null?"":h).normalize("NFD").replace(/[̀-ͯ]
 var COLS=[
   {k:"fecha",l:"fecha",req:true,al:["fecha","dia","date","fecha de operacion"]},
   {k:"vehiculos",l:"vehiculos",req:true,al:["vehiculos","vehiculos ensamblados","vehiculos producidos","produccion","unidades producidas","unidades ensambladas","veh","vehiculo","vehiculos surtidos"]},
-  {k:"personal",l:"personal",al:["personal","personal de planta","personal en turno","asociados","operarios"]},
+  {k:"personal",l:"personal",al:["personal","personal de cedis","personal en turno","operarios","asociados"]},
   {k:"inventario",l:"inventario_um",al:["inventario","inventario um","inventario al cierre","inventario cierre"]},
   {k:"paro",l:"paro_min",al:["paro","paro min","paro no planeado","minutos de paro","paros"]},
   {k:"defectos",l:"defectos",al:["defectos","defectos totales","total defectos","total de defectos"]},
@@ -2012,8 +2028,8 @@ async function descargarPlantilla(){
   var ins=X.utils.aoa_to_sheet([
     ["Columna","Qué capturar"],
     ["fecha","Obligatoria. Día de operación (AAAA-MM-DD o DD/MM/AAAA)."],
-    ["vehiculos","Obligatoria. Vehículos ensamblados en el día."],
-    ["personal","Personas de la planta en el día."],
+    ["vehiculos","Obligatoria. Juegos de componentes surtidos en el día."],
+    ["personal","Personas del CEDIS en el día."],
     ["inventario_um","Inventario al cierre, en unidades de manejo."],
     ["paro_min","Minutos de paro no planeado."],
     ["faltante, secuencia, danado, etiqueta, otro","Defectos del día por causa. El total se calcula solo."],
@@ -2024,7 +2040,7 @@ async function descargarPlantilla(){
   X.utils.book_append_sheet(wb,hoja,"Registros");
   X.utils.book_append_sheet(wb,ins,"Instrucciones");
   var out=X.write(wb,{bookType:"xlsx",type:"array"});
-  try{ await dl.save({filename:"plantilla-registros-planta-serie3.xlsx",data:new Blob([out])}); toast("Plantilla lista"); }
+  try{ await dl.save({filename:"plantilla-registros-cedis-320i.xlsx",data:new Blob([out])}); toast("Plantilla lista"); }
   catch(err){
     var code=err&&err.code;
     if(code==="declined") return;
@@ -2058,7 +2074,7 @@ async function exportarCsv(){
   });
   var csv="﻿"+cab.join(",")+"\n"+filas.join("\n")+"\n";
   try{
-    await dl.save({filename:"planta-serie3-registros"+(demoOn?"-ejemplo":"")+"-"+hoyISO()+".csv",data:csv});
+    await dl.save({filename:"cedis-320i-registros"+(demoOn?"-ejemplo":"")+"-"+hoyISO()+".csv",data:csv});
     toast("Archivo CSV listo");
   }catch(err){
     var code=err&&err.code;
