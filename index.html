@@ -1906,7 +1906,7 @@ async function leerArchivo(file){
       (upListo.length?'<span>del <b>'+esc(fechaLarga(upListo[0].fecha))+'</b> al <b>'+esc(fechaLarga(upListo[upListo.length-1].fecha))+'</b></span>':'')+
       (existentes?'<span><b>'+n(existentes)+'</b> ya existen y se reemplazarán</span>':'')+
     '</div><div class="upcols">'+colsHtml+'</div>'+
-    (hayCausas?'':'<div class="upwarn">El archivo no trae defectos por causa: el Pareto mostrará esos defectos como «Sin clasificar».</div>')+
+    (hayCausas?'':'<div class="upwarn">El archivo no trae defectos por causa: la tabla de registros los mostrará como «Sin clasificar».</div>')+
     (errores.length?'<ul class="uperr">'+errores.slice(0,6).map(function(e){return '<li>'+esc(e)+'</li>';}).join("")+
       (errores.length>6?'<li>… y '+(errores.length-6)+' más</li>':'')+'</ul>':'')+
     (avisos.length?'<div class="upwarn">'+esc(avisos[0])+(avisos.length>1?' (y '+(avisos.length-1)+' avisos más)':'')+'</div>':'');
