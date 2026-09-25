@@ -557,6 +557,20 @@ dialog.wide{width:min(860px,calc(100vw - 32px))}
 .eqp .esq{display:block;width:100%;aspect-ratio:4/3;background:var(--surface-2)}
 .eqp .esq svg{display:block;width:100%;height:100%}
 .eqp .esq text{font-family:var(--sans)}
+
+/* ---------- costos de construccion ---------- */
+.dhead2{margin-top:28px}
+.cbig{font-family:var(--mono);font-size:25px;font-weight:600;letter-spacing:-.01em;margin:0 0 8px}
+.hbr{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 10px;padding:9px 0 10px;border-top:1px solid var(--line)}
+.hbl{font-size:12.5px;color:var(--ink-2);line-height:1.3}
+.hbv{font-family:var(--mono);font-size:12.5px;color:var(--ink);white-space:nowrap;text-align:right}
+.hbv em{font-style:normal;color:var(--ink-muted);margin-left:8px}
+.hbt{grid-column:1/-1;display:block;height:12px}
+.hbt i{display:block;height:100%;min-width:2px;background:var(--s1);border-radius:0 4px 4px 0;transition:filter .15s}
+.hbr:hover .hbt i{filter:brightness(.88)}
+.ptab tr.sub td{color:var(--ink);font-weight:600}
+.ptab tr.tot td{color:var(--ink);font-weight:700;border-top:2px solid var(--ink)}
+.cnota{font-size:11.5px;color:var(--ink-muted);line-height:1.4;margin:8px 0 0}
 </style>
 </head>
 <body>
@@ -618,6 +632,15 @@ dialog.wide{width:min(860px,calc(100vw - 32px))}
     <div class="card dcard"><h3>Superficie de construcción</h3><p class="dsub">Planta rectangular de la nave</p><div id="plano"></div></div>
     <div class="card dcard"><h3>Reparto de la superficie</h3><p class="dsub">Metros cuadrados construidos por área</p><div id="pieSup"></div></div>
     <div class="card dcard"><h3>Uso del almacén</h3><p class="dsub">Desglose de la rebanada azul del reparto</p><div id="pieAlm"></div></div>
+  </div>
+  <div class="dhead dhead2">
+    <h2>Costo de la construcción</h2>
+    <p>Presupuesto de obra del documento del proyecto; los porcentajes son sobre el costo directo</p>
+  </div>
+  <div class="dgrid">
+    <div class="card dcard"><h3>Costo directo de construcción</h3><p class="dsub">17,020 m² × $7,500 por m²</p><div id="cDir"></div></div>
+    <div class="card dcard"><h3>Gastos indirectos</h3><p class="dsub">10 % sobre el costo directo</p><div id="cInd"></div></div>
+    <div class="card dcard"><h3>Del costo directo a la inversión</h3><p class="dsub">Cómo se llega a la cifra total</p><div id="cTot"></div></div>
   </div>
 </section>
 
@@ -1791,7 +1814,40 @@ function plano(host){
     '<tr><td>Ancho</td><td class="r">'+A+' m</td></tr>'+
     '<tr><td>Superficie construida</td><td class="r">'+n(CEDIS.superficie)+' m²</td></tr></tbody></table>';
 }
+var COSTO_DIR=[
+  {l:"Material de construcción",v:76590000,p:60},
+  {l:"Mano de obra",v:28083000,p:22},
+  {l:"Maquinaria, equipo y subcontratistas",v:22977000,p:18}];
+var COSTO_IND=[
+  {l:"Supervisión y administración de obra",v:5106000,p:4},
+  {l:"Proyecto arquitectónico, estructural y estudios",v:3829500,p:3},
+  {l:"Permisos, licencias y dictámenes",v:1914750,p:2},
+  {l:"Seguridad, seguros y control de obra",v:1276500,p:1}];
+function sumaV(a){ return a.reduce(function(s,x){return s+x.v;},0); }
+function barrasH(host,filas){
+  var mx=Math.max.apply(null,filas.map(function(f){return f.v;}));
+  host.innerHTML='<div class="cbig">$'+n(sumaV(filas))+'</div>'+filas.map(function(f){
+    return '<div class="hbr" data-t="'+esc(f.l+": $"+n(f.v)+" · "+f.p+" % del costo directo")+'">'+
+      '<span class="hbl">'+esc(f.l)+'</span><span class="hbv">$'+n(f.v)+'<em>'+f.p+' %</em></span>'+
+      '<span class="hbt"><i style="width:'+(f.v/mx*100).toFixed(1)+'%"></i></span></div>'; }).join("");
+  host.querySelectorAll(".hbr").forEach(function(r){
+    r.addEventListener("mousemove",function(ev){ showTip(ev,r.getAttribute("data-t")); });
+    r.addEventListener("mouseleave",hideTip);
+  });
+}
+function renderCostos(){
+  barrasH(document.getElementById("cDir"),COSTO_DIR);
+  barrasH(document.getElementById("cInd"),COSTO_IND);
+  var dir=sumaV(COSTO_DIR), ind=sumaV(COSTO_IND), sub=dir+ind, cont=Math.round(sub*0.10),
+      sin=sub+cont, iva=Math.round(sin*0.16), con=sin+iva;
+  var filas=[["Costo directo",dir],["Gastos indirectos (10 %)",ind],["Subtotal",sub,"sub"],
+             ["Contingencia (10 %)",cont],["Inversión sin IVA",sin,"tot"],["IVA (16 %)",iva],["Inversión con IVA",con,"sub"]];
+  document.getElementById("cTot").innerHTML='<table class="ptab"><tbody>'+filas.map(function(f){
+    return '<tr'+(f[2]?' class="'+f[2]+'"':'')+'><td>'+esc(f[0])+'</td><td class="r">$'+n(f[1])+'</td></tr>'; }).join("")+
+    '</tbody></table><p class="cnota">El proyecto redondea la inversión sin IVA a $153,755,000 para calcular el retorno y la recuperación.</p>';
+}
 function renderDatos(){
+  renderCostos();
   plano(document.getElementById("plano"));
   pastel(document.getElementById("pieSup"),[
     {l:"Almacén",v:CEDIS.almacen,c:"var(--s1)"},
