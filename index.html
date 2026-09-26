@@ -306,6 +306,7 @@ section{margin-top:26px}
 .kpis{display:grid;grid-template-columns:repeat(2,1fr);grid-auto-rows:minmax(202px,1fr);gap:12px}
 @media(min-width:720px){.kpis{grid-template-columns:repeat(3,1fr)}}
 @media(min-width:1100px){.kpis{grid-template-columns:repeat(4,1fr)}}
+@media(min-width:1100px){#kpis{grid-template-columns:repeat(3,1fr)}}
 .kpi{height:100%}
 .kpi .sub{min-height:2.7em}
 .kpi{position:relative;background:var(--surface);border:1px solid var(--line);
@@ -574,9 +575,12 @@ dialog.wide{width:min(860px,calc(100vw - 32px))}
 
 /* ---------- resumen: foto mas chica junto a las caracteristicas ---------- */
 @media(min-width:1000px){
-  #secFicha .s3{display:grid;grid-template-columns:minmax(0,6fr) minmax(0,5fr);gap:0 40px;align-items:start}
+  #secFicha .s3{display:grid;grid-template-columns:minmax(0,6fr) minmax(0,5fr);gap:18px 40px;align-items:start}
+  #secFicha .s3-grid{display:contents}
+  #secFicha .s3-txt{grid-column:1/-1;grid-row:1}
+  #secFicha .s3-fig{grid-column:1;grid-row:2;margin:0}
   #secFicha .s3-main{aspect-ratio:16/10}
-  #secFicha .carac{margin-top:0;border-top:0;padding-top:4px}
+  #secFicha .carac{grid-column:2;grid-row:2;margin-top:0;border-top:0;padding-top:0}
 }
 </style>
 </head>
@@ -721,13 +725,11 @@ dialog.wide{width:min(860px,calc(100vw - 32px))}
   <section id="secProd">
     <div class="card">
       <div class="chead"><h3>Producción del Serie 3 en la planta cliente</h3><span class="tag">2021–2032</span></div>
-      <p class="csub">Producción histórica del Serie 3 entre 2021 y 2025 y el pronóstico del proyecto
-      para 2027–2032, calculado con promedio móvil ponderado. Ese volumen define el consumo de
-      componentes del CEDIS.</p>
+      <p class="csub">Datos generados con regresión lineal: <b>Y = 58,874.1 + 96.3X</b>, con un coeficiente de determinación <b>R² = 0.0002</b>.</p>
       <div class="ch" id="chProd"></div>
       <div class="legend">
         <span><i class="sq" style="background:var(--s1)"></i>Producción reportada</span>
-        <span><i class="sq" style="background:var(--s2)"></i>Pronóstico del proyecto</span>
+        <span><i class="sq" style="background:var(--s2)"></i>Pronóstico por regresión lineal</span>
       </div>
     </div>
   </section>
@@ -761,7 +763,7 @@ dialog.wide{width:min(860px,calc(100vw - 32px))}
   <section id="secCal">
     <div class="shead">
       <h2>Calidad</h2>
-      <p>Cada mes contra el objetivo sigma, y los juegos surtidos contra la demanda diaria</p>
+      <p>Cada mes contra el objetivo sigma</p>
     </div>
     <div class="stack">
       <div class="card">
@@ -775,38 +777,20 @@ dialog.wide{width:min(860px,calc(100vw - 32px))}
         <div style="height:12px"></div>
         <div class="sig" id="sigmaRef"></div>
       </div>
-      <div class="card">
-          <div class="chead"><h3>Cumplimiento del surtido diario</h3></div>
-          <p class="csub" id="cumSub"></p>
-          <div class="ch" id="chCum"></div>
-          <div class="legend">
-            <span><i class="sq" style="background:var(--s1)"></i>cubrió la demanda diaria</span>
-            <span><i class="sq" style="background:var(--warn)"></i>quedó corto</span>
-            <span><i style="background:var(--s2)"></i>demanda diaria</span>
-          </div>
-      </div>
     </div>
   </section>
 
   <!-- ============ 3. RITMO Y FLUJO ============ -->
   <section id="secFlujo">
     <div class="shead">
-      <h2>Ritmo y flujo</h2>
-      <p>El ciclo real del CEDIS contra el takt de la línea, y los días de cobertura del inventario</p>
+      <h2>Cobertura del inventario</h2>
+      <p>Días de inventario de cada clase ABC contra su política</p>
     </div>
-    <div class="grid2b">
-      <div class="card">
-        <div class="chead"><h3>Ciclo real contra takt</h3></div>
-        <p class="csub" id="taktSub"></p>
-        <div class="ch" id="chTakt"></div>
-        <div class="legend" id="taktLeg"></div>
-      </div>
-      <div class="card">
-        <div class="chead"><h3>Cobertura del inventario por clase ABC</h3></div>
-        <p class="csub" id="leadSub"></p>
-        <div class="ch" id="chLead"></div>
-        <div class="legend" id="leadLeg"></div>
-      </div>
+    <div class="card">
+      <div class="chead"><h3>Cobertura del inventario por clase ABC</h3></div>
+      <p class="csub" id="leadSub"></p>
+      <div class="ch" id="chLead"></div>
+      <div class="legend" id="leadLeg"></div>
     </div>
   </section>
 
@@ -966,8 +950,10 @@ function hidratarImgs(root){ (root||document).querySelectorAll("img[data-img]").
 /* ================= datos verificados del proyecto ================= */
 var HIST=[{a:2021,v:63280},{a:2022,v:43967},{a:2023,v:74824},{a:2024,v:55998},{a:2025,v:57746}];
 /* pronóstico por promedio móvil ponderado del documento del proyecto */
-var FCST=[{a:2027,v:59020},{a:2028,v:59940},{a:2029,v:58841},{a:2030,v:59097},
-          {a:2031,v:59202},{a:2032,v:59196}];
+/* pronóstico por regresión lineal del documento del proyecto: Y = 58,874.1 + 96.3X, con X = 1 en 2021 */
+var REG={a:58874.1,b:96.3,r2:0.0002};
+var REG_PRON=[2026,2027,2028,2029,2030,2031,2032].map(function(y){
+  return {a:y,v:+(REG.a+REG.b*(y-2020)).toFixed(1)}; });
 var CEDIS={superficie:17020,almacen:11220,reserva:2205,contenedoresMes:31290,largo:185,ancho:92,abc:'3 / 5 / 10'};
 /* política de inventarios del documento: días de cobertura por clase */
 var ABC=[{k:"A",dias:3,parte:0.45,l:"Clase A · alta rotación"},
@@ -1344,8 +1330,6 @@ function kpisDe(scope){
     ? ("Último día: "+fechaLarga(ult.fecha)+(demoOn?" (ejemplo)":"")+" · la línea chica muestra el periodo")
     : "Sin días en la serie: se muestran solo los valores de diseño";
 
-  var atraso = c&&isFinite(c.ciclo) ? c.ciclo-takt : null;
-  var dCum=delta(lista,function(x){return x.cumpl;},1," pts");
   var dSig=delta(lista,function(x){return x.sigma===null?NaN:x.sigma;},2," σ");
 
   el.innerHTML=
@@ -1357,24 +1341,6 @@ function kpisDe(scope){
            n(P.demanda)+" veh ÷ "+n(P.dias)+" días = "+n(demandaDia(P),2)+" veh/día<br>"+
            "→ "+n(takt,1)+" s por vehículo"+
            "<em>Se deriva de la demanda y de la jornada definida para la planta.</em>"})+
-
-    kpi({lb:"Ciclo real",v:c?seg(c.ciclo):"—",u:"min:s",
-      cls:atraso===null?"":(atraso>0?"cr":"ok"),
-      pill:atraso===null?null:(atraso>0?"▲ ":"▼ ")+Math.abs(atraso).toFixed(0)+" s contra takt",
-      pillCls:atraso===null?"":(atraso>0?"cr":"ok"), spark:ult?"ciclo":"",
-      sub:ult?("Ritmo real del CEDIS el "+cuando):"Sin días en la serie",
-      why:"<code>(tiempo disponible − paro) ÷ vehículos del día</code><br>"+
-           (ult?("("+n(tiempoDisponibleSeg(P))+" s − "+n((ult.paro||0)*60)+" s) ÷ "+
-                 n(ult.vehiculos)+" veh = "+n(c.ciclo,1)+" s"):"Falta el registro del día")+
-           "<em>Por encima del takt, vamos atrasados contra el consumo de la línea.</em>"})+
-
-    kpi({lb:"Cumplimiento del surtido",v:c?n(c.cumpl,1):"—",u:"%",
-      cls:c?(c.cumpl>=100?"ok":(c.cumpl>=97?"wn":"cr")):"",
-      pill:dCum?dCum.txt:null,pillCls:dCum?(dCum.d>=0?"ok":"cr"):"", spark:ult?"cumpl":"",
-      sub:ult?("Juegos surtidos contra la demanda diaria el "+cuando):"Sin días en la serie",
-      why:"<code>vehículos ensamblados ÷ programa diario</code><br>"+
-           (ult?(n(ult.vehiculos)+" ÷ "+n(demandaDia(P),2)+" = "+n(c.cumpl,1)+" %"):"Falta el registro del día")+
-           "<em>Verde desde 100 %, ámbar de 97 a 100 %, rojo debajo de 97 %.</em>"})+
 
     kpi({lb:"Disponibilidad",v:c?n(c.disp,1):"—",u:"%",
       cls:c?(c.disp>=98?"ok":(c.disp>=95?"wn":"cr")):"", spark:ult?"disp":"",
@@ -1595,7 +1561,7 @@ function cumplChart(host,lista){
 function renderCharts(){
   barChart(document.getElementById("chProd"),
     HIST.map(function(h){return {a:h.a,v:h.v,c:css("--s1")};})
-        .concat(FCST.map(function(f){return {a:f.a,v:f.v,c:css("--s2")};})));
+        .concat(REG_PRON.map(function(f){return {a:f.a,v:f.v,c:css("--s2")};})));
 
   var last=ventana();
   var metaD=dpmoFromSigma(P.sigmaObj), lim=limites(last), takt=taktSeg(P);
@@ -1637,28 +1603,6 @@ function renderCharts(){
     '<span><i style="background:var(--crit)"></i>límites LSC / LIC</span>';
 
 
-  /* cumplimiento */
-  var dd=demandaDia(P);
-  var cortos=last.filter(function(r){return r.vehiculos<dd;}).length;
-  document.getElementById("cumSub").textContent= last.length
-    ? ("Juegos surtidos por día contra la demanda de "+n(dd,1)+" veh/día. "+cortos+" de "+last.length+" días quedaron cortos.")
-    : "Juegos surtidos por día contra la demanda diaria.";
-  cumplChart(document.getElementById("chCum"),last);
-
-  /* ciclo vs takt */
-  document.getElementById("taktSub").textContent=
-    "Takt de la línea "+seg(takt)+" min:s. Por encima de la línea punteada, el CEDIS fue más lento que el consumo del ensamble.";
-  lineChart(document.getElementById("chTakt"),
-    [{name:"Ciclo real",c:css("--axis"),pts:last.map(function(r){
-       return {l:fechaCorta(r.fecha),v:calcDia(r,P).ciclo};})}],
-    {h:230,w:640,R:64,ticks:6,fmt:function(v){return seg(v);},
-     refs:[{v:takt,c:css("--s2"),l:"takt",dash:"5 4",w:2}],
-     dotColor:function(v){return v>takt?css("--crit"):css("--s3");},
-     vacio:"El takt de la línea es "+seg(takt)+" min:s. Registra días para comparar el ciclo real."});
-  document.getElementById("taktLeg").innerHTML=
-    '<span><i class="sq" style="background:var(--s3)"></i>dentro del takt</span>'+
-    '<span><i class="sq" style="background:var(--crit)"></i>por encima del takt</span>'+
-    '<span><i style="background:var(--s2)"></i>takt objetivo</span>';
 
   /* cobertura: una línea por clase */
   var colABC={A:css("--crit"),B:css("--s2"),C:css("--s1")};
@@ -1672,7 +1616,7 @@ function renderCharts(){
     ? "Días que cubre el inventario de cada clase contra lo que pide la política ABC: 3, 5 y 10 días."
     : "Días de cobertura del inventario total. Captura el inventario por clase para ver una línea por cada una.";
   lineChart(document.getElementById("chLead"),series,
-    {h:230,w:640,R:78,ticks:6,fmt:function(v){return n(v,2)+" d";},
+    {h:230,w:1100,R:78,ticks:6,fmt:function(v){return n(v,2)+" d";},
      refs:ABC.map(function(a){ return {v:a.dias,c:colABC[a.k],l:a.k+" · "+a.dias+" d",dash:"4 3"}; }),
      vacio:"La política ABC pide 3, 5 y 10 días de inventario. Registra días para comparar la cobertura real."});
   document.getElementById("leadLeg").innerHTML=
