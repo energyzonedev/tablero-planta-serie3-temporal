@@ -484,7 +484,9 @@ dialog.wide{width:min(860px,calc(100vw - 32px))}
 .sync{display:none}
 
 /* ---------- menú de unidades ---------- */
-.hd{position:relative}
+.mbar{border-bottom:1px solid var(--line);background:var(--ground)}
+.mb-in{max-width:1280px;margin:0 auto;padding:8px 20px;position:relative}
+@media(max-width:560px){.mb-in{padding:8px 16px}}
 .hamb{display:flex;align-items:center;gap:10px;border:1px solid var(--line);background:var(--surface);color:var(--ink);
   border-radius:10px;padding:0 14px 0 11px;min-height:42px;font-size:13.5px;font-weight:600;cursor:pointer;flex:none}
 .hamb:hover{background:var(--surface-2)}
@@ -494,7 +496,7 @@ dialog.wide{width:min(860px,calc(100vw - 32px))}
 .hamb[aria-expanded="true"] .hb i:nth-child(1){transform:translateY(5.5px) rotate(45deg)}
 .hamb[aria-expanded="true"] .hb i:nth-child(2){opacity:0}
 .hamb[aria-expanded="true"] .hb i:nth-child(3){transform:translateY(-5.5px) rotate(-45deg)}
-.umenu{position:absolute;top:calc(100% - 6px);left:20px;z-index:50;min-width:220px;display:flex;flex-direction:column;
+.umenu{position:absolute;top:calc(100% - 2px);left:20px;z-index:50;min-width:220px;display:flex;flex-direction:column;
   background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:6px;
   box-shadow:0 12px 32px rgba(11,11,11,.14),0 2px 6px rgba(11,11,11,.06)}
 .um-t{font-size:10.5px;font-weight:600;text-transform:uppercase;letter-spacing:.09em;color:var(--ink-muted);padding:8px 12px 6px}
@@ -503,8 +505,7 @@ dialog.wide{width:min(860px,calc(100vw - 32px))}
 .umenu button:hover{background:var(--surface-2);color:var(--ink)}
 .umenu button[aria-current="page"]{color:var(--ink);font-weight:600;background:var(--surface-2)}
 .umenu button[aria-current="page"]::after{content:"";width:7px;height:7px;border-radius:50%;background:var(--accent)}
-@media(max-width:560px){.umenu{left:16px;right:16px}.hamb{padding:0 12px 0 10px}
-  .hd{column-gap:12px;flex-wrap:nowrap}.mark{flex:0 1 auto;min-width:0}.mark b{font-size:13px}}
+@media(max-width:560px){.umenu{left:16px;right:16px}.hamb{padding:0 12px 0 10px}}
 
 /* ---------- unidades por llenar ---------- */
 .pend{max-width:1280px;margin:0 auto;padding:72px 20px 110px}
@@ -613,18 +614,6 @@ dialog.wide{width:min(860px,calc(100vw - 32px))}
 
 <header>
   <div class="hd">
-    <button type="button" class="hamb" id="btnMenu" aria-expanded="false" aria-controls="umenu" aria-label="Elegir unidad">
-      <span class="hb" aria-hidden="true"><i></i><i></i><i></i></span><span id="umLbl">Unidad 1</span>
-    </button>
-    <nav class="umenu" id="umenu" aria-label="Unidades" hidden>
-      <span class="um-t">Unidades</span>
-      <button type="button" data-u="1">Unidad 1</button>
-      <button type="button" data-u="2">Unidad 2</button>
-      <button type="button" data-u="3">Unidad 3</button>
-      <button type="button" data-u="4">Unidad 4</button>
-      <button type="button" data-u="5">Unidad 5</button>
-      <button type="button" data-u="6">Unidad 6</button>
-    </nav>
     <a class="mark" href="#top" id="markHome" aria-label="Volver al menú de modelos">
       <svg viewBox="0 0 42 42" role="img" aria-label="BMW">
         <rect x="1" y="1" width="40" height="40" rx="11" fill="var(--ink)"/>
@@ -635,6 +624,22 @@ dialog.wide{width:min(860px,calc(100vw - 32px))}
     <div class="hd-r">
       <div class="sync"><span class="dot" id="dot"></span><span id="syncTxt">Conectando…</span></div>
       <button class="btn pri" id="btnSubir" hidden>Subir archivo</button>
+    </div>
+  </div>
+  <div class="mbar">
+    <div class="mb-in">
+      <button type="button" class="hamb" id="btnMenu" aria-expanded="false" aria-controls="umenu" aria-label="Elegir unidad">
+        <span class="hb" aria-hidden="true"><i></i><i></i><i></i></span><span id="umLbl">Unidad 1</span>
+      </button>
+      <nav class="umenu" id="umenu" aria-label="Unidades" hidden>
+        <span class="um-t">Unidades</span>
+        <button type="button" data-u="1">Unidad 1</button>
+        <button type="button" data-u="2">Unidad 2</button>
+        <button type="button" data-u="3">Unidad 3</button>
+        <button type="button" data-u="4">Unidad 4</button>
+        <button type="button" data-u="5">Unidad 5</button>
+        <button type="button" data-u="6">Unidad 6</button>
+      </nav>
     </div>
   </div>
   <nav class="subnav" id="subnav" aria-label="Secciones del modelo" hidden>
@@ -2286,14 +2291,14 @@ function bind(){
 
   document.getElementById("markHome").addEventListener("click",function(e){ e.preventDefault(); irInicio(); });
   var btnMenu=document.getElementById("btnMenu"), umenu=document.getElementById("umenu");
-  function menuUnidades(abrir){
+  function menuUnidades(abrir,teclado){
     umenu.hidden=!abrir; btnMenu.setAttribute("aria-expanded",abrir);
-    if(abrir){ var a=umenu.querySelector('[aria-current="page"]')||umenu.querySelector("[data-u]"); a.focus(); }
+    if(abrir&&teclado){ var a=umenu.querySelector('[aria-current="page"]')||umenu.querySelector("[data-u]"); a.focus(); }
   }
-  btnMenu.addEventListener("click",function(){ menuUnidades(umenu.hidden); });
+  btnMenu.addEventListener("click",function(e){ menuUnidades(umenu.hidden,e.detail===0); });
   umenu.addEventListener("click",function(e){
     var b=e.target.closest("[data-u]"); if(!b)return;
-    menuUnidades(false); irUnidad(+b.getAttribute("data-u")); btnMenu.focus(); });
+    menuUnidades(false); irUnidad(+b.getAttribute("data-u")); if(e.detail===0)btnMenu.focus(); });
   document.addEventListener("click",function(e){
     if(!umenu.hidden&&!umenu.contains(e.target)&&!btnMenu.contains(e.target)) menuUnidades(false); });
   document.addEventListener("keydown",function(e){
