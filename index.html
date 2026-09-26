@@ -486,7 +486,7 @@ dialog.wide{width:min(860px,calc(100vw - 32px))}
 /* ---------- menú de unidades ---------- */
 .hd{position:relative}
 .hamb{display:flex;align-items:center;gap:10px;border:1px solid var(--line);background:var(--surface);color:var(--ink);
-  border-radius:10px;padding:0 14px 0 11px;min-height:42px;font-size:13.5px;font-weight:600;cursor:pointer;flex:none}
+  border-radius:10px;padding:0;width:44px;height:44px;justify-content:center;font-size:13.5px;font-weight:600;cursor:pointer;flex:none}
 .hamb:hover{background:var(--surface-2)}
 .hamb[aria-expanded="true"]{background:var(--surface-2);border-color:var(--axis)}
 .hb{display:flex;flex-direction:column;justify-content:space-between;width:18px;height:13px}
@@ -503,7 +503,7 @@ dialog.wide{width:min(860px,calc(100vw - 32px))}
 .umenu button:hover{background:var(--surface-2);color:var(--ink)}
 .umenu button[aria-current="page"]{color:var(--ink);font-weight:600;background:var(--surface-2)}
 .umenu button[aria-current="page"]::after{content:"";width:7px;height:7px;border-radius:50%;background:var(--accent)}
-@media(max-width:560px){.umenu{left:16px;right:16px}.hd{column-gap:12px;flex-wrap:nowrap}.mark{flex:0 1 auto;min-width:0}.mark b{font-size:13px}.hamb{padding:0 12px 0 10px}}
+@media(max-width:560px){.umenu{left:16px;right:16px}.hd{column-gap:12px;flex-wrap:nowrap}.mark{flex:0 1 auto;min-width:0}.mark b{font-size:13px}}
 
 /* ---------- unidades por llenar ---------- */
 .pend{max-width:1280px;margin:0 auto;padding:72px 20px 110px}
@@ -623,7 +623,7 @@ dialog.wide{width:min(860px,calc(100vw - 32px))}
       <div class="sync"><span class="dot" id="dot"></span><span id="syncTxt">Conectando…</span></div>
       <button class="btn pri" id="btnSubir" hidden>Subir archivo</button>
       <button type="button" class="hamb" id="btnMenu" aria-expanded="false" aria-controls="umenu" aria-label="Elegir unidad">
-        <span class="hb" aria-hidden="true"><i></i><i></i><i></i></span><span id="umLbl">Unidad 1</span>
+        <span class="hb" aria-hidden="true"><i></i><i></i><i></i></span>
       </button>
       <nav class="umenu" id="umenu" aria-label="Unidades" hidden>
         <span class="um-t">Unidades</span>
@@ -1681,7 +1681,7 @@ function mostrarTab(){
   if(pend) document.getElementById("pendT").textContent="Unidad "+unidad;
   document.querySelectorAll("#umenu [data-u]").forEach(function(b){
     b.setAttribute("aria-current",+b.getAttribute("data-u")===unidad?"page":"false"); });
-  document.getElementById("umLbl").textContent="Unidad "+unidad;
+  document.getElementById("btnMenu").setAttribute("aria-label","Elegir unidad (ahora: Unidad "+unidad+")");
   document.getElementById("fichaBand").hidden=tab!=="ficha";
   document.getElementById("dashWrap").hidden=tab==="ficha";
   document.querySelectorAll("#tabs [data-tab]").forEach(function(b){
