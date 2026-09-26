@@ -484,14 +484,27 @@ dialog.wide{width:min(860px,calc(100vw - 32px))}
 .sync{display:none}
 
 /* ---------- menú de unidades ---------- */
-.umenu{border-bottom:1px solid var(--line);background:var(--ground)}
-.um-in{max-width:1280px;margin:0 auto;padding:0 20px;display:flex;overflow-x:auto;scrollbar-width:none}
-.um-in::-webkit-scrollbar{display:none}
-.um-in button{border:0;background:transparent;color:var(--ink-2);font-size:13.5px;font-weight:500;
-  padding:0 14px;min-height:44px;white-space:nowrap;border-bottom:3px solid transparent;cursor:pointer}
-.um-in button:hover{color:var(--ink)}
-.um-in button[aria-current="page"]{color:var(--ink);font-weight:600;border-bottom-color:var(--accent)}
-@media(max-width:560px){.um-in{padding:0 8px}.um-in button{padding:0 10px}}
+.hd{position:relative}
+.hamb{display:flex;align-items:center;gap:10px;border:1px solid var(--line);background:var(--surface);color:var(--ink);
+  border-radius:10px;padding:0 14px 0 11px;min-height:42px;font-size:13.5px;font-weight:600;cursor:pointer;flex:none}
+.hamb:hover{background:var(--surface-2)}
+.hamb[aria-expanded="true"]{background:var(--surface-2);border-color:var(--axis)}
+.hb{display:flex;flex-direction:column;justify-content:space-between;width:18px;height:13px}
+.hb i{display:block;height:2px;border-radius:2px;background:currentColor;transition:transform .18s,opacity .18s}
+.hamb[aria-expanded="true"] .hb i:nth-child(1){transform:translateY(5.5px) rotate(45deg)}
+.hamb[aria-expanded="true"] .hb i:nth-child(2){opacity:0}
+.hamb[aria-expanded="true"] .hb i:nth-child(3){transform:translateY(-5.5px) rotate(-45deg)}
+.umenu{position:absolute;top:calc(100% - 6px);left:20px;z-index:50;min-width:220px;display:flex;flex-direction:column;
+  background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:6px;
+  box-shadow:0 12px 32px rgba(11,11,11,.14),0 2px 6px rgba(11,11,11,.06)}
+.um-t{font-size:10.5px;font-weight:600;text-transform:uppercase;letter-spacing:.09em;color:var(--ink-muted);padding:8px 12px 6px}
+.umenu button{border:0;background:transparent;color:var(--ink-2);font-size:14px;font-weight:500;text-align:left;
+  padding:0 12px;min-height:42px;border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:space-between}
+.umenu button:hover{background:var(--surface-2);color:var(--ink)}
+.umenu button[aria-current="page"]{color:var(--ink);font-weight:600;background:var(--surface-2)}
+.umenu button[aria-current="page"]::after{content:"";width:7px;height:7px;border-radius:50%;background:var(--accent)}
+@media(max-width:560px){.umenu{left:16px;right:16px}.hamb{padding:0 12px 0 10px}
+  .hd{column-gap:12px;flex-wrap:nowrap}.mark{flex:0 1 auto;min-width:0}.mark b{font-size:13px}}
 
 /* ---------- unidades por llenar ---------- */
 .pend{max-width:1280px;margin:0 auto;padding:72px 20px 110px}
@@ -526,7 +539,9 @@ dialog.wide{width:min(860px,calc(100vw - 32px))}
 .ptab i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:7px;vertical-align:-1px}
 
 /* ---------- maquinaria y equipo ---------- */
-.maq{display:grid;grid-template-columns:repeat(auto-fill,minmax(228px,1fr));gap:12px}
+.maq{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+@media(min-width:1000px){.maq{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media(max-width:520px){.maq{grid-template-columns:1fr}}
 .eqp{margin:0;background:var(--surface);border:1px solid var(--line);border-radius:11px;overflow:hidden;
   display:flex;flex-direction:column;min-width:0}
 .eqp img{display:block;width:100%;height:auto;aspect-ratio:4/3;object-fit:cover;background:var(--surface-2)}
@@ -548,7 +563,7 @@ dialog.wide{width:min(860px,calc(100vw - 32px))}
 .eqp .spec span{color:var(--ink-muted)}
 .eqp .spec em{font-style:normal;font-variant-numeric:tabular-nums;color:var(--ink);text-align:right}
 .eqp .spec em.nw{white-space:nowrap}
-.eqp .cr{margin-top:auto;padding-top:6px}
+.eqp .cr{padding-top:2px}
 /* comparativo */
 .crit{margin-bottom:4px}
 .crit-h h3{margin:0}
@@ -564,7 +579,7 @@ dialog.wide{width:min(860px,calc(100vw - 32px))}
 .eqp .num{font-family:var(--mono);color:var(--accent);margin-right:6px}
 .eqp .car{font-size:12px;color:var(--ink);line-height:1.4}
 .eqp .car small{display:block;font-size:12px;color:var(--ink-muted)}
-.eqp .alt{font-size:11.5px;color:var(--ink-muted);line-height:1.4;padding-top:7px;border-top:1px solid var(--line)}
+.eqp .alt{margin-top:auto;font-size:11.5px;color:var(--ink-muted);line-height:1.4;padding-top:7px;border-top:1px solid var(--line)}
 .eqp .alt s{text-decoration:none;color:var(--ink-2)}
 .maqnota{margin:16px 0 0;font-size:12.5px;color:var(--ink-muted);line-height:1.45}
 
@@ -598,6 +613,18 @@ dialog.wide{width:min(860px,calc(100vw - 32px))}
 
 <header>
   <div class="hd">
+    <button type="button" class="hamb" id="btnMenu" aria-expanded="false" aria-controls="umenu" aria-label="Elegir unidad">
+      <span class="hb" aria-hidden="true"><i></i><i></i><i></i></span><span id="umLbl">Unidad 1</span>
+    </button>
+    <nav class="umenu" id="umenu" aria-label="Unidades" hidden>
+      <span class="um-t">Unidades</span>
+      <button type="button" data-u="1">Unidad 1</button>
+      <button type="button" data-u="2">Unidad 2</button>
+      <button type="button" data-u="3">Unidad 3</button>
+      <button type="button" data-u="4">Unidad 4</button>
+      <button type="button" data-u="5">Unidad 5</button>
+      <button type="button" data-u="6">Unidad 6</button>
+    </nav>
     <a class="mark" href="#top" id="markHome" aria-label="Volver al menú de modelos">
       <svg viewBox="0 0 42 42" role="img" aria-label="BMW">
         <rect x="1" y="1" width="40" height="40" rx="11" fill="var(--ink)"/>
@@ -610,16 +637,6 @@ dialog.wide{width:min(860px,calc(100vw - 32px))}
       <button class="btn pri" id="btnSubir" hidden>Subir archivo</button>
     </div>
   </div>
-  <nav class="umenu" id="umenu" aria-label="Unidades">
-    <div class="um-in">
-      <button type="button" data-u="1">Unidad 1</button>
-      <button type="button" data-u="2">Unidad 2</button>
-      <button type="button" data-u="3">Unidad 3</button>
-      <button type="button" data-u="4">Unidad 4</button>
-      <button type="button" data-u="5">Unidad 5</button>
-      <button type="button" data-u="6">Unidad 6</button>
-    </div>
-  </nav>
   <nav class="subnav" id="subnav" aria-label="Secciones del modelo" hidden>
     <div class="sub-in">
       <button class="back" id="btnBack" type="button"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3L5 8l5 5"/></svg>Modelos</button>
@@ -757,13 +774,6 @@ dialog.wide{width:min(860px,calc(100vw - 32px))}
     <div class="shead">
       <h2 id="kpiTitle">Operación diaria</h2>
       <p id="kpiSub"></p>
-      <div class="right">
-        <div class="seg" role="group" aria-label="Periodo" id="periodo">
-          <button data-p="10" aria-pressed="false">10 días</button>
-          <button data-p="20" aria-pressed="true">20 días</button>
-          <button data-p="0" aria-pressed="false">Todo</button>
-        </div>
-      </div>
     </div>
     <div class="kpis" id="kpis"></div>
   </section>
@@ -1672,6 +1682,7 @@ function mostrarTab(){
   if(pend) document.getElementById("pendT").textContent="Unidad "+unidad;
   document.querySelectorAll("#umenu [data-u]").forEach(function(b){
     b.setAttribute("aria-current",+b.getAttribute("data-u")===unidad?"page":"false"); });
+  document.getElementById("umLbl").textContent="Unidad "+unidad;
   document.getElementById("fichaBand").hidden=tab!=="ficha";
   document.getElementById("dashWrap").hidden=tab==="ficha";
   document.querySelectorAll("#tabs [data-tab]").forEach(function(b){
@@ -1819,12 +1830,12 @@ var CRITERIOS=[
   ["Compatibilidad con pallets, racks, contenedores y procesos",20],["Mantenimiento y disponibilidad de servicio",15],
   ["Facilidad de operación",10],["Consumo de energía o consumibles",10]];
 var GRUPOS=[
-  {t:"Manejo de materiales",ks:["yale","pe","carro"],
-   d:"Los patines atienden movimientos cortos y espacios reducidos; la transpaleta con plataforma cubre los recorridos repetitivos."},
+  {t:"Manejo de materiales y surtido",ks:["yale","pe","carro","uline"],
+   d:"Los patines atienden movimientos cortos y espacios reducidos; la transpaleta con plataforma cubre los recorridos repetitivos. Los carros y las mesas sostienen el surtido de kits y la preparación de pedidos."},
   {t:"Almacenamiento y unidades de carga",ks:["rack","chep2","klt","film"],
    d:"El rack selectivo da acceso directo al inventario ABC; los pallets CHEP y los contenedores KLT estandarizan las unidades de manejo."},
-  {t:"Recepción, inspección y trazabilidad",ks:["ds2","zt231","etiq","ohaus","uline"],
-   d:"El lector, la impresora y las etiquetas Zebra forman una base compatible para la trazabilidad con códigos de barras."},
+  {t:"Identificación, pesaje y trazabilidad",ks:["ds2","zt231","etiq","ohaus"],
+   d:"El lector, la impresora y las etiquetas Zebra forman una base compatible para la trazabilidad con códigos de barras; la báscula integra el peso al registro de materiales."},
   {t:"Seguridad del CEDIS",ks:["axis","amerex","brady","epp"],
    d:"Protección inicial y control visual, sujetos al proyecto de seguridad, a la normativa aplicable y al análisis de riesgos."}
 ];
@@ -2274,8 +2285,19 @@ function bind(){
     var b=e.target.closest("[data-v]"); if(b)ponerVista(b.getAttribute("data-v")); });
 
   document.getElementById("markHome").addEventListener("click",function(e){ e.preventDefault(); irInicio(); });
-  document.getElementById("umenu").addEventListener("click",function(e){
-    var b=e.target.closest("[data-u]"); if(b)irUnidad(+b.getAttribute("data-u")); });
+  var btnMenu=document.getElementById("btnMenu"), umenu=document.getElementById("umenu");
+  function menuUnidades(abrir){
+    umenu.hidden=!abrir; btnMenu.setAttribute("aria-expanded",abrir);
+    if(abrir){ var a=umenu.querySelector('[aria-current="page"]')||umenu.querySelector("[data-u]"); a.focus(); }
+  }
+  btnMenu.addEventListener("click",function(){ menuUnidades(umenu.hidden); });
+  umenu.addEventListener("click",function(e){
+    var b=e.target.closest("[data-u]"); if(!b)return;
+    menuUnidades(false); irUnidad(+b.getAttribute("data-u")); btnMenu.focus(); });
+  document.addEventListener("click",function(e){
+    if(!umenu.hidden&&!umenu.contains(e.target)&&!btnMenu.contains(e.target)) menuUnidades(false); });
+  document.addEventListener("keydown",function(e){
+    if(e.key==="Escape"&&!umenu.hidden){ menuUnidades(false); btnMenu.focus(); } });
   window.addEventListener("hashchange",function(){
     var m=/^#u([1-6])$/.exec(location.hash); if(m&&+m[1]!==unidad)irUnidad(+m[1]); });
 
@@ -2283,13 +2305,6 @@ function bind(){
   bindSubir();
   document.querySelectorAll("dialog [data-close]").forEach(function(b){
     b.addEventListener("click",function(){ b.closest("dialog").close(); }); });
-  document.querySelectorAll("#periodo button").forEach(function(b){
-    b.addEventListener("click",function(){
-      periodo=+b.getAttribute("data-p");
-      document.querySelectorAll("#periodo button").forEach(function(x){x.setAttribute("aria-pressed",x===b);});
-      renderAll();
-    });
-  });
   var mq=window.matchMedia&&window.matchMedia("(prefers-color-scheme:dark)");
   if(mq&&mq.addEventListener)mq.addEventListener("change",function(){renderAll();});
   new MutationObserver(function(){renderAll();}).observe(
