@@ -484,9 +484,7 @@ dialog.wide{width:min(860px,calc(100vw - 32px))}
 .sync{display:none}
 
 /* ---------- menú de unidades ---------- */
-.mbar{border-bottom:1px solid var(--line);background:var(--ground)}
-.mb-in{max-width:1280px;margin:0 auto;padding:8px 20px;position:relative}
-@media(max-width:560px){.mb-in{padding:8px 16px}}
+.hd{position:relative}
 .hamb{display:flex;align-items:center;gap:10px;border:1px solid var(--line);background:var(--surface);color:var(--ink);
   border-radius:10px;padding:0 14px 0 11px;min-height:42px;font-size:13.5px;font-weight:600;cursor:pointer;flex:none}
 .hamb:hover{background:var(--surface-2)}
@@ -496,7 +494,7 @@ dialog.wide{width:min(860px,calc(100vw - 32px))}
 .hamb[aria-expanded="true"] .hb i:nth-child(1){transform:translateY(5.5px) rotate(45deg)}
 .hamb[aria-expanded="true"] .hb i:nth-child(2){opacity:0}
 .hamb[aria-expanded="true"] .hb i:nth-child(3){transform:translateY(-5.5px) rotate(-45deg)}
-.umenu{position:absolute;top:calc(100% - 2px);left:20px;z-index:50;min-width:220px;display:flex;flex-direction:column;
+.umenu{position:absolute;top:calc(100% - 6px);right:20px;z-index:50;min-width:220px;display:flex;flex-direction:column;
   background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:6px;
   box-shadow:0 12px 32px rgba(11,11,11,.14),0 2px 6px rgba(11,11,11,.06)}
 .um-t{font-size:10.5px;font-weight:600;text-transform:uppercase;letter-spacing:.09em;color:var(--ink-muted);padding:8px 12px 6px}
@@ -505,7 +503,7 @@ dialog.wide{width:min(860px,calc(100vw - 32px))}
 .umenu button:hover{background:var(--surface-2);color:var(--ink)}
 .umenu button[aria-current="page"]{color:var(--ink);font-weight:600;background:var(--surface-2)}
 .umenu button[aria-current="page"]::after{content:"";width:7px;height:7px;border-radius:50%;background:var(--accent)}
-@media(max-width:560px){.umenu{left:16px;right:16px}.hamb{padding:0 12px 0 10px}}
+@media(max-width:560px){.umenu{left:16px;right:16px}.hd{column-gap:12px;flex-wrap:nowrap}.mark{flex:0 1 auto;min-width:0}.mark b{font-size:13px}.hamb{padding:0 12px 0 10px}}
 
 /* ---------- unidades por llenar ---------- */
 .pend{max-width:1280px;margin:0 auto;padding:72px 20px 110px}
@@ -624,10 +622,6 @@ dialog.wide{width:min(860px,calc(100vw - 32px))}
     <div class="hd-r">
       <div class="sync"><span class="dot" id="dot"></span><span id="syncTxt">Conectando…</span></div>
       <button class="btn pri" id="btnSubir" hidden>Subir archivo</button>
-    </div>
-  </div>
-  <div class="mbar">
-    <div class="mb-in">
       <button type="button" class="hamb" id="btnMenu" aria-expanded="false" aria-controls="umenu" aria-label="Elegir unidad">
         <span class="hb" aria-hidden="true"><i></i><i></i><i></i></span><span id="umLbl">Unidad 1</span>
       </button>
