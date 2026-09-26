@@ -571,6 +571,13 @@ dialog.wide{width:min(860px,calc(100vw - 32px))}
 .ptab tr.sub td{color:var(--ink);font-weight:600}
 .ptab tr.tot td{color:var(--ink);font-weight:700;border-top:2px solid var(--ink)}
 .cnota{font-size:11.5px;color:var(--ink-muted);line-height:1.4;margin:8px 0 0}
+
+/* ---------- resumen: foto mas chica junto a las caracteristicas ---------- */
+@media(min-width:1000px){
+  #secFicha .s3{display:grid;grid-template-columns:minmax(0,6fr) minmax(0,5fr);gap:0 40px;align-items:start}
+  #secFicha .s3-main{aspect-ratio:16/10}
+  #secFicha .carac{margin-top:0;border-top:0;padding-top:4px}
+}
 </style>
 </head>
 <body>
@@ -710,14 +717,8 @@ dialog.wide{width:min(860px,calc(100vw - 32px))}
     <h2 id="indTitle">Indicadores del CEDIS</h2>
   </div>
 
-  <!-- ============ 1. CAPACIDAD DEL CEDIS ============ -->
-  <section id="secPlanta">
-    <div class="shead">
-      <h2>Capacidad del CEDIS</h2>
-      <p>Cifras tomadas del documento del proyecto: demanda del Serie 3, componentes y superficie del almacén</p>
-    </div>
-    <div class="kpis" id="kpisPlanta"></div>
-    <div style="height:12px"></div>
+  <!-- ============ PRODUCCIÓN DEL SERIE 3 ============ -->
+  <section id="secProd">
     <div class="card">
       <div class="chead"><h3>Producción del Serie 3 en la planta cliente</h3><span class="tag">2021–2032</span></div>
       <p class="csub">Producción histórica del Serie 3 entre 2021 y 2025 y el pronóstico del proyecto
@@ -729,6 +730,15 @@ dialog.wide{width:min(860px,calc(100vw - 32px))}
         <span><i class="sq" style="background:var(--s2)"></i>Pronóstico del proyecto</span>
       </div>
     </div>
+  </section>
+
+  <!-- ============ CAPACIDAD DEL CEDIS ============ -->
+  <section id="secPlanta">
+    <div class="shead">
+      <h2>Capacidad del CEDIS</h2>
+      <p>Cifras tomadas del documento del proyecto: demanda del Serie 3, componentes por vehículo y contenedores</p>
+    </div>
+    <div class="kpis" id="kpisPlanta"></div>
   </section>
 
   <!-- ============ 2. OPERACIÓN DIARIA ============ -->
@@ -1324,13 +1334,7 @@ function kpisDe(scope){
       kpi({lb:"Componentes por vehículo",v:n(P.oportunidades),u:"conjuntos",
         sub:"Lista de materiales (BOM) del 320i de referencia"})+
       kpi({lb:"Contenedores por mes",v:n(CEDIS.contenedoresMes),u:"contenedores",
-        sub:"Flujo mensual considerado en el estudio de localización"})+
-      kpi({lb:"Superficie construida",v:n(CEDIS.superficie),u:"m²",
-        sub:CEDIS.largo+" × "+CEDIS.ancho+" m en el Parque Industrial Logistik II"})+
-      kpi({lb:"Almacenamiento con pasillos",v:n(CEDIS.almacen),u:"m²",
-        sub:"Racks, calles y circulación de montacargas"})+
-      kpi({lb:"Reserva de crecimiento",v:n(CEDIS.reserva),u:"m²",
-        sub:"15 % del subtotal, para ampliación futura"});
+        sub:"Flujo mensual considerado en el estudio de localización"});
     document.querySelectorAll("#kpisPlanta .spark").forEach(function(s){s.remove();});
     return;
   }
