@@ -6,6 +6,8 @@
 <meta name="robots" content="noindex">
 <style>:root{box-sizing:border-box}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 <title>Presentación del CEDIS</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" integrity="sha384-c6Rcwz4e4CITMbu/NBmnNS8yN2sC3cUElMEMfP3vqqKFp7GOYaaBBCqmaWBjmkjb" crossorigin="anonymous" referrerpolicy="no-referrer">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js" integrity="sha384-NElt3Op+9NBMCYaef5HxeJmU4Xeard/Lku8ek6hoPTvYkQPh3zLIrJP7KiRocsxO" crossorigin="anonymous" referrerpolicy="no-referrer" defer></script>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
 <style>
 :root{
@@ -605,6 +607,39 @@ dialog.wide{width:min(860px,calc(100vw - 32px))}
   #secFicha .s3-main{aspect-ratio:16/10}
   #secFicha .carac{grid-column:2;grid-row:2;margin-top:0;border-top:0;padding-top:0}
 }
+
+/* ---------- ubicacion del CEDIS ---------- */
+.ugrid{display:grid;grid-template-columns:minmax(0,3fr) minmax(0,2fr);gap:12px;margin-bottom:12px}
+.ugrid2{margin-bottom:0}
+@media(max-width:900px){.ugrid{grid-template-columns:1fr}}
+.umap{height:380px;border-radius:9px;overflow:hidden;background:var(--surface-2);border:1px solid var(--line);z-index:0}
+.umap .ufail{display:flex;height:100%;align-items:center;justify-content:center;text-align:center;padding:20px;
+  font-size:13px;color:var(--ink-muted)}
+.uleg{display:flex;flex-wrap:wrap;gap:6px 16px;margin-top:10px;font-size:12px;color:var(--ink-2)}
+.uleg span{display:inline-flex;align-items:center;gap:6px}
+.uleg i{display:inline-block;width:11px;height:11px;border-radius:50%;border:2px solid #fff;box-shadow:0 0 0 1px var(--axis)}
+.usel{font-size:21px;font-weight:600;letter-spacing:-.01em;line-height:1.2}
+.udir{margin:6px 0 12px;font-size:13px;color:var(--ink-2);line-height:1.45}
+.utab{margin-top:0}
+.unota{margin:12px 0 0;font-size:12px;color:var(--ink-muted);line-height:1.45}
+.ulink{margin-top:auto;padding-top:12px;font-size:13px;font-weight:600}
+.leaflet-tooltip.utip{font-family:var(--sans);font-size:11.5px;font-weight:600;padding:3px 7px;border-radius:6px;
+  border:1px solid var(--line);box-shadow:0 2px 6px rgba(11,11,11,.12)}
+.ufac table{width:100%;border-collapse:collapse;font-size:12px}
+.ufac th{font-size:10.5px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-muted);
+  text-align:right;padding:0 0 6px 8px;white-space:nowrap}
+.ufac th:first-child{text-align:left;padding-left:0}
+.ufac td{padding:5px 0 5px 8px;border-top:1px solid var(--line);text-align:right;font-family:var(--mono);
+  font-variant-numeric:tabular-nums;color:var(--ink);white-space:nowrap}
+.ufac td:first-child{font-family:var(--sans);text-align:left;padding-left:0;color:var(--ink-2);white-space:normal}
+.ufac td.w{color:var(--ink-muted)}
+.ufac td.hi{font-weight:600;color:var(--s1)}
+.ufac tr.tot td{border-top:2px solid var(--ink);font-weight:700;color:var(--ink)}
+.ufac tr.tot td.hi{color:var(--s1)}
+@media(max-width:560px){.ufac .rp{display:none}}
+.ucg-p{font-family:var(--mono);font-size:18px;font-weight:600;margin:0 0 10px}
+.ucg-p small{display:block;font-family:var(--sans);font-size:11.5px;font-weight:500;color:var(--ink-muted)}
+.ucg-t{margin:14px 0 0;font-size:12.5px;color:var(--ink-2);line-height:1.5}
 </style>
 </head>
 <body>
@@ -659,8 +694,47 @@ dialog.wide{width:min(860px,calc(100vw - 32px))}
   </div>
 </div>
 
-<section class="datos" id="secDatos" aria-labelledby="datosT">
+<section class="datos" id="secDatos" aria-labelledby="ubicT">
   <div class="dhead">
+    <h2 id="ubicT">Ubicación del CEDIS</h2>
+    <p>Terreno elegido en el estudio de localización del proyecto: centro de gravedad y factores ponderados</p>
+  </div>
+  <div class="ugrid">
+    <div class="card dcard umap-card">
+      <h3>Mapa de localización</h3>
+      <p class="dsub">El CEDIS, la planta BMW, el terreno alternativo y el centro de gravedad calculado</p>
+      <div class="umap" id="umap" role="img" aria-label="Mapa de San Luis Potosí con el terreno del CEDIS en el Parque Industrial Logistik II, junto a la planta BMW"></div>
+      <div class="uleg" id="uleg"></div>
+    </div>
+    <div class="card dcard">
+      <h3>Terreno seleccionado</h3>
+      <p class="dsub">Opción 1 del estudio de localización</p>
+      <div class="usel">Parque Industrial Logistik II</div>
+      <p class="udir">Lote 606, Manzana 6, Parque Industrial Logistik II, C.P. 79526, Villa de Reyes, San Luis Potosí</p>
+      <table class="ptab utab"><tbody>
+        <tr><td>Coordenadas</td><td class="r">21.967621, −100.881781</td></tr>
+        <tr><td>Superficie del lote</td><td class="r">23,302.35 m²</td></tr>
+        <tr><td>Nave proyectada</td><td class="r">17,020 m² · 185 × 92 m</td></tr>
+        <tr><td>Carretera</td><td class="r">federal 57</td></tr>
+        <tr><td>Factores ponderados</td><td class="r">9.09 de 10</td></tr>
+      </tbody></table>
+      <p class="unota">Dentro del corredor automotriz donde opera BMW. Antes de la decisión definitiva se verifican las dimensiones exactas del lote y las restricciones de construcción.</p>
+      <a class="ulink" id="ulink" href="https://www.google.com/maps?q=21.967621,-100.881781" target="_blank" rel="noopener">Abrir en Google Maps</a>
+    </div>
+  </div>
+  <div class="ugrid ugrid2">
+    <div class="card dcard">
+      <h3>Método de factores ponderados</h3>
+      <p class="dsub">Calificación del 1 al 10 por factor, multiplicada por su ponderación</p>
+      <div class="ufac" id="ufac"></div>
+    </div>
+    <div class="card dcard">
+      <h3>Método del centro de gravedad</h3>
+      <p class="dsub">22 puntos con coordenadas y un flujo de 31,290 contenedores al mes</p>
+      <div id="ucg"></div>
+    </div>
+  </div>
+  <div class="dhead dhead2">
     <h2 id="datosT">Datos del CEDIS</h2>
     <p>Superficie de construcción y cómo se reparte, según el documento del proyecto</p>
   </div>
@@ -1679,6 +1753,7 @@ function mostrarTab(){
   document.getElementById("vPend").hidden=!pend;
   document.getElementById("footCred").hidden=pend;
   if(pend) document.getElementById("pendT").textContent="Unidad "+unidad;
+  if(!pend&&app!=="modelo") setTimeout(pintarMapa,0);
   document.querySelectorAll("#umenu [data-u]").forEach(function(b){
     b.setAttribute("aria-current",+b.getAttribute("data-u")===unidad?"page":"false"); });
   document.getElementById("btnMenu").setAttribute("aria-label","Elegir unidad (ahora: Unidad "+unidad+")");
@@ -1791,7 +1866,61 @@ function renderCostos(){
     return '<tr'+(f[2]?' class="'+f[2]+'"':'')+'><td>'+esc(f[0])+'</td><td class="r">$'+n(f[1])+'</td></tr>'; }).join("")+
     '</tbody></table><p class="cnota">El proyecto redondea la inversión sin IVA a $153,755,000 para calcular el retorno y la recuperación.</p>';
 }
+/* estudio de localizacion del documento del proyecto */
+var UBIC={
+  cedis:{l:"CEDIS · Logistik II",lat:21.967621,lng:-100.881781,c:"--s1",r:9},
+  bmw:{l:"Planta BMW",lat:21.9655,lng:-100.882,c:"--ink",r:7},
+  eje:{l:"Eje 120 (alternativa)",lat:22.092041,lng:-100.903541,c:"--ink-muted",r:7},
+  cg:{l:"Centro de gravedad",lat:22.185492,lng:-100.868404,c:"--s2",r:7}
+};
+var FACTORES=[
+  ["Cercanía con la planta BMW",18,10,6],["Acceso a carreteras principales",12,9,9],["Cercanía con los proveedores",12,9,8],
+  ["Superficie y dimensiones del terreno",12,8,7],["Disponibilidad de servicios industriales",10,10,9],
+  ["Infraestructura logística de la zona",8,10,9],["Posibilidad de crecimiento",8,8,7],["Disponibilidad de mano de obra",6,8,9],
+  ["Seguridad de la zona",5,9,7],["Compatibilidad del uso de suelo",4,10,10],["Condiciones físicas y topográficas",3,8,9],
+  ["Impacto ambiental y cumplimiento normativo",2,8,9]];
+var mapaU=null;
+function renderUbicacion(){
+  var t1=0,t2=0;
+  var filas=FACTORES.map(function(f){ var a=f[1]*f[2]/100, b=f[1]*f[3]/100; t1+=a; t2+=b;
+    return '<tr><td>'+esc(f[0])+'</td><td class="w">'+f[1]+' %</td><td class="rp'+(f[2]>f[3]?' hi':'')+'">'+f[2]+'</td>'+
+      '<td class="'+(f[2]>f[3]?'hi':'')+'">'+n(a,2)+'</td><td class="rp">'+f[3]+'</td><td>'+n(b,2)+'</td></tr>'; }).join("");
+  document.getElementById("ufac").innerHTML='<table><thead><tr><th>Factor</th><th>Peso</th><th class="rp">Logistik II</th>'+
+    '<th>Pond.</th><th class="rp">Eje 120</th><th>Pond.</th></tr></thead><tbody>'+filas+
+    '<tr class="tot"><td>Total</td><td class="w">100 %</td><td class="rp"></td><td class="hi">'+n(t1,2)+'</td><td class="rp"></td><td>'+n(t2,2)+'</td></tr>'+
+    '</tbody></table>';
+  document.getElementById("ucg").innerHTML=
+    '<p class="ucg-p">22.185492, −100.868404<small>Ubicación teórica calculada</small></p>'+
+    '<table class="ptab utab"><tbody>'+
+    '<tr><td>Distancia de Eje 120 al centro</td><td class="r">10.99 km</td></tr>'+
+    '<tr><td>Distancia de Logistik II al centro</td><td class="r">24.22 km</td></tr>'+
+    '<tr class="sub"><td>Factores ponderados: Logistik II contra Eje 120</td><td class="r">9.09 · 7.88</td></tr>'+
+    '</tbody></table>'+
+    '<p class="ucg-t">El centro de gravedad queda más cerca de Eje 120, pero se elige Logistik II: está junto a la planta BMW, '+
+    'tiene mejor infraestructura logística, seguridad y servicios, y facilita el abastecimiento justo a tiempo.</p>';
+  document.getElementById("uleg").innerHTML=Object.keys(UBIC).map(function(k){ var p=UBIC[k];
+    return '<span><i style="background:var('+p.c+')"></i>'+esc(p.l)+'</span>'; }).join("");
+  pintarMapa();
+}
+function pintarMapa(){
+  var host=document.getElementById("umap");
+  if(mapaU){ mapaU.invalidateSize(); return; }
+  if(!window.L&&document.readyState!=="complete"){ addEventListener("load",pintarMapa,{once:true}); return; }
+  if(!window.L){ host.innerHTML='<div class="ufail">No se pudo cargar el mapa. El CEDIS está en el Lote 606 del Parque Industrial Logistik II, Villa de Reyes, S.L.P.</div>'; return; }
+  if(!host.offsetWidth) return;
+  host.innerHTML="";
+  mapaU=L.map(host,{scrollWheelZoom:false,attributionControl:true});
+  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19,
+    attribution:'&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>'}).addTo(mapaU);
+  var pts=[], dir={cedis:"right",bmw:"left",eje:"left",cg:"right"};
+  Object.keys(UBIC).forEach(function(k){ var p=UBIC[k], ll=[p.lat,p.lng]; pts.push(ll);
+    L.circleMarker(ll,{radius:p.r,color:"#ffffff",weight:2,fillColor:css(p.c),fillOpacity:1})
+      .bindTooltip(p.l,{permanent:true,direction:dir[k],offset:[dir[k]==="right"?8:-8,0],className:"utip"}).addTo(mapaU); });
+  L.polyline([[UBIC.cedis.lat,UBIC.cedis.lng],[UBIC.cg.lat,UBIC.cg.lng]],{color:css("--s2"),weight:2,dashArray:"5 6",opacity:.8}).addTo(mapaU);
+  mapaU.fitBounds(pts,{padding:[40,40]});
+}
 function renderDatos(){
+  renderUbicacion();
   renderCostos();
   plano(document.getElementById("plano"));
   pastel(document.getElementById("pieSup"),[
