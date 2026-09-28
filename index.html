@@ -611,12 +611,12 @@ dialog.wide{width:min(860px,calc(100vw - 32px))}
 /* ---------- ubicacion del CEDIS ---------- */
 .ugrid{display:grid;grid-template-columns:minmax(0,3fr) minmax(0,2fr);gap:12px}
 @media(max-width:900px){.ugrid{grid-template-columns:1fr}}
-.umap{height:380px;border-radius:9px;overflow:hidden;background:var(--surface-2);border:1px solid var(--line);z-index:0}
+.umap{height:340px;border-radius:9px;overflow:hidden;background:var(--surface-2);border:1px solid var(--line);z-index:0}
 .umap .ufail{display:flex;height:100%;align-items:center;justify-content:center;text-align:center;padding:20px;
   font-size:13px;color:var(--ink-muted)}
-.usel{font-size:21px;font-weight:600;letter-spacing:-.01em;line-height:1.2}
-.udir{margin:6px 0 12px;font-size:13px;color:var(--ink-2);line-height:1.45}
-.utab{margin-top:0}
+.usel{font-size:21px;font-weight:600;letter-spacing:-.01em;line-height:1.2;margin-bottom:10px}
+.utab{margin-top:4px}
+.utab td.r.tx{font-family:var(--sans);white-space:normal;line-height:1.4}
 .unota{margin:12px 0 0;font-size:12px;color:var(--ink-muted);line-height:1.45}
 .ulink{margin-top:auto;padding-top:12px;font-size:13px;font-weight:600}
 .leaflet-tooltip.utip{font-family:var(--sans);font-size:11.5px;font-weight:600;padding:3px 7px;border-radius:6px;
@@ -708,14 +708,13 @@ dialog.wide{width:min(860px,calc(100vw - 32px))}
     </div>
     <div class="card dcard">
       <h3>Terreno seleccionado</h3>
-      <p class="dsub">Dirección y datos generales del lote</p>
+      <p class="dsub">Dirección del terreno donde se construirá el CEDIS</p>
       <div class="usel">Parque Industrial Logistik II</div>
-      <p class="udir">Lote 606, Manzana 6, Parque Industrial Logistik II, C.P. 79526, Villa de Reyes, San Luis Potosí</p>
       <table class="ptab utab"><tbody>
+        <tr><td>Dirección</td><td class="r tx">Lote 606, Manzana 6, Parque Industrial Logistik II</td></tr>
+        <tr><td>Municipio</td><td class="r tx">Villa de Reyes, San Luis Potosí</td></tr>
+        <tr><td>Código postal</td><td class="r">79526</td></tr>
         <tr><td>Coordenadas</td><td class="r">21.967621, −100.881781</td></tr>
-        <tr><td>Superficie del lote</td><td class="r">23,302.35 m²</td></tr>
-        <tr><td>Nave proyectada</td><td class="r">17,020 m² · 185 × 92 m</td></tr>
-        <tr><td>Carretera</td><td class="r">federal 57</td></tr>
       </tbody></table>
       <p class="unota">Dentro del corredor automotriz donde opera BMW, lo que acerca el surtido de componentes a la línea de ensamble.</p>
       <a class="ulink" id="ulink" href="https://www.google.com/maps?q=21.967621,-100.881781" target="_blank" rel="noopener">Abrir en Google Maps</a>
