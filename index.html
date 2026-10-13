@@ -697,7 +697,7 @@ dialog.wide{width:min(860px,calc(100vw - 32px))}
   </div>
   <div class="dgrid">
     <div class="card dcard"><h3>Costo directo de construcción</h3><p class="dsub">17,020 m² × $7,500 por m²</p><div id="cDir"></div></div>
-    <div class="card dcard"><h3>Gastos indirectos</h3><p class="dsub">9.5 % sobre el costo directo</p><div id="cInd"></div><p class="cnota">En el presupuesto del documento, permisos aparece como 2 %, pero su importe equivale a 1.5 % del costo directo.</p></div>
+    <div class="card dcard"><h3>Gastos indirectos</h3><p class="dsub">10 % sobre el costo directo</p><div id="cInd"></div></div>
     <div class="card dcard"><h3>Del costo directo a la inversión</h3><p class="dsub">Cómo se llega a la cifra total</p><div id="cTot"></div></div>
   </div>
   <div class="dhead dhead2">
@@ -1823,7 +1823,7 @@ var COSTO_DIR=[
 var COSTO_IND=[
   {l:"Supervisión y administración de obra",v:5106000,p:4},
   {l:"Proyecto arquitectónico, estructural y estudios",v:3829500,p:3},
-  {l:"Permisos, licencias y dictámenes",v:1914750,p:1.5},
+  {l:"Permisos, licencias y dictámenes",v:1914750,p:2},
   {l:"Seguridad, seguros y control de obra",v:1276500,p:1}];
 function sumaV(a){ return a.reduce(function(s,x){return s+x.v;},0); }
 function barrasH(host,filas){
@@ -1842,7 +1842,7 @@ function renderCostos(){
   barrasH(document.getElementById("cInd"),COSTO_IND);
   var dir=sumaV(COSTO_DIR), ind=sumaV(COSTO_IND), sub=dir+ind, cont=Math.round(sub*0.10),
       sin=sub+cont, iva=Math.round(sin*0.16), con=sin+iva;
-  var filas=[["Costo directo",dir],["Gastos indirectos (9.5 %)",ind],["Subtotal",sub,"sub"],
+  var filas=[["Costo directo",dir],["Gastos indirectos (10 %)",ind],["Subtotal",sub,"sub"],
              ["Contingencia (10 %)",cont],["Inversión sin IVA",sin,"tot"],["IVA (16 %)",iva],["Inversión con IVA",con,"sub"]];
   document.getElementById("cTot").innerHTML='<table class="ptab"><tbody>'+filas.map(function(f){
     return '<tr'+(f[2]?' class="'+f[2]+'"':'')+'><td>'+esc(f[0])+'</td><td class="r">$'+n(f[1])+'</td></tr>'; }).join("")+
