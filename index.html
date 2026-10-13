@@ -697,7 +697,7 @@ dialog.wide{width:min(860px,calc(100vw - 32px))}
   </div>
   <div class="dgrid">
     <div class="card dcard"><h3>Costo directo de construcción</h3><p class="dsub">17,020 m² × $7,500 por m²</p><div id="cDir"></div></div>
-    <div class="card dcard"><h3>Gastos indirectos</h3><p class="dsub">10 % sobre el costo directo</p><div id="cInd"></div></div>
+    <div class="card dcard"><h3>Gastos indirectos</h3><p class="dsub">9.5 % sobre el costo directo</p><div id="cInd"></div><p class="cnota">En el presupuesto del documento, permisos aparece como 2 %, pero su importe equivale a 1.5 % del costo directo.</p></div>
     <div class="card dcard"><h3>Del costo directo a la inversión</h3><p class="dsub">Cómo se llega a la cifra total</p><div id="cTot"></div></div>
   </div>
   <div class="dhead dhead2">
@@ -802,11 +802,11 @@ dialog.wide{width:min(860px,calc(100vw - 32px))}
   <section id="secProd">
     <div class="card">
       <div class="chead"><h3>Producción del Serie 3 en la planta cliente</h3><span class="tag">2021–2032</span></div>
-      <p class="csub">Datos generados con regresión lineal: <b>Y = 58,874.1 + 96.3X</b>, con un coeficiente de determinación <b>R² = 0.0002</b>.</p>
+      <p class="csub">Pronóstico por promedio móvil ponderado de cinco periodos (10, 15, 20, 25 y 30 %). La regresión lineal se descartó por su coeficiente de determinación <b>R² = 0.0002</b>.</p>
       <div class="ch" id="chProd"></div>
       <div class="legend">
         <span><i class="sq" style="background:var(--s1)"></i>Producción reportada</span>
-        <span><i class="sq" style="background:var(--s2)"></i>Pronóstico por regresión lineal</span>
+        <span><i class="sq" style="background:var(--s2)"></i>Pronóstico por promedio móvil ponderado</span>
       </div>
     </div>
   </section>
@@ -1025,11 +1025,10 @@ function hidratarImgs(root){ (root||document).querySelectorAll("img[data-img]").
 /* ================= datos verificados del proyecto ================= */
 var HIST=[{a:2021,v:63280},{a:2022,v:43967},{a:2023,v:74824},{a:2024,v:55998},{a:2025,v:57746}];
 /* pronóstico por promedio móvil ponderado del documento del proyecto */
-/* pronóstico por regresión lineal del documento del proyecto: Y = 58,874.1 + 96.3X, con X = 1 en 2021 */
-var REG={a:58874.1,b:96.3,r2:0.0002};
-var REG_PRON=[2026,2027,2028,2029,2030,2031,2032].map(function(y){
-  return {a:y,v:+(REG.a+REG.b*(y-2020)).toFixed(1)}; });
-var CEDIS={superficie:17020,almacen:11220,reserva:2205,contenedoresMes:31290,largo:185,ancho:92,abc:'3 / 5 / 10'};
+/* pronóstico por promedio móvil ponderado (10, 15, 20, 25 y 30 %), el método que eligió el documento */
+var PMP_PRON=[{a:2026,v:59211.15},{a:2027,v:59019.745},{a:2028,v:59940.011},{a:2029,v:58840.8696},
+  {a:2030,v:59097.4851},{a:2031,v:59201.5419},{a:2032,v:59195.9839}];
+var CEDIS={superficie:17020,almacen:11220.40,reserva:2204.81,contenedoresMes:31290,largo:185,ancho:92,abc:'3 / 5 / 10'};
 /* política de inventarios del documento: días de cobertura por clase */
 /* participación en el valor según el análisis ABC del documento del proyecto */
 var ABC_VALOR={A:"Cerca del 80 % del valor del inventario: control estricto y revisiones frecuentes",
@@ -1182,7 +1181,8 @@ function tiempoDisponibleSeg(p){ return p.turnos*(p.horas*60-p.descanso)*60; }
 function demandaDia(p){ return p.mensual&&p.diasMes ? p.mensual/p.diasMes : p.demanda/p.dias; }
 /* el takt del documento divide 1,260 min entre 197 autos (la demanda diaria redondeada) */
 function taktSeg(p){ var d=Math.round(demandaDia(p)); return d>0?tiempoDisponibleSeg(p)/d:NaN; }
-function taktMin(p){ return Math.floor(taktSeg(p)/60*100)/100; }
+function taktMin(p){ return Math.round(taktSeg(p)/60*100)/100; }
+function taktMinSeg(p){ var t=Math.round(taktSeg(p)); return Math.floor(t/60)+" min "+(t%60)+" s"; }
 
 function calcDia(r,p){
   var disp=tiempoDisponibleSeg(p);
@@ -1408,7 +1408,7 @@ function kpisDe(scope){
 
 
   el.innerHTML=
-    kpi({lb:"Takt time",v:n(taktMin(P),2),u:"min por auto",cls:"nu",
+    kpi({lb:"Takt time",v:n(taktMin(P),2),u:"min ("+taktMinSeg(P)+")",cls:"nu",
       sub:"3 turnos de 7 h = "+n(tiempoDisponibleSeg(P)/60,0)+" min ÷ "+n(Math.round(demandaDia(P)))+" autos al día",
       why:"<code>tiempo disponible ÷ demanda diaria</code><br>"+
            P.turnos+" turnos × ("+n(P.horas,1)+" h − "+P.descanso+" min) = "+
@@ -1612,7 +1612,7 @@ function cumplChart(host,lista){
 function renderCharts(){
   barChart(document.getElementById("chProd"),
     HIST.map(function(h){return {a:h.a,v:h.v,c:css("--s1")};})
-        .concat(REG_PRON.map(function(f){return {a:f.a,v:f.v,c:css("--s2")};})));
+        .concat(PMP_PRON.map(function(f){return {a:f.a,v:f.v,c:css("--s2")};})));
 
   var last=ventana();
   var metaD=dpmoFromSigma(P.sigmaObj), lim=limites(last), takt=taktSeg(P);
@@ -1692,7 +1692,7 @@ function renderModelos(){
   document.getElementById("mGrid").innerHTML= lista.length ? lista.map(function(m){
     var facts= m.proyecto
       ? '<span><b>'+n(P.demanda)+'</b>veh/año planeados</span><span><b>'+n(Math.round(dd))+'</b>veh/día</span>'+
-        '<span><b>'+n(taktMin(P),2)+'</b>takt en min</span><span><b>'+n(P.oportunidades)+'</b>componentes por vehículo</span>'
+        '<span><b>'+n(taktMin(P),2)+' min</b>takt ('+taktMinSeg(P)+')</span><span><b>'+n(P.oportunidades)+'</b>componentes por vehículo</span>'
       : '<span class="full">Se fabrica en la planta cliente; el CEDIS no lo surte.</span>';
     return '<button class="mcard" data-modelo="'+m.k+'" aria-pressed="'+(m.k===modelo)+'">'+
       '<span class="mc-top"><span class="tags"><span>'+m.tipo+'</span>'+(m.proyecto?'<span class="dark">En surtido</span>':'')+'</span>'+
@@ -1776,9 +1776,10 @@ function arcoDona(R,r,a0,a1){
   return "M"+p(R,a0)+" A"+R+" "+R+" 0 "+g+" 1 "+p(R,a1)+" L"+p(r,a1)+" A"+r+" "+r+" 0 "+g+" 0 "+p(r,a0)+"Z";
 }
 /* areas operativas del layout general (plano L-01) del documento */
-var AREAS_OP=[["Recepción y descarga",898],["Inspección",449],["Preparación de pedidos",1122],
-  ["Oficinas",337],["Servicios",449],["Mantenimiento",224]];
-function sumaAreas(){ return AREAS_OP.reduce(function(s,a){return s+a[1];},0); }
+var AREAS_OP=[["Recepción y descarga",897.63],["Inspección",448.82],["Preparación de pedidos",1122.04],
+  ["Oficinas",336.61],["Servicios",448.82],["Mantenimiento",224.41]];
+/* el documento totaliza 31 % de 11,220.40 = 3,478.32 m2; la suma de los valores redondeados da 3,478.33 */
+function sumaAreas(){ return 3478.32; }
 function pastel(host,partes,centro,sub,titulo){
   var tot=partes.reduce(function(s,x){return s+x.v;},0), a=0;
   function pct(x){ return (x.v/tot*100).toFixed(1)+" %"; }
@@ -1822,7 +1823,7 @@ var COSTO_DIR=[
 var COSTO_IND=[
   {l:"Supervisión y administración de obra",v:5106000,p:4},
   {l:"Proyecto arquitectónico, estructural y estudios",v:3829500,p:3},
-  {l:"Permisos, licencias y dictámenes",v:1914750,p:2},
+  {l:"Permisos, licencias y dictámenes",v:1914750,p:1.5},
   {l:"Seguridad, seguros y control de obra",v:1276500,p:1}];
 function sumaV(a){ return a.reduce(function(s,x){return s+x.v;},0); }
 function barrasH(host,filas){
@@ -1841,7 +1842,7 @@ function renderCostos(){
   barrasH(document.getElementById("cInd"),COSTO_IND);
   var dir=sumaV(COSTO_DIR), ind=sumaV(COSTO_IND), sub=dir+ind, cont=Math.round(sub*0.10),
       sin=sub+cont, iva=Math.round(sin*0.16), con=sin+iva;
-  var filas=[["Costo directo",dir],["Gastos indirectos (10 %)",ind],["Subtotal",sub,"sub"],
+  var filas=[["Costo directo",dir],["Gastos indirectos (9.5 %)",ind],["Subtotal",sub,"sub"],
              ["Contingencia (10 %)",cont],["Inversión sin IVA",sin,"tot"],["IVA (16 %)",iva],["Inversión con IVA",con,"sub"]];
   document.getElementById("cTot").innerHTML='<table class="ptab"><tbody>'+filas.map(function(f){
     return '<tr'+(f[2]?' class="'+f[2]+'"':'')+'><td>'+esc(f[0])+'</td><td class="r">$'+n(f[1])+'</td></tr>'; }).join("")+
@@ -1889,17 +1890,17 @@ function renderDatos(){
   renderCostos();
   plano(document.getElementById("plano"));
   pastel(document.getElementById("pieSup"),[
-    {l:"Almacenamiento y pasillos",v:CEDIS.almacen,c:"var(--s1)"},
-    {l:"Áreas operativas",v:sumaAreas(),c:"var(--s2)"},
-    {l:"Reserva de crecimiento",v:CEDIS.reserva,c:"var(--s3)"},
-    {l:"Sin asignar en el layout",v:CEDIS.superficie-CEDIS.almacen-sumaAreas()-CEDIS.reserva,c:"var(--axis)"}],
+    {l:"Almacenamiento y pasillos",v:CEDIS.almacen,d:2,c:"var(--s1)"},
+    {l:"Áreas operativas",v:sumaAreas(),d:2,c:"var(--s2)"},
+    {l:"Reserva de crecimiento",v:CEDIS.reserva,d:2,c:"var(--s3)"},
+    {l:"Sin asignar en el layout",v:CEDIS.superficie-CEDIS.almacen-sumaAreas()-CEDIS.reserva,d:2,c:"var(--axis)"}],
     n(CEDIS.superficie),"m² construidos","Reparto de la superficie construida");
-  document.getElementById("supNota").textContent="Áreas operativas: "+AREAS_OP.map(function(a){return a[0].toLowerCase()+" "+n(a[1]);}).join(", ")+
+  document.getElementById("supNota").textContent="Áreas operativas: "+AREAS_OP.map(function(a){return a[0].toLowerCase()+" "+n(a[1],2);}).join(", ")+
     " m². La reserva es el 15 % del almacenamiento más las áreas operativas.";
   pastel(document.getElementById("pieAlm"),[
     {l:"Superficie neta de posiciones",v:6732.24,d:2,c:"var(--alm1)"},
     {l:"Pasillos, calles y circulación",v:CEDIS.almacen-6732.24,d:2,c:"var(--alm2)"}],
-    n(CEDIS.almacen),"m² de almacén","Uso del almacén");
+    n(CEDIS.almacen,2),"m² de almacén","Uso del almacén");
 }
 
 /* ================= maquinaria y equipo ================= */
