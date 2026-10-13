@@ -688,7 +688,7 @@ dialog.wide{width:min(860px,calc(100vw - 32px))}
   </div>
   <div class="dgrid">
     <div class="card dcard"><h3>Superficie de construcción</h3><p class="dsub">Planta rectangular de la nave</p><div id="plano"></div></div>
-    <div class="card dcard"><h3>Reparto de la superficie</h3><p class="dsub">Metros cuadrados construidos por área</p><div id="pieSup"></div></div>
+    <div class="card dcard"><h3>Reparto de la superficie</h3><p class="dsub">Metros cuadrados por área, según el layout general del documento</p><div id="pieSup"></div><p class="cnota" id="supNota"></p></div>
     <div class="card dcard"><h3>Uso del almacén</h3><p class="dsub">Desglose de la rebanada azul del reparto</p><div id="pieAlm"></div></div>
   </div>
   <div class="dhead dhead2">
@@ -857,7 +857,7 @@ dialog.wide{width:min(860px,calc(100vw - 32px))}
       <p>Días de inventario de cada clase ABC contra su política</p>
     </div>
     <div class="card">
-      <div class="chead"><h3>Cobertura del inventario por clase ABC</h3></div>
+      <div class="chead"><h3>Cobertura del inventario por clase ABC</h3><span class="tag" id="leadTag"></span></div>
       <p class="csub" id="leadSub"></p>
       <div class="ch" id="chLead"></div>
       <div class="legend" id="leadLeg"></div>
@@ -1039,7 +1039,7 @@ var ABC=[{k:"A",dias:3,parte:0.45,l:"Clase A · alta rotación"},
          {k:"B",dias:5,parte:0.30,l:"Clase B · rotación media"},
          {k:"C",dias:10,parte:0.25,l:"Clase C · baja rotación"}];
 function consumoClase(a,p){ return p.consumoUM*a.parte; }
-var DEF={demanda:59020,dias:300,turnos:3,horas:7,descanso:0,oportunidades:22,
+var DEF={demanda:59020,mensual:4919,diasMes:25,dias:300,turnos:3,horas:7,descanso:0,oportunidades:22,
          consumoUM:1251.6,sigmaObj:4,cobMin:3,cobMax:10};
 var SIGTAB=[{s:1,d:690000,y:"30.85"},{s:2,d:308000,y:"69.20"},{s:3,d:66800,y:"93.32"},
             {s:4,d:6210,y:"99.38"},{s:5,d:233,y:"99.977"},{s:6,d:3.4,y:"99.99966"}];
@@ -1068,18 +1068,13 @@ var FOTOS={
 var vistaS3="frente";
 var CARAC={
   serie3:{filas:[
-    ["Carrocería","Sedán de 4 puertas"],
-    ["Generación","G20 · actualización en julio de 2022"],
-    ["Plataforma","CLAR"],
-    ["Largo · ancho · alto","4,709 · 1,827 · 1,442 mm"],
-    ["Distancia entre ejes","2,851 mm"],
-    ["Motorizaciones","Gasolina, diésel e híbrida enchufable (330e), según el mercado"],
-    ["Tracción","Trasera o integral xDrive"],
-    ["Transmisión","Automática de 8 velocidades"],
-    ["Vehículo de referencia del proyecto","320i 2026, según la ficha técnica de BMW México"],
-    ["Planta que abastece el CEDIS","BMW Group Planta San Luis Potosí, en Villa de Reyes"]],
-   fuentes:[["BMW Group PressClub México","https://www.press.bmwgroup.com/mexico/article/detail/T0309300ES/bmw-group-planta-san-luis-potos%C3%AD-celebra-su-primer-aniversario-en-m%C3%A9xico?language=es"],
-            ["Wikipedia, BMW 3 Series (G20)","https://en.wikipedia.org/wiki/BMW_3_Series_(G20)"]]},
+    ["Modelo / versión","Serie 3 / 320i"],["Año modelo","2026"],["Carrocería","Sedán"],["Combustible","Gasolina"],
+    ["Motor","BMW TwinPower Turbo, un turbocompresor"],["Número de cilindros","4"],["Cilindrada","1,998 cm³"],
+    ["Potencia","184 hp"],["Torque máximo","300 Nm"],["Transmisión","Automática deportiva de 8 velocidades"],
+    ["Tracción","Trasera"],["Aceleración de 0 a 100 km/h","7.4 segundos"],["Capacidad del tanque","59 litros"],
+    ["Rines","17 pulgadas"],["Neumáticos","Runflat"],["Vestiduras","Sensatec"],["Iluminación","Faros LED"]],
+   fuentes:[["Tabla 1 del documento: ficha técnica oficial de BMW 320i 2026, BMW México",
+     "https://www.bmw.com.mx/content/dam/bmw/marketMX/bmw_com_mx/Descargas/fichas-2026/agosto/serie-3/Ficha%20T%C3%A9cnica%20BMW%20320i%202026.pdf.coredownload.pdf"]]},
   serie2:{filas:[["Carrocería","Coupé de 2 puertas"],["Generación","G42"],["Relación con el proyecto","Fuera del alcance"]]},
   m2:{filas:[["Carrocería","Coupé de 2 puertas"],["Generación","G87"],["Línea","BMW M"],["Relación con el proyecto","Fuera del alcance"]]}};
 function renderCarac(m){
@@ -1087,7 +1082,7 @@ function renderCarac(m){
   if(!c){ el.innerHTML=""; return; }
   el.innerHTML='<h3>Características del modelo</h3><dl>'+c.filas.map(function(f){
       return '<div><dt>'+esc(f[0])+'</dt><dd>'+esc(f[1])+'</dd></div>'; }).join("")+'</dl>'+
-    (c.fuentes?'<p class="src">Fuentes: '+c.fuentes.map(function(x){
+    (c.fuentes?'<p class="src">Fuente: '+c.fuentes.map(function(x){
       return '<a href="'+x[1]+'" target="_blank" rel="noopener">'+esc(x[0])+'</a>'; }).join(" · ")+'</p>':'');
 }
 var CATS=[{k:"sedan",l:"Sedán"},{k:"coupe",l:"Coupé"}];
@@ -1183,8 +1178,11 @@ var cargado=false;
 function vista(){ return demoOn?demo:reales; }
 function ventana(){ var l=vista(); return periodo>0?l.slice(-periodo):l.slice(); }
 function tiempoDisponibleSeg(p){ return p.turnos*(p.horas*60-p.descanso)*60; }
-function demandaDia(p){ return p.demanda/p.dias; }
-function taktSeg(p){ var d=demandaDia(p); return d>0?tiempoDisponibleSeg(p)/d:NaN; }
+/* el documento: 59,020 / 12 = 4,918.33, redondeado a 4,919 al mes; 4,919 / 25 dias = 196.76 por dia */
+function demandaDia(p){ return p.mensual&&p.diasMes ? p.mensual/p.diasMes : p.demanda/p.dias; }
+/* el takt del documento divide 1,260 min entre 197 autos (la demanda diaria redondeada) */
+function taktSeg(p){ var d=Math.round(demandaDia(p)); return d>0?tiempoDisponibleSeg(p)/d:NaN; }
+function taktMin(p){ return Math.floor(taktSeg(p)/60*100)/100; }
 
 function calcDia(r,p){
   var disp=tiempoDisponibleSeg(p);
@@ -1394,8 +1392,8 @@ function kpisDe(scope){
     el.innerHTML=
       kpi({lb:"Demanda 2027",v:n(P.demanda),u:"veh/año",
         sub:"Pronóstico del Serie 3 por promedio móvil ponderado"})+
-      kpi({lb:"Demanda diaria",v:n(demandaDia(P),1),u:"veh/día",
-        sub:n(P.dias)+" días operativos al año, de lunes a sábado"})+
+      kpi({lb:"Demanda diaria",v:n(Math.round(demandaDia(P))),u:"veh/día",
+        sub:"4,919 autos al mes ÷ 25 días laborales, de lunes a sábado = "+n(demandaDia(P),2)})+
       kpi({lb:"Componentes por vehículo",v:n(P.oportunidades),u:"conjuntos",
         sub:"Lista de materiales (BOM) del 320i de referencia"})+
       kpi({lb:"Contenedores por mes",v:n(CEDIS.contenedoresMes),u:"contenedores",
@@ -1410,8 +1408,8 @@ function kpisDe(scope){
 
 
   el.innerHTML=
-    kpi({lb:"Takt time",v:seg(takt),u:"min:s",cls:"nu",
-      sub:n(demandaDia(P),1)+" veh/día · "+n(tiempoDisponibleSeg(P)/60,0)+" min disponibles",
+    kpi({lb:"Takt time",v:n(taktMin(P),2),u:"min por auto",cls:"nu",
+      sub:"3 turnos de 7 h = "+n(tiempoDisponibleSeg(P)/60,0)+" min ÷ "+n(Math.round(demandaDia(P)))+" autos al día",
       why:"<code>tiempo disponible ÷ demanda diaria</code><br>"+
            P.turnos+" turnos × ("+n(P.horas,1)+" h − "+P.descanso+" min) = "+
            n(tiempoDisponibleSeg(P))+" s<br>"+
@@ -1621,6 +1619,7 @@ function renderCharts(){
 
   /* carta de control por mes */
   document.getElementById("ccTag").textContent=demoOn?"datos de ejemplo":"";
+  document.getElementById("leadTag").textContent=demoOn?"datos de ejemplo":"";
   var meses=agrupaMes(vista());
   var limM=limitesDe(meses.map(function(m){return m.dpmo;}));
   var refs=[{v:metaD,c:css("--s2"),l:"meta "+P.sigmaObj+"σ",dash:"5 4",w:2}];
@@ -1644,7 +1643,7 @@ function renderCharts(){
       ' sigma, sobre los autos terminados</span>'+
       '<div class="hi"><b>'+n(L4.juegosAnio,0)+'</b>autos con defecto al año, de la demanda de '+n(P.demanda)+'</div>'+
       '<div><b>'+n(L4.errComp,3)+' %</b>de los autos</div>'+
-      '<div><b>'+n(L4.juegosAnio/P.dias,2)+'</b>autos al día de '+n(demandaDia(P),1)+'</div>'
+      '<div><b>'+n(L4.juegosAnio/P.dias,2)+'</b>autos al día de '+n(Math.round(demandaDia(P)))+'</div>'
     : "";
   document.getElementById("ccLeg").innerHTML=
     (meses.length?'<span style="color:var(--ink-2)">'+meses.length+' mes'+(meses.length>1?'es':'')+
@@ -1692,8 +1691,8 @@ function renderModelos(){
   var dd=demandaDia(P);
   document.getElementById("mGrid").innerHTML= lista.length ? lista.map(function(m){
     var facts= m.proyecto
-      ? '<span><b>'+n(P.demanda)+'</b>veh/año planeados</span><span><b>'+n(dd,1)+'</b>veh/día</span>'+
-        '<span><b>'+seg(taktSeg(P))+'</b>takt min:s</span><span><b>'+n(P.oportunidades)+'</b>componentes por vehículo</span>'
+      ? '<span><b>'+n(P.demanda)+'</b>veh/año planeados</span><span><b>'+n(Math.round(dd))+'</b>veh/día</span>'+
+        '<span><b>'+n(taktMin(P),2)+'</b>takt en min</span><span><b>'+n(P.oportunidades)+'</b>componentes por vehículo</span>'
       : '<span class="full">Se fabrica en la planta cliente; el CEDIS no lo surte.</span>';
     return '<button class="mcard" data-modelo="'+m.k+'" aria-pressed="'+(m.k===modelo)+'">'+
       '<span class="mc-top"><span class="tags"><span>'+m.tipo+'</span>'+(m.proyecto?'<span class="dark">En surtido</span>':'')+'</span>'+
@@ -1776,6 +1775,10 @@ function arcoDona(R,r,a0,a1){
   var g=(a1-a0)>Math.PI?1:0;
   return "M"+p(R,a0)+" A"+R+" "+R+" 0 "+g+" 1 "+p(R,a1)+" L"+p(r,a1)+" A"+r+" "+r+" 0 "+g+" 0 "+p(r,a0)+"Z";
 }
+/* areas operativas del layout general (plano L-01) del documento */
+var AREAS_OP=[["Recepción y descarga",898],["Inspección",449],["Preparación de pedidos",1122],
+  ["Oficinas",337],["Servicios",449],["Mantenimiento",224]];
+function sumaAreas(){ return AREAS_OP.reduce(function(s,a){return s+a[1];},0); }
 function pastel(host,partes,centro,sub,titulo){
   var tot=partes.reduce(function(s,x){return s+x.v;},0), a=0;
   function pct(x){ return (x.v/tot*100).toFixed(1)+" %"; }
@@ -1886,13 +1889,16 @@ function renderDatos(){
   renderCostos();
   plano(document.getElementById("plano"));
   pastel(document.getElementById("pieSup"),[
-    {l:"Almacén",v:CEDIS.almacen,c:"var(--s1)"},
-    {l:"Áreas de apoyo",v:CEDIS.superficie-CEDIS.almacen-CEDIS.reserva,c:"var(--s2)"},
-    {l:"Reserva de crecimiento",v:CEDIS.reserva,c:"var(--s3)"}],
+    {l:"Almacenamiento y pasillos",v:CEDIS.almacen,c:"var(--s1)"},
+    {l:"Áreas operativas",v:sumaAreas(),c:"var(--s2)"},
+    {l:"Reserva de crecimiento",v:CEDIS.reserva,c:"var(--s3)"},
+    {l:"Sin asignar en el layout",v:CEDIS.superficie-CEDIS.almacen-sumaAreas()-CEDIS.reserva,c:"var(--axis)"}],
     n(CEDIS.superficie),"m² construidos","Reparto de la superficie construida");
+  document.getElementById("supNota").textContent="Áreas operativas: "+AREAS_OP.map(function(a){return a[0].toLowerCase()+" "+n(a[1]);}).join(", ")+
+    " m². La reserva es el 15 % del almacenamiento más las áreas operativas.";
   pastel(document.getElementById("pieAlm"),[
-    {l:"Posiciones de piso",v:6732.24,d:2,c:"var(--alm1)"},
-    {l:"Pasillos y maniobras",v:CEDIS.almacen-6732.24,d:2,c:"var(--alm2)"}],
+    {l:"Superficie neta de posiciones",v:6732.24,d:2,c:"var(--alm1)"},
+    {l:"Pasillos, calles y circulación",v:CEDIS.almacen-6732.24,d:2,c:"var(--alm2)"}],
     n(CEDIS.almacen),"m² de almacén","Uso del almacén");
 }
 
@@ -1949,19 +1955,19 @@ var EQUIPOS={
   axis:{no:9,fam:"Sistema CCTV",n:"Axis P3265-LVE",car:"Cámara IP para interior y exterior",ven:"Analítica, buena imagen y enfoque industrial.",
     alt:["Hikvision DS-2CD2T87G2","Bosch DINION 5100i"],uso:"Prioriza confiabilidad y supervisión de accesos, andenes y pasillos de almacenamiento."},
   amerex:{no:10,fam:"Extintor",n:"Amerex B456 ABC",car:"Extintor multipropósito de 10 lb",ven:"Uso general y construcción metálica.",
-    alt:["Kidde Pro 10 MP","Ansul Sentry AA10S"],uso:"Alternativa multipropósito para la protección inicial, sujeta al proyecto de seguridad y a la normativa aplicable."},
+    alt:["Kidde Pro 10 MP","Ansul Sentry AA10S"],uso:"Es una alternativa multipropósito para la protección inicial, sujeta al proyecto de seguridad y normativa aplicable."},
   brady:{no:11,fam:"Señalización",n:"Brady Safety",car:"Señales, etiquetas de seguridad y demarcación",ven:"Catálogo industrial amplio.",
     alt:["Seton","Accuform"],uso:"Permite estandarizar rutas, riesgos, ubicaciones, equipos de emergencia y control visual."},
   epp:{no:12,fam:"Equipo de protección personal",n:"Honeywell Industrial",car:"Protección ocular, auditiva, respiratoria y corporal",ven:"Portafolio industrial integral.",
-    alt:["3M Industrial","MSA Safety"],uso:"Facilita integrar un paquete de EPP para las actividades del CEDIS; la selección final depende del análisis de riesgos."},
+    alt:["3M Industrial","MSA Safety"],uso:"Facilita integrar un paquete de EPP para las distintas actividades del CEDIS; la selección final depende del análisis de riesgos."},
   carro:{no:13,fam:"Carro de picking",n:"Rubbermaid Heavy Duty",car:"Carro de servicio industrial",ven:"Maniobrable, resistente y versátil.",
-    alt:["Uline Steel Picking Cart","Metro Utility Cart"],uso:"Útil para el surtido manual de kits y piezas de baja dimensión en las zonas B y C."},
+    alt:["Uline Steel Picking Cart","Metro Utility Cart"],uso:"Es útil para el surtido manual de kits y piezas de baja dimensión en las zonas B y C."},
   film:{no:14,fam:"Film plástico",n:"Sigma Stretch Film",car:"Película estirable para emplaye",ven:"Variedad de calibres y aplicación manual o automática.",
     alt:["Berry Global Stretch Film","Intertape StretchFlex"],uso:"Permite estabilizar pallets y proteger los componentes durante el manejo interno."},
   etiq:{no:15,fam:"Etiqueta industrial",n:"Zebra Z-Ultimate 3000T",car:"Etiqueta sintética de transferencia térmica",ven:"Alta resistencia y buena calidad de impresión.",
-    alt:["Brady B-423","Avery Industrial"],uso:"Compatible con impresión por transferencia térmica; favorece la trazabilidad de contenedores y ubicaciones."},
+    alt:["Brady B-423","Avery Industrial"],uso:"Es compatible con impresión por transferencia térmica y favorece la trazabilidad de contenedores y ubicaciones."},
   zt231:{no:16,fam:"Etiquetadora industrial",n:"Zebra ZT231",car:"203 o 300 dpi; transferencia térmica",ven:"Interfaz amigable y opción RFID.",
-    alt:["Honeywell PM45","TSC MH241"],uso:"Cubre las etiquetas de códigos de barras del CEDIS con operación sencilla y capacidad industrial."}
+    alt:["Honeywell PM45","TSC MH241"],uso:"Cubre las necesidades de etiquetas de códigos de barras del CEDIS con operación sencilla y capacidad industrial."}
 };
 function fichaEq(k){
   var e=EQUIPOS[k], f=FOTO_EQ[k], dist=/distribuidor/.test(f.autor);
