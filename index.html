@@ -1105,6 +1105,48 @@ dialog.wide{width:min(860px,calc(100vw - 32px))}
 
   </div><!-- /dash -->
 
+  <!-- ============ VSM ACTUAL ============ -->
+  <section id="secVsm">
+    <div class="vsm-aparte">
+      <span class="tag">VSM actual</span>
+      <h2>VSM actual · fabricación de alfombras automotrices</h2>
+      <p>Línea de alfombras del conjunto «Acabados y accesorios» del BOM; las mejoras y el VSM futuro están en la Unidad 2</p>
+    </div>
+    <p class="u2-lead">Un juego = 4 alfombras · <b>4,919 juegos al mes ÷ 25 días = 197 juegos al día</b> · jornada de 420 min (25,200 s) · <b>takt = 25,200 ÷ 197 = 127.9 ≈ 128 s por juego</b></p>
+    <div class="kpis" id="kpisVsm1"></div>
+    <div style="height:12px"></div>
+    <div class="card">
+      <div class="chead"><h3>Mapa de flujo de valor · estado actual</h3></div>
+      <p class="csub" id="vsmMapSub1"></p>
+      <div class="vsm-scroll"><div class="vsm" id="vsmMap1"></div></div>
+      <div class="legend" id="vsmLeg1"></div>
+    </div>
+    <div style="height:12px"></div>
+    <div class="card">
+      <div class="chead"><h3>Tiempo de ciclo de cada estación contra el takt</h3></div>
+      <p class="csub" id="vsmCtSub1"></p>
+      <div id="vsmCt1"></div>
+    </div>
+    <div style="height:12px"></div>
+    <div class="vsm-hz">
+      <div class="card">
+        <div class="chead"><h3>Desperdicios identificados</h3></div>
+        <p class="csub">Lo que encontró el análisis del estado actual</p>
+        <ul class="hz-list" id="vsmDesp"></ul>
+      </div>
+      <div class="card">
+        <div class="chead"><h3>Estaciones arriba del takt</h3></div>
+        <p class="csub">Tiempo de ciclo contra los 128 s que exige la demanda; el embarque no tiene tiempo medido</p>
+        <div id="vsmSobre"></div>
+        <div class="hz-prog">
+          <h4>Cómo se programa hoy</h4>
+          <p>Pronósticos mensuales, pedidos semanales, hojas de cálculo y órdenes de producción impresas.</p>
+        </div>
+      </div>
+    </div>
+    <p class="maqnota">El estado actual es el punto de partida para las actividades de mejora y el VSM futuro de la Unidad 2.</p>
+  </section>
+
 
 </div>
 </div><!-- /vModelo -->
@@ -1128,51 +1170,23 @@ dialog.wide{width:min(860px,calc(100vw - 32px))}
   <!-- ============ 2.1.1 VSM ============ -->
   <section class="u2s" id="u2Vsm">
     <div class="dhead">
-      <h2>2.1.1 VSM · fabricación de alfombras automotrices</h2>
-      <p>Las alfombras entran al CEDIS dentro del conjunto «Acabados y accesorios» del BOM (supuesto del equipo)</p>
+      <h2>2.1.1 VSM futuro · fabricación de alfombras automotrices</h2>
+      <p>Cómo funcionaría la línea con las mejoras; el VSM actual está en la Unidad 1, al final de los indicadores</p>
     </div>
     <p class="u2-lead">Un juego = 4 alfombras · <b>4,919 juegos al mes ÷ 25 días = 197 juegos al día</b> · jornada de 420 min (25,200 s) · <b>takt = 25,200 ÷ 197 = 127.9 ≈ 128 s por juego</b></p>
     <div class="kpis" id="kpisVsm"></div>
     <div style="height:12px"></div>
     <div class="card">
-      <div class="chead"><h3>Mapa de flujo de valor</h3>
-        <div class="seg u2-modo" role="group" aria-label="Estado del VSM" id="vsmModo">
-          <button type="button" data-m="actual" aria-pressed="true">VSM actual</button>
-          <button type="button" data-m="futuro" aria-pressed="false">VSM futuro</button>
-        </div>
-      </div>
+      <div class="chead"><h3>Mapa de flujo de valor · estado futuro</h3></div>
       <p class="csub" id="vsmMapSub"></p>
       <div class="vsm-scroll"><div class="vsm" id="vsmMap"></div></div>
       <div class="legend" id="vsmLeg"></div>
     </div>
     <div style="height:12px"></div>
     <div class="card">
-      <div class="chead"><h3>Tiempo de ciclo por estación: actual contra futuro</h3></div>
+      <div class="chead"><h3>Tiempo de ciclo futuro de cada estación contra el takt</h3></div>
       <p class="csub" id="vsmCtSub"></p>
       <div id="vsmCt"></div>
-      <div class="legend">
-        <span><i class="sq" style="background:var(--axis)"></i>Actual dentro del takt</span>
-        <span><i class="sq" style="background:var(--crit)"></i>Actual arriba del takt</span>
-        <span><i class="sq" style="background:var(--s1)"></i>Futuro</span>
-        <span><i class="vl-inf"></i>Takt de 128 s</span>
-      </div>
-    </div>
-    <div style="height:12px"></div>
-    <div class="vsm-hz">
-      <div class="card">
-        <div class="chead"><h3>Desperdicios del estado actual</h3></div>
-        <p class="csub">Lo que encontró el análisis del VSM actual</p>
-        <ul class="hz-list" id="vsmDesp"></ul>
-      </div>
-      <div class="card">
-        <div class="chead"><h3>Estaciones arriba del takt (actual)</h3></div>
-        <p class="csub">Tiempo de ciclo contra los 128 s que exige la demanda; el embarque no tiene tiempo medido</p>
-        <div id="vsmSobre"></div>
-        <div class="hz-prog">
-          <h4>Cómo se programa hoy</h4>
-          <p>Pronósticos mensuales, pedidos semanales, hojas de cálculo y órdenes de producción impresas.</p>
-        </div>
-      </div>
     </div>
     <div style="height:12px"></div>
     <div class="card">
@@ -2468,12 +2482,11 @@ var JIDOKA=[
   ["Logotipo y sujetadores",120,90,"Poka-Yoke: plantilla con orificios en la posición exacta de cada sujetador y del logotipo, y charola con el número exacto de sujetadores de un juego.","Contacto y valor fijo; advertencia","Medir la posición de cada pieza, buscar sujetadores y errores de orientación; si queda un sujetador en la charola, falta colocarlo."],
   ["Inspección final",95,65,"Autocontrol en cada estación y galga de contorno del modelo contra la que se coloca la alfombra terminada.","Contacto; advertencia","Revisar al final defectos que ya se detectaron y corrigieron en su estación."],
   ["Empaque y etiquetado",105,80,"Poka-Yoke: se escanean las cuatro alfombras del juego y la etiqueta solo se imprime si las cuatro corresponden al mismo modelo y juego.","Secuencia de pasos; control","Juegos incompletos o con piezas de otro modelo que hoy se descubren en la planta de ensamble."]];
-var vsmModo="actual";
-function diasTxt(d){ return n(d,d%1?(d*4%1?2:(d*2%1?2:1)):0)+(d===1?" día":" días"); }
+function diasTxt(d){ return n(d,d%1?(d*2%1?2:1):0)+(d===1?" día":" días"); }
 function sumCt(e){ return e.filter(function(x){return x.ct;}).reduce(function(s,x){return s+x.ct;},0); }
 function sumEsp(a){ return a.reduce(function(s,d){return s+d;},0); }
-function mapaVsm(){
-  var M=VSM[vsmModo], est=M.est, conCt=est.filter(function(e){return e.ct;}), proc=sumCt(est), lead=sumEsp(M.espera);
+function mapaVsm(modo,sfx){
+  var M=VSM[modo], est=M.est, conCt=est.filter(function(e){return e.ct;}), proc=sumCt(est), lead=sumEsp(M.espera), act=modo==="actual";
   var tri='<svg class="vs-tri" viewBox="0 0 24 21" aria-hidden="true"><path d="M12 1.5L22.5 19.5H1.5Z"/></svg>';
   var sup='<svg class="vs-sup" viewBox="0 0 22 20" aria-hidden="true"><path d="M2 2H20V18H2M2 7.3H20M2 12.6H20"/></svg>';
   var fila=est.map(function(e,i){
@@ -2481,16 +2494,16 @@ function mapaVsm(){
     var dt=e.ct?('<div class="dt">C/T <b>'+e.ct+' s</b><br>'+e.op+' operadores<br>Disp. <b>'+e.disp+' %</b>'+
         (e.extra?'<br>'+esc(e.extra[0])+' <b>'+esc(e.extra[1])+'</b>':'')+'</div>')
       :'<div class="dt">C/T no medido<br>'+esc(M.sal)+'</div>';
-    var caja='<div class="vs-st'+(e.bn&&vsmModo==="actual"?' bn':'')+(sob?' sobre':'')+(e.ct?'':' sinct')+'" data-t="'+
+    var caja='<div class="vs-st'+(e.bn&&act?' bn':'')+(sob?' sobre':'')+(e.ct?'':' sinct')+'" data-t="'+
       esc(e.ct?(e.n+": C/T "+e.ct+" s contra takt de "+VSM.takt+" s"+(sob?" · arriba del takt":" · dentro del takt")):e.n+": C/T no medido")+'">'+
       '<div class="h">'+esc(e.n)+'</div>'+dt+(e.kz?'<span class="kz">'+esc(e.kz)+'</span>':'')+
-      (e.bn&&vsmModo==="actual"?'<span class="bnt">Cuello de botella</span>':'')+'</div>';
+      (e.bn&&act?'<span class="bnt">Cuello de botella</span>':'')+'</div>';
     var b=M.buf[i], ico=b==="inv"?tri:(b==="sup"?sup:'<span class="vs-fifo">FIFO</span>');
     var gap=i<est.length-1?('<div class="vs-gap" data-t="'+esc((b==="inv"?"Inventario":b==="sup"?"Supermercado":"Carril FIFO")+": "+diasTxt(M.espera[i]))+'"><span class="vs-arr"></span>'+ico+'<span class="vs-d">'+diasTxt(M.espera[i])+'</span></div>'):'';
     return caja+gap; }).join("");
   var lad=M.espera.map(function(d,i){
     return '<div class="vs-cell"><div class="w">'+diasTxt(d)+'</div><div class="p">'+conCt[i].ct+' s</div></div>'; }).join("");
-  document.getElementById("vsmMap").innerHTML=
+  document.getElementById("vsmMap"+sfx).innerHTML=
     '<div class="vs-top">'+
       '<div class="vs-ent">Proveedor<small>materia prima</small><span class="vs-trk">'+esc(M.ent)+'</span></div>'+
       '<div class="vs-inf izq">'+esc(M.prov)+'</div>'+
@@ -2502,16 +2515,15 @@ function mapaVsm(){
     '<div class="vs-row">'+fila+'</div>'+
     '<div class="vs-lad">'+lad+'<div class="vs-tot"><span>Lead time</span><b>'+n(lead,lead%1?1:0)+' días</b><span>Tiempo de proceso</span><b>'+n(proc)+' s</b></div></div>'+
     '<div class="vs-lab"><span>Arriba: tiempo de espera (días) · abajo: tiempo de proceso (segundos)</span></div>';
-  document.getElementById("vsmMapSub").textContent=vsmModo==="actual"
-    ? "Estado actual: material empujado entre estaciones con inventario en cada paso; lead time de 14 días y 975 s de proceso (16.25 min por juego)."
-    : "Estado futuro: sistema pull con WMS y e-Kanban, carriles FIFO y supermercados; lead time de 4.5 días y 685 s de proceso (11.42 min por juego). Todos los C/T quedan debajo del takt.";
-  document.getElementById("vsmLeg").innerHTML=
+  document.getElementById("vsmMapSub"+sfx).textContent=act
+    ? "Material empujado entre estaciones con inventario en cada paso; lead time de 14 días y 975 s de proceso (16.25 min por juego)."
+    : "Sistema pull con WMS y e-Kanban, carriles FIFO y supermercados; lead time de 4.5 días y 685 s de proceso (11.42 min por juego). Todos los C/T quedan debajo del takt.";
+  document.getElementById("vsmLeg"+sfx).innerHTML=
     '<span><i class="vl-mat"></i>Flujo de material</span><span><i class="vl-inf"></i>Flujo de información</span>'+
     '<span><i class="vl-inv"></i>Inventario en espera</span>'+
-    (vsmModo==="actual"?'<span><i class="sq" style="background:var(--crit)"></i>Cuello de botella / C/T arriba del takt</span>'
+    (act?'<span><i class="sq" style="background:var(--crit)"></i>Cuello de botella / C/T arriba del takt</span>'
       :'<span>FIFO · carril con capacidad máxima</span><span><i class="sq" style="background:color-mix(in srgb,var(--good) 30%,var(--surface))"></i>Mejora aplicada</span>');
-  document.querySelectorAll("#vsmModo button").forEach(function(x){ x.setAttribute("aria-pressed",x.getAttribute("data-m")===vsmModo); });
-  tips(document.getElementById("vsmMap"));
+  tips(document.getElementById("vsmMap"+sfx));
 }
 function tips(root){
   root.querySelectorAll("[data-t]").forEach(function(r){
@@ -2520,6 +2532,37 @@ function tips(root){
     r.addEventListener("mouseleave",hideTip);
   });
 }
+function barrasCt(est,ref){
+  var c=est.filter(function(e){return e.ct;}), mx=Math.max(VSM.takt,Math.max.apply(null,(ref||c).filter(function(e){return e.ct;}).map(function(e){return e.ct;})))*1.1, pt=VSM.takt/mx*100;
+  return '<div class="ctr-ax"><span></span><div><span style="left:'+pt.toFixed(1)+'%">takt '+VSM.takt+' s</span></div><span></span></div>'+
+    c.map(function(e,i){
+      var antes=ref?ref.filter(function(r){return r.ct;})[i].ct:null;
+      return '<div class="ctr'+(e.ct>VSM.takt?' sobre':'')+'" data-t="'+esc(e.n+": "+e.ct+" s · takt "+VSM.takt+" s"+(antes?" · antes "+antes+" s":""))+'">'+
+        '<span class="n">'+esc(e.n)+(e.bn&&!ref?' · cuello de botella':'')+'</span>'+
+        '<span class="t"><i style="width:'+(e.ct/mx*100).toFixed(1)+'%"></i><em style="left:'+pt.toFixed(1)+'%"></em></span>'+
+        '<span class="v">'+e.ct+' s</span></div>'; }).join("");
+}
+/* Unidad 1: VSM actual */
+function renderVsmActual(){
+  var A=VSM.actual, p=sumCt(A.est), l=sumEsp(A.espera), cA=A.est.filter(function(e){return e.ct;}), sobre=cA.filter(function(e){return e.ct>VSM.takt;});
+  document.getElementById("kpisVsm1").innerHTML=
+    kpi({lb:"Demanda",v:n(VSM.dia),u:"juegos/día",sub:n(VSM.mensual)+" juegos al mes ÷ "+VSM.diasMes+" días laborables · cada juego son 4 alfombras"})+
+    kpi({lb:"Takt time",v:n(VSM.takt),u:"s/juego",sub:VSM.jornadaMin+" min efectivos ("+n(VSM.jornadaMin*60)+" s) ÷ "+n(VSM.dia)+" juegos = 127.9 s"})+
+    kpi({lb:"Lead time",v:n(l),u:"días",sub:"Aproximado: suma de las esperas de inventario entre estaciones"})+
+    kpi({lb:"Tiempo de proceso",v:n(p),u:"s",sub:n(p/60,2)+" min por juego · suma de los tiempos de ciclo"});
+  document.querySelectorAll("#kpisVsm1 .spark").forEach(function(x){x.remove();});
+  mapaVsm("actual","1");
+  document.getElementById("vsmCtSub1").textContent=sobre.length+" de "+cA.length+" estaciones quedan arriba del takt de "+VSM.takt+" s: "+
+    sobre.map(function(e){return e.n.toLowerCase()+" ("+e.ct+" s)";}).join(", ")+". La línea punteada es el takt.";
+  document.getElementById("vsmCt1").innerHTML=barrasCt(A.est);
+  document.getElementById("vsmDesp").innerHTML=VSM.desperdicios.map(function(d){
+    return '<li>'+esc(d[0])+'<span>'+esc(d[1])+'</span></li>'; }).join("");
+  document.getElementById("vsmSobre").innerHTML=sobre.slice().sort(function(a,b){return b.ct-a.ct;}).map(function(e){
+    return '<div class="hz-st"><span>'+esc(e.n)+'</span><b>'+e.ct+' s</b><em>+'+(e.ct-VSM.takt)+' s</em>'+
+      (e.bn?'<small>Principal cuello de botella</small>':'')+'</div>'; }).join("");
+  tips(document.getElementById("secVsm"));
+}
+/* Unidad 2: VSM futuro */
 function renderVsm(){
   var A=VSM.actual, F=VSM.futuro;
   var pA=sumCt(A.est), pF=sumCt(F.est), lA=sumEsp(A.espera), lF=sumEsp(F.espera);
@@ -2529,23 +2572,9 @@ function renderVsm(){
     kpi({lb:"Desperdicio de corte",v:"3",u:"%",pill:"antes 6 %",pillCls:"ok",sub:"Nuevo patrón de corte, topes y sensor de alineación"})+
     kpi({lb:"Reproceso en costura",v:"2",u:"%",pill:"antes 5 %",pillCls:"ok",sub:"Jidoka, balanceo y método estándar de costura"});
   document.querySelectorAll("#kpisVsm .spark").forEach(function(x){x.remove();});
-  mapaVsm();
-  var cA=A.est.filter(function(e){return e.ct;}), sobre=cA.filter(function(e){return e.ct>VSM.takt;});
-  document.getElementById("vsmDesp").innerHTML=VSM.desperdicios.map(function(d){
-    return '<li>'+esc(d[0])+'<span>'+esc(d[1])+'</span></li>'; }).join("");
-  document.getElementById("vsmSobre").innerHTML=sobre.slice().sort(function(a,b){return b.ct-a.ct;}).map(function(e){
-    return '<div class="hz-st"><span>'+esc(e.n)+'</span><b>'+e.ct+' s</b><em>+'+(e.ct-VSM.takt)+' s</em>'+
-      (e.bn?'<small>Principal cuello de botella</small>':'')+'</div>'; }).join("");
-  var mx=Math.max.apply(null,cA.map(function(e){return e.ct;}))*1.1, pt=VSM.takt/mx*100;
-  document.getElementById("vsmCtSub").textContent="Actual: "+sobre.length+" de "+cA.length+" estaciones arriba del takt de "+VSM.takt+
-    " s. Futuro: las "+cA.length+" quedan debajo; el tiempo de proceso baja de "+pA+" a "+pF+" s.";
-  document.getElementById("vsmCt").innerHTML=cA.map(function(e,i){
-    var f=F.est[i];
-    return '<div class="ct2" data-t="'+esc(e.n+": actual "+e.ct+" s → futuro "+f.ct+" s · takt "+VSM.takt+" s")+'">'+
-      '<span class="n">'+esc(e.n)+'</span>'+
-      '<span class="t"><i class="a'+(e.ct>VSM.takt?' sobre':'')+'" style="width:'+(e.ct/mx*100).toFixed(1)+'%"></i>'+
-      '<i class="f" style="width:'+(f.ct/mx*100).toFixed(1)+'%"></i><em style="left:'+pt.toFixed(1)+'%"></em></span>'+
-      '<span class="v"><s>'+e.ct+'</s> → '+f.ct+' s</span></div>'; }).join("");
+  mapaVsm("futuro","");
+  document.getElementById("vsmCtSub").textContent="Las 8 estaciones quedan debajo del takt de "+VSM.takt+" s; la más lenta es costura y ribeteado con 115 s. El tiempo de proceso suma "+pF+" s.";
+  document.getElementById("vsmCt").innerHTML=barrasCt(F.est,A.est);
   var alta=MEJORAS.filter(function(m){return m[4]==="Alta";}).length;
   document.getElementById("mejTag").textContent=MEJORAS.length+" actividades · "+alta+" de prioridad alta";
   document.getElementById("vsmMej").innerHTML=MEJORAS.map(function(m){
@@ -3153,8 +3182,6 @@ function bind(){
     if(!umenu.hidden&&!umenu.contains(e.target)&&!btnMenu.contains(e.target)) menuUnidades(false); });
   document.addEventListener("keydown",function(e){
     if(e.key==="Escape"&&!umenu.hidden){ menuUnidades(false); btnMenu.focus(); } });
-  document.getElementById("vsmModo").addEventListener("click",function(e){
-    var b=e.target.closest("[data-m]"); if(b){ vsmModo=b.getAttribute("data-m"); mapaVsm(); } });
   document.getElementById("ganttFil").addEventListener("click",function(e){
     var b=e.target.closest("[data-q]"); if(b){ ganttQuien=b.getAttribute("data-q"); pintarGantt(); } });
   document.getElementById("u2Nav").addEventListener("click",function(e){
@@ -3175,7 +3202,7 @@ function bind(){
 
 demo=generarDemo();
 hidratarImgs();
-renderDatos(); renderMaq(); renderU2();
+renderDatos(); renderMaq(); renderVsmActual(); renderU2();
 bind(); renderAll(); ponerVista("frente"); renderCreditos();
 setSync(false,"Vista sin conexión");
 
