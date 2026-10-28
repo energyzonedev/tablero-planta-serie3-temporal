@@ -1163,14 +1163,6 @@ dialog.wide{width:min(860px,calc(100vw - 32px))}
     <span class="u2-tag">Unidad 2</span>
     <h1>Planeación del proyecto CEDIS BMW</h1>
     <p>VSM de la fabricación de alfombras, objetivos y metas, alcance, riesgos y suposiciones, costo del almacén y cronograma</p>
-    <nav class="u2-nav" id="u2Nav" aria-label="Apartados de la Unidad 2">
-      <button type="button" data-ir="u2Vsm">2.1.1 VSM</button>
-      <button type="button" data-ir="u2Obj">2.1.2 Objetivos y metas</button>
-      <button type="button" data-ir="u2Alc">2.1.3 Alcance</button>
-      <button type="button" data-ir="u2Rie">2.1.4 Riesgos y suposiciones</button>
-      <button type="button" data-ir="u2Cos">2.1.5 Costo del almacén</button>
-      <button type="button" data-ir="u2Cro">3.1 Cronograma</button>
-    </nav>
   </div>
 
   <!-- ============ 2.1.1 VSM ============ -->
@@ -3224,8 +3216,6 @@ function bind(){
     if(e.key==="Escape"&&!umenu.hidden){ menuUnidades(false); btnMenu.focus(); } });
   document.getElementById("ganttFil").addEventListener("click",function(e){
     var b=e.target.closest("[data-q]"); if(b){ ganttQuien=b.getAttribute("data-q"); pintarGantt(); } });
-  document.getElementById("u2Nav").addEventListener("click",function(e){
-    var b=e.target.closest("[data-ir]"); if(b) document.getElementById(b.getAttribute("data-ir")).scrollIntoView({behavior:"smooth",block:"start"}); });
   window.addEventListener("hashchange",function(){
     var m=/^#u([1-6])$/.exec(location.hash); if(m&&+m[1]!==unidad)irUnidad(+m[1]); });
 
