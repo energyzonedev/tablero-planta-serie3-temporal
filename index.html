@@ -729,6 +729,12 @@ dialog.wide{width:min(860px,calc(100vw - 32px))}
 .u2-gen p,.u2-excl p{margin:0;font-size:13.5px;line-height:1.6;color:var(--ink);max-width:95ch}
 /* VSM futuro */
 .vs-gap .vs-d{white-space:normal;max-width:40px}
+.vs-kzr{display:grid;grid-template-columns:repeat(8,minmax(92px,1fr) 38px) minmax(92px,1fr);margin-top:12px}
+.vs-burst{position:relative;height:64px;display:flex;align-items:center;justify-content:center}
+.vs-burst svg{position:absolute;inset:0;width:100%;height:100%}
+.vs-burst path,.lg-burst path{fill:color-mix(in srgb,var(--good) 16%,var(--surface));stroke:var(--good-ink);stroke-width:1.5;stroke-linejoin:round}
+.vs-burst b{position:relative;font-size:12px;font-weight:700;color:var(--good-ink)}
+.lg-burst{width:30px;height:12px;vertical-align:-2px;margin-right:5px}
 .vs-gap .vs-fifo{font-size:9.5px;font-weight:700;letter-spacing:.04em;border:1.5px solid var(--ink);border-left:0;border-right:0;padding:1px 4px;line-height:1.2}
 .vs-sup{width:22px;height:20px}
 .vs-sup path{fill:none;stroke:var(--ink);stroke-width:1.8}
@@ -1183,6 +1189,7 @@ dialog.wide{width:min(860px,calc(100vw - 32px))}
     <div style="height:12px"></div>
     <div class="card">
       <div class="chead"><h3>Jidoka y Poka-Yoke en cada estación</h3></div>
+      <p class="csub">Detalle de las actividades 8, 14, 15 y 16: en qué estación se aplica cada una, con qué dispositivo y qué elimina</p>
       <div class="jp" id="vsmJp"></div>
       <p class="cnota">Cuando se activa un paro, el líder de línea acude, se corrige la causa y se registra en el tablero de indicadores. Los tiempos futuros son estimación del equipo y deberán confirmarse con mediciones.</p>
     </div>
@@ -2481,7 +2488,7 @@ var TOP_MEJ=[
   [12,"Costura y ribeteado baja de 160 a 115 s y deja de ser el cuello de botella"],
   [11,"Ninguna estación supera el takt de 128 s; el tiempo de proceso baja de 975 a 685 s"],
   [3,"Es la base del sistema pull que, con FIFO y supermercados, baja el lead time de 14 a 4.5 días"],
-  [10,"Con los topes y el sensor de corte, el desperdicio baja de 6 % a 3 %"],
+  [15,"Plantillas, topes, sensores y lectores en inspección, corte, base, logotipo y empaque evitan errores de colocación y juegos incompletos"],
   [14,"El paro automático en costura baja el reproceso de 5 % a 2 %"]];
 var JIDOKA=[
   ["Inspección de materiales",150,75,"Poka-Yoke: lector de código de barras que compara el rollo recibido (número de parte, color y lote) contra la orden e-Kanban; si no coincide, la terminal no permite darlo de alta. Calibrador pasa / no pasa para el espesor de la alfombra.","Valor fijo; control","La revisión manual pieza por pieza y la captura en papel; solo se revisa a detalle el rollo que el lector o el calibrador rechazan."],
@@ -2494,6 +2501,11 @@ var JIDOKA=[
 function diasTxt(d){ return n(d,d%1?(d*2%1?2:1):0)+(d===1?" día":" días"); }
 function sumCt(e){ return e.filter(function(x){return x.ct;}).reduce(function(s,x){return s+x.ct;},0); }
 function sumEsp(a){ return a.reduce(function(s,d){return s+d;},0); }
+/* estallidos kaizen del VSM futuro (figura 2): nombre, columna de inicio en la fila de estaciones y alcance */
+var KAIZEN=[["5S",2,"orden en las estaciones, desde la inspección de materiales"],["Flujo continuo",8,"celda de corte, base, costura y acabado"],
+  ["Gestión visual",13,"tablero por turno con tiempo de ciclo, desperdicio, inventario y defectos"]];
+var BURST=(function(){ var p=[], n=18; for(var i=0;i<n*2;i++){ var a=Math.PI*i/n, r=i%2?0.72:1;
+  p.push((80+76*r*Math.cos(a)).toFixed(1)+" "+(32+30*r*Math.sin(a)).toFixed(1)); } return "M"+p.join("L")+"Z"; })();
 function mapaVsm(modo,sfx){
   var M=VSM[modo], est=M.est, conCt=est.filter(function(e){return e.ct;}), proc=sumCt(est), lead=sumEsp(M.espera), act=modo==="actual";
   var tri='<svg class="vs-tri" viewBox="0 0 24 21" aria-hidden="true"><path d="M12 1.5L22.5 19.5H1.5Z"/></svg>';
@@ -2522,6 +2534,9 @@ function mapaVsm(modo,sfx){
     '</div>'+
     '<div class="vs-ord">'+esc(M.ord)+'</div>'+
     '<div class="vs-row">'+fila+'</div>'+
+    (act?'':'<div class="vs-kzr">'+KAIZEN.map(function(k){
+      return '<span class="vs-burst" style="grid-column:'+k[1]+' / span 3" data-t="'+esc("Kaizen: "+k[0]+" · "+k[2])+'">'+
+        '<svg viewBox="0 0 160 64" aria-hidden="true"><path d="'+BURST+'"/></svg><b>'+esc(k[0])+'</b></span>'; }).join("")+'</div>')+
     '<div class="vs-lad">'+lad+'<div class="vs-tot"><span>Lead time</span><b>'+n(lead,lead%1?1:0)+' días</b><span>Tiempo de proceso</span><b>'+n(proc)+' s</b></div></div>'+
     '<div class="vs-lab"><span>Arriba: tiempo de espera (días) · abajo: tiempo de proceso (segundos)</span></div>';
   document.getElementById("vsmMapSub"+sfx).textContent=act
@@ -2531,7 +2546,8 @@ function mapaVsm(modo,sfx){
     '<span><i class="vl-mat"></i>Flujo de material</span><span><i class="vl-inf"></i>Flujo de información</span>'+
     '<span><i class="vl-inv"></i>Inventario en espera</span>'+
     (act?'<span><i class="sq" style="background:var(--crit)"></i>Cuello de botella / C/T arriba del takt</span>'
-      :'<span>FIFO · carril con capacidad máxima</span><span><i class="sq" style="background:color-mix(in srgb,var(--good) 30%,var(--surface))"></i>Mejora aplicada</span>');
+      :'<span>FIFO · carril con capacidad máxima</span><span><i class="sq" style="background:color-mix(in srgb,var(--good) 30%,var(--surface))"></i>Mejora aplicada en la estación</span>'+
+       '<span><svg class="lg-burst" viewBox="0 0 160 64" aria-hidden="true"><path d="'+BURST+'"/></svg>Kaizen (estallido): mejora en varias estaciones</span>');
   tips(document.getElementById("vsmMap"+sfx));
 }
 function tips(root){
