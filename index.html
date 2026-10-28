@@ -1183,13 +1183,14 @@ dialog.wide{width:min(860px,calc(100vw - 32px))}
     <p class="u2-lead">Un juego = 4 alfombras · <b>4,919 juegos al mes ÷ 25 días = 197 juegos al día</b> · jornada de 420 min (25,200 s) · <b>takt = 25,200 ÷ 197 = 127.9 ≈ 128 s por juego</b></p>
     <div class="chead u2-sub"><h3>Primero: las mejoras</h3></div>
     <div class="card">
-      <div class="chead"><h3>Actividades de mejora</h3><span class="tag" id="mejTag"></span></div>
+      <div class="chead"><h3>Actividades de mejora · los 9 kaizen del VSM futuro</h3><span class="tag" id="mejTag"></span></div>
+      <p class="csub">Un kaizen por estación, con las actividades de las tablas 1 y 2 que lo forman. Toca una fila para ver el detalle.</p>
       <div class="mej" id="vsmMej"></div>
     </div>
     <div style="height:12px"></div>
     <div class="card">
-      <div class="chead"><h3>Jidoka y Poka-Yoke en cada estación</h3></div>
-      <p class="csub">Detalle de las actividades 8, 14, 15 y 16: en qué estación se aplica cada una, con qué dispositivo y qué elimina</p>
+      <div class="chead"><h3>Kaizen en cada estación</h3></div>
+      <p class="csub">Cómo se aplica cada kaizen (Jidoka, Poka-Yoke, TPM, Heijunka y demás): dispositivo o método, tipo y qué tiempo o defecto elimina</p>
       <div class="jp" id="vsmJp"></div>
       <p class="cnota">Cuando se activa un paro, el líder de línea acude, se corrige la causa y se registra en el tablero de indicadores. Los tiempos futuros son estimación del equipo y deberán confirmarse con mediciones.</p>
     </div>
@@ -2483,27 +2484,41 @@ var MEJORAS=[
   [20,"Dos días de producto terminado","Establecer embarques diarios nivelados","Disminuir el inventario final y entregar cantidades constantes","Alta","Menor inventario terminado","Heijunka","Empaque y embarque","Programar un embarque diario de 197 juegos de acuerdo con el consumo de la planta"],
   [21,"Diferencias en habilidades operativas","Capacitar a los operadores","Mejorar calidad, productividad, seguridad y solución de anomalías","Media","Personal polivalente","Capacitación","Todas las estaciones","Elaborar una matriz de habilidades y capacitar a cada operador en al menos dos estaciones"],
   [22,"Falta de seguimiento del desempeño","Monitorear indicadores de desempeño","Controlar tiempos, desperdicio, disponibilidad, inventarios y defectos","Alta","Mejora continua basada en datos","Indicadores KPI","Control de producción","Tablero visual por turno con tiempo de ciclo, desperdicio, disponibilidad, inventario, defectos y paros"]];
-/* las 5 de mayor impacto: cada una mueve un resultado del VSM futuro */
-var TOP_MEJ=[
-  [12,"Costura y ribeteado baja de 160 a 115 s y deja de ser el cuello de botella"],
-  [11,"Ninguna estación supera el takt de 128 s; el tiempo de proceso baja de 975 a 685 s"],
-  [3,"Es la base del sistema pull que, con FIFO y supermercados, baja el lead time de 14 a 4.5 días"],
-  [15,"Plantillas, topes, sensores y lectores en inspección, corte, base, logotipo y empaque evitan errores de colocación y juegos incompletos"],
-  [14,"El paro automático en costura baja el reproceso de 5 % a 2 %"]];
-var JIDOKA=[
-  ["Inspección de materiales",150,75,"Poka-Yoke: lector de código de barras que compara el rollo recibido (número de parte, color y lote) contra la orden e-Kanban; si no coincide, la terminal no permite darlo de alta. Calibrador pasa / no pasa para el espesor de la alfombra.","Valor fijo; control","La revisión manual pieza por pieza y la captura en papel; solo se revisa a detalle el rollo que el lector o el calibrador rechazan."],
-  ["Corte",110,95,"Poka-Yoke: mesa de corte con topes que solo aceptan el rollo en una orientación y programa de corte que se selecciona con el código del modelo. Jidoka: sensor que detiene la cortadora si el rollo se desalinea.","Contacto; control","Reacomodos del rollo y cortes fuera de medida; junto con el nuevo patrón de corte ayuda a bajar el desperdicio de 6 % a 3 %."],
-  ["Base antiderrapante",145,105,"Poka-Yoke: escantillón con pernos guía que entran en los barrenos de la alfombra, de modo que la base solo asienta en la posición correcta; la prensa no arranca si el sensor de presencia no detecta la base completa.","Contacto; control","Alinear la base a ojo, retirarla y volverla a colocar, y piezas que salen sin base."],
-  ["Costura y ribeteado",160,115,"Jidoka: máquina de coser con detector de rotura de hilo y de fin de bobina que se detiene sola y enciende la luz andón; el operador también puede detener la estación con el botón andón.","Paro automático; control","Tramos cosidos sin hilo que después se descosen; el reproceso baja de 5 % a 2 %. La mayor parte de la reducción viene del balanceo y del método estándar (actividades 11 a 13)."],
-  ["Logotipo y sujetadores",120,90,"Poka-Yoke: plantilla con orificios en la posición exacta de cada sujetador y del logotipo, y charola con el número exacto de sujetadores de un juego.","Contacto y valor fijo; advertencia","Medir la posición de cada pieza, buscar sujetadores y errores de orientación; si queda un sujetador en la charola, falta colocarlo."],
-  ["Inspección final",95,65,"Autocontrol en cada estación y galga de contorno del modelo contra la que se coloca la alfombra terminada.","Contacto; advertencia","Revisar al final defectos que ya se detectaron y corrigieron en su estación."],
-  ["Empaque y etiquetado",105,80,"Poka-Yoke: se escanean las cuatro alfombras del juego y la etiqueta solo se imprime si las cuatro corresponden al mismo modelo y juego.","Secuencia de pasos; control","Juegos incompletos o con piezas de otro modelo que hoy se descubren en la planta de ensamble."]];
+/* los 9 kaizen del VSM futuro, uno por estación (figura 2), con sus actividades (tablas 1 y 2) y su detalle (tabla 3) */
+var KZ9=[
+  {est:"Recepción",kz:"Citas de andén · código de barras",acts:[2,7],a:90,f:60,tipo:"Citas de andén; código de barras",
+   como:"Ventana de horario fija para cada proveedor y registro de cada llegada con código de barras; los rollos se etiquetan y se escanean al recibir.",
+   elim:"Esperas, congestión y tiempos de descarga en el andén, y la falta de trazabilidad de la materia prima."},
+  {est:"Inspección de materiales",kz:"Calidad en la fuente · Poka-Yoke",acts:[8,15],a:150,f:75,tipo:"Poka-Yoke de valor fijo; control",
+   como:"Lector de código de barras que compara el rollo recibido (número de parte, color y lote) contra la orden e-Kanban; si no coincide, la terminal no permite darlo de alta. Calibrador pasa / no pasa para el espesor.",
+   elim:"La revisión manual pieza por pieza y la captura en papel; solo se revisa a detalle el rollo que el lector o el calibrador rechazan."},
+  {est:"Corte",kz:"TPM · patrón de corte",acts:[9,10,14],a:110,f:95,tipo:"TPM; Poka-Yoke de contacto; Jidoka",
+   como:"Mantenimiento por horas de uso y plantillas que acomodan las cuatro piezas en el ancho del rollo; mesa con topes que solo acepta el rollo en una orientación y sensor que detiene la cortadora si el rollo se desalinea.",
+   elim:"Paros de la cortadora, reacomodos del rollo y cortes fuera de medida; el desperdicio baja de 6 % a 3 %."},
+  {est:"Base antiderrapante",kz:"Poka-Yoke",acts:[15],a:145,f:105,tipo:"Poka-Yoke de contacto; control",
+   como:"Escantillón con pernos guía que entran en los barrenos de la alfombra, de modo que la base solo asienta en la posición correcta; la prensa no arranca si el sensor no detecta la base completa.",
+   elim:"Alinear la base a ojo, retirarla y volverla a colocar, y piezas que salen sin base."},
+  {est:"Costura y ribeteado",kz:"Balanceo · Jidoka",acts:[11,12,13,14],a:160,f:115,tipo:"Balanceo de línea; Jidoka de paro automático",
+   como:"La costura y el ribeteado se dividen entre los cuatro operadores con una hoja de trabajo estándar; la máquina detecta rotura de hilo y fin de bobina, se detiene sola y enciende la luz andón.",
+   elim:"El cuello de botella (160 a 115 s) y los tramos cosidos sin hilo que después se descosen; el reproceso baja de 5 % a 2 %."},
+  {est:"Logotipo y sujetadores",kz:"Poka-Yoke",acts:[15],a:120,f:90,tipo:"Poka-Yoke de contacto y valor fijo; advertencia",
+   como:"Plantilla con orificios en la posición exacta de cada sujetador y del logotipo, y charola con el número exacto de sujetadores de un juego.",
+   elim:"Medir la posición de cada pieza, buscar sujetadores y errores de orientación; si queda un sujetador en la charola, falta colocarlo."},
+  {est:"Inspección final",kz:"Autocontrol",acts:[16],a:95,f:65,tipo:"Autocontrol; galga de contorno; advertencia",
+   como:"Cada operador revisa su pieza con una lista corta antes de pasarla, y la alfombra terminada se coloca contra una galga de contorno del modelo.",
+   elim:"Revisar al final defectos que ya se detectaron y corrigieron en su estación."},
+  {est:"Empaque y etiquetado",kz:"Código de barras · Poka-Yoke",acts:[7,15],a:105,f:80,tipo:"Poka-Yoke de secuencia de pasos; control",
+   como:"Se escanean las cuatro alfombras del juego y la etiqueta solo se imprime si las cuatro corresponden al mismo modelo y juego.",
+   elim:"Juegos incompletos o con piezas de otro modelo que hoy se descubren en la planta de ensamble."},
+  {est:"Embarque",kz:"Heijunka · 197 juegos/día",acts:[20],a:null,f:null,tipo:"Heijunka (nivelación)",
+   como:"Un embarque diario de 197 juegos, de acuerdo con el consumo de la planta de ensamble.",
+   elim:"Los 2 días de producto terminado del estado actual; el supermercado final queda en 0.5 días."}];
 function diasTxt(d){ return n(d,d%1?(d*2%1?2:1):0)+(d===1?" día":" días"); }
 function sumCt(e){ return e.filter(function(x){return x.ct;}).reduce(function(s,x){return s+x.ct;},0); }
 function sumEsp(a){ return a.reduce(function(s,d){return s+d;},0); }
 /* estallidos kaizen del VSM futuro (figura 2): nombre, columna de inicio en la fila de estaciones y alcance */
-var KAIZEN=[["5S",2,"orden en las estaciones, desde la inspección de materiales"],["Flujo continuo",8,"celda de corte, base, costura y acabado"],
-  ["Gestión visual",13,"tablero por turno con tiempo de ciclo, desperdicio, inventario y defectos"]];
+var KAIZEN=[["5S",2,"actividad 17 · orden en todas las estaciones"],["Flujo continuo",8,"actividad 19 · celda en U de corte, base, costura y acabado"],
+  ["Gestión visual",13,"actividad 22 · tablero por turno con tiempo de ciclo, desperdicio, inventario y defectos"]];
 var BURST=(function(){ var p=[], n=18; for(var i=0;i<n*2;i++){ var a=Math.PI*i/n, r=i%2?0.72:1;
   p.push((80+76*r*Math.cos(a)).toFixed(1)+" "+(32+30*r*Math.sin(a)).toFixed(1)); } return "M"+p.join("L")+"Z"; })();
 function mapaVsm(modo,sfx){
@@ -2517,7 +2532,7 @@ function mapaVsm(modo,sfx){
       :'<div class="dt">C/T no medido<br>'+esc(M.sal)+'</div>';
     var caja='<div class="vs-st'+(e.bn&&act?' bn':'')+(sob?' sobre':'')+(e.ct?'':' sinct')+'" data-t="'+
       esc(e.ct?(e.n+": C/T "+e.ct+" s contra takt de "+VSM.takt+" s"+(sob?" · arriba del takt":" · dentro del takt")):e.n+": C/T no medido")+'">'+
-      '<div class="h">'+esc(e.n)+'</div>'+dt+(e.kz?'<span class="kz">'+esc(e.kz)+'</span>':'')+
+      '<div class="h">'+esc(e.n)+'</div>'+dt+(e.kz?'<span class="kz">K'+(i+1)+' · '+esc(e.kz)+'</span>':'')+
       (e.bn&&act?'<span class="bnt">Cuello de botella</span>':'')+'</div>';
     var b=M.buf[i], ico=b==="inv"?tri:(b==="sup"?sup:'<span class="vs-fifo">FIFO</span>');
     var gap=i<est.length-1?('<div class="vs-gap" data-t="'+esc((b==="inv"?"Inventario":b==="sup"?"Supermercado":"Carril FIFO")+": "+diasTxt(M.espera[i]))+'"><span class="vs-arr"></span>'+ico+'<span class="vs-d">'+diasTxt(M.espera[i])+'</span></div>'):'';
@@ -2546,8 +2561,8 @@ function mapaVsm(modo,sfx){
     '<span><i class="vl-mat"></i>Flujo de material</span><span><i class="vl-inf"></i>Flujo de información</span>'+
     '<span><i class="vl-inv"></i>Inventario en espera</span>'+
     (act?'<span><i class="sq" style="background:var(--crit)"></i>Cuello de botella / C/T arriba del takt</span>'
-      :'<span>FIFO · carril con capacidad máxima</span><span><i class="sq" style="background:color-mix(in srgb,var(--good) 30%,var(--surface))"></i>Mejora aplicada en la estación</span>'+
-       '<span><svg class="lg-burst" viewBox="0 0 160 64" aria-hidden="true"><path d="'+BURST+'"/></svg>Kaizen (estallido): mejora en varias estaciones</span>');
+      :'<span>FIFO · carril con capacidad máxima</span><span><i class="sq" style="background:color-mix(in srgb,var(--good) 30%,var(--surface))"></i>K1 a K9: kaizen de cada estación</span>'+
+       '<span><svg class="lg-burst" viewBox="0 0 160 64" aria-hidden="true"><path d="'+BURST+'"/></svg>Kaizen de toda la línea (actividades 17, 19 y 22)</span>');
   tips(document.getElementById("vsmMap"+sfx));
 }
 function tips(root){
@@ -2600,16 +2615,18 @@ function renderVsm(){
   mapaVsm("futuro","");
   document.getElementById("vsmCtSub").textContent="Las 8 estaciones quedan debajo del takt de "+VSM.takt+" s; la más lenta es costura y ribeteado con 115 s. El tiempo de proceso suma "+pF+" s.";
   document.getElementById("vsmCt").innerHTML=barrasCt(F.est,A.est);
-  document.getElementById("mejTag").textContent="5 de "+MEJORAS.length+" actividades";
-  document.getElementById("vsmMej").innerHTML=TOP_MEJ.map(function(t){
-    var m=MEJORAS[t[0]-1];
-    return '<details><summary><span class="no">'+m[0]+'</span><span class="ac"><b>'+esc(m[2])+'</b><small>'+esc(m[1])+'</small></span>'+
-      '<span class="chip h">'+esc(m[6])+'</span><span class="chip '+m[4].toLowerCase()+'">'+esc(m[4])+'</span></summary>'+
-      '<div class="det"><div><span>Impacto en el VSM futuro</span>'+esc(t[1])+'</div><div><span>Propósito</span>'+esc(m[3])+'</div>'+
-      '<div><span>Área</span>'+esc(m[7])+'</div><div><span>Cómo se implementará</span>'+esc(m[8])+'</div></div></details>'; }).join("");
-  document.getElementById("vsmJp").innerHTML=JIDOKA.map(function(j){
-    return '<div class="jpc"><h4>'+esc(j[0])+'<span>'+j[1]+' → '+j[2]+' s</span></h4><span class="chip">'+esc(j[4])+'</span>'+
-      '<p>'+esc(j[3])+'</p><p class="el"><b>Qué elimina</b>'+esc(j[5])+'</p></div>'; }).join("");
+  var usadas={}; KZ9.forEach(function(k){ k.acts.forEach(function(a){ usadas[a]=1; }); });
+  document.getElementById("mejTag").textContent="9 kaizen · "+Object.keys(usadas).length+" de las "+MEJORAS.length+" actividades";
+  document.getElementById("vsmMej").innerHTML=KZ9.map(function(k,i){
+    var ms=k.acts.map(function(a){return MEJORAS[a-1];}), alta=ms.some(function(m){return m[4]==="Alta";});
+    return '<details><summary><span class="no">K'+(i+1)+'</span><span class="ac"><b>'+esc(k.est)+' · '+esc(k.kz)+'</b><small>'+
+      esc(ms.map(function(m){return m[1];}).join(" · "))+'</small></span>'+
+      '<span class="chip h">Actividad'+(k.acts.length>1?'es ':' ')+k.acts.join(", ")+'</span><span class="chip '+(alta?'alta':'media')+'">'+(alta?'Alta':'Media')+'</span></summary>'+
+      '<div class="det">'+ms.map(function(m){
+        return '<div><span>'+m[0]+' · '+esc(m[6])+'</span><b>'+esc(m[2])+'</b><br>'+esc(m[8])+'</div>'; }).join("")+'</div></details>'; }).join("");
+  document.getElementById("vsmJp").innerHTML=KZ9.map(function(k,i){
+    return '<div class="jpc"><h4>K'+(i+1)+' · '+esc(k.est)+'<span>'+(k.a?k.a+' → '+k.f+' s':'C/T no medido')+'</span></h4><span class="chip">'+esc(k.tipo)+'</span>'+
+      '<p>'+esc(k.como)+'</p><p class="el"><b>Qué elimina</b>'+esc(k.elim)+'</p></div>'; }).join("");
 }
 
 /* objetivos, metas y alcance */
