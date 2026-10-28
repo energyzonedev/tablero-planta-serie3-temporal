@@ -721,6 +721,7 @@ dialog.wide{width:min(860px,calc(100vw - 32px))}
 .u2-lead b{color:var(--ink);font-weight:600}
 .u2-modo{margin-left:auto}
 .u2-sub{margin-bottom:2px}
+.u2-paso{margin-top:28px}
 .u2-sub h3{font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.09em;color:var(--ink-2)}
 .u2-2c{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px}
 @media(max-width:860px){.u2-2c{grid-template-columns:1fr}}
@@ -1170,10 +1171,24 @@ dialog.wide{width:min(860px,calc(100vw - 32px))}
   <!-- ============ 2.1.1 VSM ============ -->
   <section class="u2s" id="u2Vsm">
     <div class="dhead">
-      <h2>2.1.1 VSM futuro · fabricación de alfombras automotrices</h2>
-      <p>Cómo funcionaría la línea con las mejoras; el VSM actual está en la Unidad 1, al final de los indicadores</p>
+      <h2>2.1.1 Mejoras y VSM futuro · fabricación de alfombras automotrices</h2>
+      <p>Del VSM actual (Unidad 1, al final de los indicadores) a las mejoras y al estado futuro</p>
     </div>
     <p class="u2-lead">Un juego = 4 alfombras · <b>4,919 juegos al mes ÷ 25 días = 197 juegos al día</b> · jornada de 420 min (25,200 s) · <b>takt = 25,200 ÷ 197 = 127.9 ≈ 128 s por juego</b></p>
+    <div class="chead u2-sub"><h3>Primero: las mejoras</h3></div>
+    <div class="card">
+      <div class="chead"><h3>Actividades de mejora</h3><span class="tag" id="mejTag"></span></div>
+      <div class="mej" id="vsmMej"></div>
+    </div>
+    <div style="height:12px"></div>
+    <div class="card">
+      <div class="chead"><h3>Jidoka y Poka-Yoke en cada estación</h3></div>
+      <div class="jp" id="vsmJp"></div>
+      <p class="cnota">Cuando se activa un paro, el líder de línea acude, se corrige la causa y se registra en el tablero de indicadores. Los tiempos futuros son estimación del equipo y deberán confirmarse con mediciones.</p>
+    </div>
+    <div style="height:12px"></div>
+    <div class="chead u2-sub u2-paso"><h3>Resultado: VSM futuro</h3></div>
+    <p class="csub">Así quedaría la línea una vez aplicadas las mejoras</p>
     <div class="kpis" id="kpisVsm"></div>
     <div style="height:12px"></div>
     <div class="card">
@@ -1187,17 +1202,6 @@ dialog.wide{width:min(860px,calc(100vw - 32px))}
       <div class="chead"><h3>Tiempo de ciclo futuro de cada estación contra el takt</h3></div>
       <p class="csub" id="vsmCtSub"></p>
       <div id="vsmCt"></div>
-    </div>
-    <div style="height:12px"></div>
-    <div class="card">
-      <div class="chead"><h3>Actividades de mejora</h3><span class="tag" id="mejTag"></span></div>
-      <div class="mej" id="vsmMej"></div>
-    </div>
-    <div style="height:12px"></div>
-    <div class="card">
-      <div class="chead"><h3>Jidoka y Poka-Yoke en cada estación</h3></div>
-      <div class="jp" id="vsmJp"></div>
-      <p class="cnota">Cuando se activa un paro, el líder de línea acude, se corrige la causa y se registra en el tablero de indicadores. Los tiempos futuros son estimación del equipo y deberán confirmarse con mediciones.</p>
     </div>
   </section>
 
