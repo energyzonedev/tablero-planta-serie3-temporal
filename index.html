@@ -1191,7 +1191,7 @@ dialog.wide{width:min(860px,calc(100vw - 32px))}
     <div style="height:12px"></div>
     <div class="card">
       <div class="chead"><h3>Actividades de mejora</h3><span class="tag" id="mejTag"></span></div>
-      <p class="csub">Tablas 1 y 2: problema, actividad, herramienta Lean, área y cómo se implementará. Toca una fila para ver el detalle.</p>
+      <p class="csub">De las 22 actividades de las tablas 1 y 2 se muestran las 5 de mayor impacto: cada una mueve directamente un resultado del VSM futuro. Toca una fila para ver el detalle.</p>
       <div class="mej" id="vsmMej"></div>
     </div>
     <div style="height:12px"></div>
@@ -2474,6 +2474,13 @@ var MEJORAS=[
   [20,"Dos días de producto terminado","Establecer embarques diarios nivelados","Disminuir el inventario final y entregar cantidades constantes","Alta","Menor inventario terminado","Heijunka","Empaque y embarque","Programar un embarque diario de 197 juegos de acuerdo con el consumo de la planta"],
   [21,"Diferencias en habilidades operativas","Capacitar a los operadores","Mejorar calidad, productividad, seguridad y solución de anomalías","Media","Personal polivalente","Capacitación","Todas las estaciones","Elaborar una matriz de habilidades y capacitar a cada operador en al menos dos estaciones"],
   [22,"Falta de seguimiento del desempeño","Monitorear indicadores de desempeño","Controlar tiempos, desperdicio, disponibilidad, inventarios y defectos","Alta","Mejora continua basada en datos","Indicadores KPI","Control de producción","Tablero visual por turno con tiempo de ciclo, desperdicio, disponibilidad, inventario, defectos y paros"]];
+/* las 5 de mayor impacto: cada una mueve un resultado del VSM futuro */
+var TOP_MEJ=[
+  [12,"Costura y ribeteado baja de 160 a 115 s y deja de ser el cuello de botella"],
+  [11,"Ninguna estación supera el takt de 128 s; el tiempo de proceso baja de 975 a 685 s"],
+  [3,"Es la base del sistema pull que, con FIFO y supermercados, baja el lead time de 14 a 4.5 días"],
+  [10,"Con los topes y el sensor de corte, el desperdicio baja de 6 % a 3 %"],
+  [14,"El paro automático en costura baja el reproceso de 5 % a 2 %"]];
 var JIDOKA=[
   ["Inspección de materiales",150,75,"Poka-Yoke: lector de código de barras que compara el rollo recibido (número de parte, color y lote) contra la orden e-Kanban; si no coincide, la terminal no permite darlo de alta. Calibrador pasa / no pasa para el espesor de la alfombra.","Valor fijo; control","La revisión manual pieza por pieza y la captura en papel; solo se revisa a detalle el rollo que el lector o el calibrador rechazan."],
   ["Corte",110,95,"Poka-Yoke: mesa de corte con topes que solo aceptan el rollo en una orientación y programa de corte que se selecciona con el código del modelo. Jidoka: sensor que detiene la cortadora si el rollo se desalinea.","Contacto; control","Reacomodos del rollo y cortes fuera de medida; junto con el nuevo patrón de corte ayuda a bajar el desperdicio de 6 % a 3 %."],
@@ -2575,12 +2582,12 @@ function renderVsm(){
   mapaVsm("futuro","");
   document.getElementById("vsmCtSub").textContent="Las 8 estaciones quedan debajo del takt de "+VSM.takt+" s; la más lenta es costura y ribeteado con 115 s. El tiempo de proceso suma "+pF+" s.";
   document.getElementById("vsmCt").innerHTML=barrasCt(F.est,A.est);
-  var alta=MEJORAS.filter(function(m){return m[4]==="Alta";}).length;
-  document.getElementById("mejTag").textContent=MEJORAS.length+" actividades · "+alta+" de prioridad alta";
-  document.getElementById("vsmMej").innerHTML=MEJORAS.map(function(m){
+  document.getElementById("mejTag").textContent="5 de "+MEJORAS.length+" actividades";
+  document.getElementById("vsmMej").innerHTML=TOP_MEJ.map(function(t){
+    var m=MEJORAS[t[0]-1];
     return '<details><summary><span class="no">'+m[0]+'</span><span class="ac"><b>'+esc(m[2])+'</b><small>'+esc(m[1])+'</small></span>'+
       '<span class="chip h">'+esc(m[6])+'</span><span class="chip '+m[4].toLowerCase()+'">'+esc(m[4])+'</span></summary>'+
-      '<div class="det"><div><span>Propósito</span>'+esc(m[3])+'</div><div><span>Resultado esperado</span>'+esc(m[5])+'</div>'+
+      '<div class="det"><div><span>Impacto en el VSM futuro</span>'+esc(t[1])+'</div><div><span>Propósito</span>'+esc(m[3])+'</div>'+
       '<div><span>Área</span>'+esc(m[7])+'</div><div><span>Cómo se implementará</span>'+esc(m[8])+'</div></div></details>'; }).join("");
   document.getElementById("vsmJp").innerHTML=JIDOKA.map(function(j){
     return '<div class="jpc"><h4>'+esc(j[0])+'<span>'+j[1]+' → '+j[2]+' s</span></h4><span class="chip">'+esc(j[4])+'</span>'+
