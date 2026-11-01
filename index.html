@@ -1314,14 +1314,24 @@ dialog.wide{width:min(860px,calc(100vw - 32px))}
     <div class="kpis" id="kpisVsm"></div>
     <div style="height:12px"></div>
     <div class="card">
-      <div class="chead"><h3>Mapa de flujo de valor · estado futuro</h3></div>
+      <div class="chead"><h3 id="vsmMapT">Mapa de flujo de valor · estado futuro</h3>
+        <div class="seg u2-modo" role="group" aria-label="Estado del mapa" id="vsmMapBtn">
+          <button type="button" data-m="actual" aria-pressed="false">VSM actual</button>
+          <button type="button" data-m="futuro" aria-pressed="true">VSM futuro</button>
+        </div>
+      </div>
       <p class="csub" id="vsmMapSub"></p>
       <div class="vsm-scroll"><div class="vsm" id="vsmMap"></div></div>
       <div class="legend" id="vsmLeg"></div>
     </div>
     <div style="height:12px"></div>
     <div class="card">
-      <div class="chead"><h3>Tiempo de ciclo futuro de cada estación contra el takt</h3></div>
+      <div class="chead"><h3 id="vsmCtT">Tiempo de ciclo futuro de cada estación contra el takt</h3>
+        <div class="seg u2-modo" role="group" aria-label="Estado de la gráfica" id="vsmCtBtn">
+          <button type="button" data-m="actual" aria-pressed="false">VSM actual</button>
+          <button type="button" data-m="futuro" aria-pressed="true">VSM futuro</button>
+        </div>
+      </div>
       <p class="csub" id="vsmCtSub"></p>
       <div id="vsmCt"></div>
     </div>
@@ -2899,7 +2909,23 @@ function renderVsmActual(){
       (e.bn?'<small>Principal cuello de botella</small>':'')+'</div>'; }).join("");
   tips(document.getElementById("secVsm"));
 }
-/* Unidad 2: VSM futuro */
+/* Unidad 2: el mapa y la gráfica muestran el estado futuro y, con su botón, el actual */
+function marcarModo(id,m){ document.querySelectorAll("#"+id+" button").forEach(function(b){ b.setAttribute("aria-pressed",b.getAttribute("data-m")===m); }); }
+function verMapaU2(m){
+  mapaVsm(m,"");
+  document.getElementById("vsmMapT").textContent="Mapa de flujo de valor · estado "+m;
+  marcarModo("vsmMapBtn",m);
+}
+function verCtU2(m){
+  var A=VSM.actual, F=VSM.futuro, act=m==="actual", cA=A.est.filter(function(e){return e.ct;}), sobre=cA.filter(function(e){return e.ct>VSM.takt;});
+  document.getElementById("vsmCtT").textContent="Tiempo de ciclo "+m+" de cada estación contra el takt";
+  document.getElementById("vsmCtSub").textContent=act
+    ? sobre.length+" de "+cA.length+" estaciones quedan arriba del takt de "+VSM.takt+" s: "+sobre.map(function(e){return e.n.toLowerCase()+" ("+e.ct+" s)";}).join(", ")+". El tiempo de proceso suma "+sumCt(A.est)+" s."
+    : "Las 8 estaciones quedan debajo del takt de "+VSM.takt+" s; la más lenta es costura y ribeteado con 115 s. El tiempo de proceso suma "+sumCt(F.est)+" s.";
+  document.getElementById("vsmCt").innerHTML=act?barrasCt(A.est):barrasCt(F.est,A.est);
+  marcarModo("vsmCtBtn",m);
+  tips(document.getElementById("vsmCt"));
+}
 function renderVsm(){
   var A=VSM.actual, F=VSM.futuro;
   var pA=sumCt(A.est), pF=sumCt(F.est), lA=sumEsp(A.espera), lF=sumEsp(F.espera);
@@ -2909,9 +2935,7 @@ function renderVsm(){
     kpi({lb:"Desperdicio de corte",v:"3",u:"%",pill:"antes 6 %",pillCls:"ok",sub:"Nuevo patrón de corte, topes y sensor de alineación"})+
     kpi({lb:"Reproceso en costura",v:"2",u:"%",pill:"antes 5 %",pillCls:"ok",sub:"Jidoka, balanceo y método estándar de costura"});
   document.querySelectorAll("#kpisVsm .spark").forEach(function(x){x.remove();});
-  mapaVsm("futuro","");
-  document.getElementById("vsmCtSub").textContent="Las 8 estaciones quedan debajo del takt de "+VSM.takt+" s; la más lenta es costura y ribeteado con 115 s. El tiempo de proceso suma "+pF+" s.";
-  document.getElementById("vsmCt").innerHTML=barrasCt(F.est,A.est);
+  verMapaU2("futuro"); verCtU2("futuro");
   document.getElementById("vsmMej").innerHTML=KZ9.map(function(k,i){
     var ms=k.acts.map(function(a){return MEJORAS[a-1];}), alta=ms.some(function(m){return m[4]==="Alta";});
     return '<details><summary><span class="no">K'+(i+1)+'</span><span class="ac"><b>'+esc(k.est)+' · '+esc(k.kz)+'</b><small>'+
@@ -3758,6 +3782,10 @@ function bind(){
   function girar(c){ var on=!c.classList.contains("on"); c.classList.toggle("on",on); c.setAttribute("aria-pressed",on); }
   kzg.addEventListener("click",function(e){ if(e.target.closest("a"))return; var c=e.target.closest(".kzc"); if(c) girar(c); });
   kzg.addEventListener("keydown",function(e){ var c=e.target.closest(".kzc"); if(c&&(e.key==="Enter"||e.key===" ")){ e.preventDefault(); girar(c); } });
+  document.getElementById("vsmMapBtn").addEventListener("click",function(e){
+    var b=e.target.closest("[data-m]"); if(b) verMapaU2(b.getAttribute("data-m")); });
+  document.getElementById("vsmCtBtn").addEventListener("click",function(e){
+    var b=e.target.closest("[data-m]"); if(b) verCtU2(b.getAttribute("data-m")); });
   document.getElementById("actFil").addEventListener("click",function(e){
     var b=e.target.closest("[data-q]"); if(b){ actQuien=b.getAttribute("data-q"); pintarActs(); } });
   document.getElementById("ganttFil").addEventListener("click",function(e){
