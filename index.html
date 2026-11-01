@@ -908,6 +908,8 @@ dialog.wide{width:min(860px,calc(100vw - 32px))}
 .lim4>div{padding:10px 0;border-top:1px solid var(--line)}
 .lim4 h4{margin:0 0 3px;font-size:12.5px;font-weight:600}
 .lim4 p{margin:0;font-size:13px;line-height:1.45;color:var(--ink-2)}
+.exc{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.exc .chip{white-space:normal;font-size:12px;padding:4px 9px}
 .u3-band{margin-top:44px;padding-top:30px;border-top:2px solid var(--ink);scroll-margin-top:84px}
 .u3-band h2{font-size:30px;font-weight:300;letter-spacing:-.015em;margin-top:10px}
 .u3-band>p{margin:6px 0 16px;color:var(--ink-muted);font-size:14px}
@@ -1402,7 +1404,8 @@ dialog.wide{width:min(860px,calc(100vw - 32px))}
     <div style="height:12px"></div>
     <div class="card u2-excl">
       <div class="chead"><h3>Exclusiones del alcance</h3></div>
-      <p>No contempla la compra del terreno, los planos ejecutivos, la contratación de personal, la construcción física del CEDIS, la instalación real de equipos ni la puesta en marcha. Tampoco incluye negociaciones comerciales con BMW, proveedores, constructoras o autoridades; estos elementos se desarrollarían en una etapa posterior si la propuesta se aprueba. El gasto de personal de los gastos anuales es una estimación; la contratación no forma parte del proyecto.</p>
+      <div class="exc"><span class="chip">Compra del terreno</span><span class="chip">Planos ejecutivos</span><span class="chip">Contratación de personal</span><span class="chip">Construcción</span><span class="chip">Instalación de equipos</span><span class="chip">Puesta en marcha</span><span class="chip">Negociaciones comerciales</span></div>
+      <p class="cnota">Se desarrollarían en una etapa posterior si la propuesta se aprueba. El gasto de personal de los gastos anuales es una estimación.</p>
     </div>
   </section>
 
