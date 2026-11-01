@@ -900,6 +900,11 @@ dialog.wide{width:min(860px,calc(100vw - 32px))}
 .obj-c summary:hover{background:var(--surface-2);color:var(--ink)}
 .obj-c .u2-ol{margin-top:10px;color:var(--ink-2)}
 .obj-c p{margin-top:10px;padding-top:10px;border-top:1px solid var(--line);color:var(--ink-2)}
+.ent-g{padding:10px 0;border-top:1px solid var(--line)}
+.ent-g h4{margin:0 0 7px;font-size:12.5px;font-weight:600}
+.ent-g>div{display:flex;flex-wrap:wrap;gap:6px}
+.ent-g .chip{white-space:normal;font-size:12px;padding:4px 9px}
+.u2-gen p b{font-weight:600}
 .u3-band{margin-top:44px;padding-top:30px;border-top:2px solid var(--ink);scroll-margin-top:84px}
 .u3-band h2{font-size:30px;font-weight:300;letter-spacing:-.015em;margin-top:10px}
 .u3-band>p{margin:6px 0 16px;color:var(--ink-muted);font-size:14px}
@@ -1380,11 +1385,11 @@ dialog.wide{width:min(860px,calc(100vw - 32px))}
   <section class="u2s" id="u2Alc">
     <div class="dhead"><h2>Definición del alcance</h2><p>Límites del proyecto, entregables y restricciones (Project Management Institute, 2017)</p></div>
     <div class="card u2-gen">
-      <p>El proyecto comprende el diseño de una instalación para almacenar la materia prima del ensamble del BMW 320i en San Luis Potosí. Se analiza la demanda 2021-2025 con un horizonte de siete años; se elaboran el BOM, la clasificación ABC y los cálculos de inventario; se convierten los requerimientos en contenedores, posiciones y metros cuadrados; se evalúan dos terrenos; se diseña un layout conceptual; se seleccionan equipos; se elaboran el VSM actual y futuro de las alfombras y se estiman costos, beneficios, retorno y recuperación.</p>
+      <p>Diseñar el almacén, desde el pronóstico hasta la evaluación financiera, <b>sin construirlo ni operarlo</b>. Horizonte de 7 años.</p>
     </div>
     <div style="height:12px"></div>
     <div class="u2-2c">
-      <div class="card"><div class="chead"><h3>Entregables incluidos</h3><span class="tag" id="entN"></span></div><ul class="u2-check" id="u2Ent"></ul></div>
+      <div class="card"><div class="chead"><h3>Entregables incluidos</h3><span class="tag" id="entN"></span></div><div class="ent" id="u2Ent"></div></div>
       <div class="card"><div class="chead"><h3>Limitaciones</h3><span class="tag" id="limN"></span></div><p class="csub">Fines académicos: propuesta preliminar por validar con estudios, cotizaciones y datos reales. Debe estar en San Luis Potosí, aunque no sea lo más cercano al centro de gravedad.</p><ul class="u2-lim" id="u2Lim"></ul></div>
     </div>
     <div style="height:12px"></div>
@@ -3009,10 +3014,10 @@ var U2_SMART_C=[
   ["Viabilidad económica","Estimar, entre las semanas 8 y 10, la inversión inicial, los gastos anuales de operación, los beneficios económicos, el retorno de inversión y el periodo de recuperación del almacén, con el propósito de comprobar que la propuesta sea viable durante un horizonte de evaluación de siete años."],
   ["VSM de la línea de alfombras","Elaborar, entre las semanas 7 y 9, el VSM actual y el VSM futuro de la fabricación de alfombras automotrices, con el propósito de proponer actividades de mejora que reduzcan el lead time de 14 a 4.5 días y el tiempo de proceso de 975 a 685 segundos por juego."]];
 var U2_ACT=["Establecer los supuestos, limitaciones y riesgos del proyecto.","Recopilar los históricos de producción del BMW Serie 3 en México.", "Aplicar métodos de pronóstico para estimar la demanda futura.", "Comparar los resultados de regresión lineal y promedio móvil ponderado.", "Seleccionar el pronóstico que mejor represente el comportamiento de los datos.", "Definir las especificaciones generales del BMW 320i.", "Elaborar la lista de materiales o BOM del vehículo.", "Determinar la demanda mensual y diaria de componentes.", "Calcular el takt time correspondiente a la demanda estimada.", "Clasificar los componentes mediante el método ABC.", "Establecer las políticas de inventario para las categorías A, B y C.", "Calcular el stock de seguridad, punto de reorden y cantidad por pedido.", "Calcular el inventario máximo, inventario promedio y rotación anual.", "Convertir los requerimientos de inventario en contenedores, pallets y posiciones.", "Calcular la superficie neta de almacenamiento.", "Determinar el espacio requerido para pasillos y maniobras.", "Calcular las áreas de recepción, inspección, preparación de pedidos, oficinas, servicios y mantenimiento.", "Considerar una reserva de superficie para el crecimiento futuro.", "Analizar las alternativas de localización mediante factores ponderados.", "Aplicar el método del centro de gravedad.", "Seleccionar la ubicación más conveniente para el almacén.", "Elaborar el layout general de la instalación.", "Comparar y seleccionar la maquinaria, los equipos y los materiales necesarios.", "Elaborar el VSM actual y proponer un VSM futuro.", "Estimar los costos de construcción, permisos, equipo y puesta en marcha.", "Calcular los beneficios, gastos operativos, retorno de inversión y periodo de recuperación.", "Integrar los resultados y presentar la propuesta final del diseño del almacén."];
-var U2_ENT=["Pronóstico de la demanda para el horizonte del proyecto","Ficha técnica general del BMW 320i","Lista de materiales o BOM","Clasificación ABC de los componentes",
-  "Política y cálculos de inventario","Requerimientos de contenedores, pallets y posiciones","Cálculo de la superficie del almacén","Evaluación de alternativas de localización",
-  "Selección del terreno propuesto","Layout conceptual de la instalación","Comparación y selección de maquinaria y equipo","VSM actual y VSM futuro de la fabricación de alfombras",
-  "Presupuesto preliminar de construcción","Evaluación técnica, operativa y financiera"];
+var U2_ENT=[["Demanda y producto",["Pronóstico","Ficha técnica","BOM"]],
+  ["Inventario y almacén",["ABC","Política de inventario","Contenedores y posiciones","Superficie"]],
+  ["Ubicación y diseño",["Alternativas","Terreno","Layout","Maquinaria y equipo"]],
+  ["Mejora y evaluación",["VSM actual y futuro","Presupuesto","Evaluación técnica, operativa y financiera"]]];
 var U2_LIM=["El análisis considera únicamente los componentes requeridos para el BMW 320i.",
   "Los históricos de producción disponibles pueden presentar variaciones o actualizaciones.",
   "Los pronósticos dependen de los datos de 2021-2025 y no garantizan la demanda real futura.",
@@ -3148,8 +3153,8 @@ function renderU2(){
   document.getElementById("u2SmartC").innerHTML=U2_SMART_C.map(function(t){return '<li><b>'+esc(t[0])+':</b> '+esc(t[1])+'</li>';}).join("");
   document.getElementById("u2Act").innerHTML=U2_ACT.map(function(a){return '<li>'+esc(a)+'</li>';}).join("");
   document.getElementById("u2ActN").textContent="("+U2_ACT.length+")";
-  document.getElementById("u2Ent").innerHTML=U2_ENT.map(function(t){return '<li>'+esc(t)+'</li>';}).join("");
-  document.getElementById("entN").textContent=U2_ENT.length;
+  document.getElementById("u2Ent").innerHTML=U2_ENT.map(function(g){return '<div class="ent-g"><h4>'+esc(g[0])+'</h4><div>'+g[1].map(function(t){return '<span class="chip">'+esc(t)+'</span>';}).join("")+'</div></div>';}).join("");
+  document.getElementById("entN").textContent=U2_ENT.reduce(function(s,g){return s+g[1].length;},0);
   document.getElementById("u2Lim").innerHTML=U2_LIM.map(function(t){return '<li>'+esc(t)+'</li>';}).join("");
   document.getElementById("limN").textContent=U2_LIM.length;
   document.getElementById("u2Niv").innerHTML=[["20 a 25 · Crítico: se atiende primero","lv-c"],["12 a 16 · Alto: respuesta planeada","lv-a"],
