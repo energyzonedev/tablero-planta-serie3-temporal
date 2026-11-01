@@ -1297,8 +1297,8 @@ dialog.wide{width:min(860px,calc(100vw - 32px))}
     </div>
     <div class="chead u2-sub"><h3>Primero: las mejoras</h3></div>
     <div class="card">
-      <div class="chead"><h3>Actividades de mejora · los 9 kaizen del VSM futuro</h3><span class="tag" id="mejTag"></span></div>
-      <p class="csub">Un kaizen por estación, con las actividades de la Tabla 1 que lo forman. Toca una fila para ver el detalle.</p>
+      <div class="chead"><h3>Actividades de mejora</h3></div>
+      <p class="csub">Toca una fila para ver el detalle.</p>
       <div class="mej" id="vsmMej"></div>
     </div>
     <div style="height:12px"></div>
@@ -2912,8 +2912,6 @@ function renderVsm(){
   mapaVsm("futuro","");
   document.getElementById("vsmCtSub").textContent="Las 8 estaciones quedan debajo del takt de "+VSM.takt+" s; la más lenta es costura y ribeteado con 115 s. El tiempo de proceso suma "+pF+" s.";
   document.getElementById("vsmCt").innerHTML=barrasCt(F.est,A.est);
-  var usadas={}; KZ9.forEach(function(k){ k.acts.forEach(function(a){ usadas[a]=1; }); });
-  document.getElementById("mejTag").textContent="9 kaizen · "+Object.keys(usadas).length+" de las "+MEJORAS.length+" actividades";
   document.getElementById("vsmMej").innerHTML=KZ9.map(function(k,i){
     var ms=k.acts.map(function(a){return MEJORAS[a-1];}), alta=ms.some(function(m){return m[4]==="Alta";});
     return '<details><summary><span class="no">K'+(i+1)+'</span><span class="ac"><b>'+esc(k.est)+' · '+esc(k.kz)+'</b><small>'+
