@@ -905,6 +905,9 @@ dialog.wide{width:min(860px,calc(100vw - 32px))}
 .ent-g>div{display:flex;flex-wrap:wrap;gap:6px}
 .ent-g .chip{white-space:normal;font-size:12px;padding:4px 9px}
 .u2-gen p b{font-weight:600}
+.lim4>div{padding:10px 0;border-top:1px solid var(--line)}
+.lim4 h4{margin:0 0 3px;font-size:12.5px;font-weight:600}
+.lim4 p{margin:0;font-size:13px;line-height:1.45;color:var(--ink-2)}
 .u3-band{margin-top:44px;padding-top:30px;border-top:2px solid var(--ink);scroll-margin-top:84px}
 .u3-band h2{font-size:30px;font-weight:300;letter-spacing:-.015em;margin-top:10px}
 .u3-band>p{margin:6px 0 16px;color:var(--ink-muted);font-size:14px}
@@ -1390,7 +1393,11 @@ dialog.wide{width:min(860px,calc(100vw - 32px))}
     <div style="height:12px"></div>
     <div class="u2-2c">
       <div class="card"><div class="chead"><h3>Entregables incluidos</h3><span class="tag" id="entN"></span></div><div class="ent" id="u2Ent"></div></div>
-      <div class="card"><div class="chead"><h3>Limitaciones</h3><span class="tag" id="limN"></span></div><p class="csub">Fines académicos: propuesta preliminar por validar con estudios, cotizaciones y datos reales. Debe estar en San Luis Potosí, aunque no sea lo más cercano al centro de gravedad.</p><ul class="u2-lim" id="u2Lim"></ul></div>
+      <div class="card"><div class="chead"><h3>Limitaciones</h3><span class="tag" id="limN"></span></div><div class="lim4" id="u2Lim4"></div>
+        <details class="obj-c"><summary>Ver limitaciones completas</summary>
+          <p>El proyecto se desarrolla con fines académicos, por lo que los resultados representan una propuesta preliminar y deberán validarse mediante estudios técnicos, cotizaciones y datos reales antes de ejecutar la construcción.</p>
+          <p>La instalación deberá ubicarse en San Luis Potosí, debido a que su función es suministrar componentes a la planta de BMW. Esta condición limita el análisis geográfico y significa que debe seleccionarse la ubicación que cumpla con los requerimientos estratégicos del proyecto, aunque no sea necesariamente la alternativa más cercana al centro de gravedad calculado.</p>
+          <ol class="u2-ol" id="u2Lim"></ol></details></div>
     </div>
     <div style="height:12px"></div>
     <div class="card u2-excl">
@@ -3018,20 +3025,24 @@ var U2_ENT=[["Demanda y producto",["Pronóstico","Ficha técnica","BOM"]],
   ["Inventario y almacén",["ABC","Política de inventario","Contenedores y posiciones","Superficie"]],
   ["Ubicación y diseño",["Alternativas","Terreno","Layout","Maquinaria y equipo"]],
   ["Mejora y evaluación",["VSM actual y futuro","Presupuesto","Evaluación técnica, operativa y financiera"]]];
+var U2_LIM4=[["Datos","históricos, pronósticos, coordenadas y tiempos del VSM son aproximados o supuestos."],
+  ["Costos","son estimaciones académicas. No incluyen terreno, equipo de manejo ni WMS."],
+  ["Diseño","el layout, los contenedores y los racks son preliminares, sin estudios reales del terreno."],
+  ["Finanzas","horizonte de 7 años, sin inflación, impuestos, depreciación, financiamiento ni tipo de cambio."]];
 var U2_LIM=["El análisis considera únicamente los componentes requeridos para el BMW 320i.",
   "Los históricos de producción disponibles pueden presentar variaciones o actualizaciones.",
-  "Los pronósticos dependen de los datos de 2021-2025 y no garantizan la demanda real futura.",
+  "Los pronósticos dependen del comportamiento de los datos de 2021-2025 y no garantizan la demanda real futura.",
   "Las coordenadas y capacidades de algunos proveedores son aproximadas.",
-  "Los terrenos deben tener superficie útil continua para aproximadamente 17,020 m²; si la demanda supera la reserva de crecimiento (riesgo 2), el terreno tendría que admitir la superficie adicional.",
-  "No se considera el costo del terreno; se supone proporcionado para el proyecto.",
+  "Los terrenos analizados deberán contar con una superficie útil continua suficiente para construir aproximadamente 17,020 m²; si la demanda supera la reserva de crecimiento (riesgo 2), el terreno tendría que admitir la superficie adicional.",
+  "No se considera el costo de adquisición del terreno, debido a que se supone que será proporcionado para el proyecto.",
   "Los costos de componentes, construcción, maquinaria, mano de obra, permisos y operación son estimaciones académicas.",
-  "La inversión inicial corresponde a la construcción. El equipo de manejo (patines, transpaletas, racks y contenedores) y la implementación del WMS aún no se cotizan; el 18 % de maquinaria, equipo y subcontratistas forma parte del costo de construcción.",
-  "El BOM contiene conjuntos generales, no todos los componentes individuales.",
+  "La inversión inicial corresponde a la construcción del CEDIS. El equipo de manejo de materiales (patines, transpaletas, racks y contenedores) y la implementación del WMS aún no se cotizan, por lo que no están incluidos; el 18 % de maquinaria, equipo y subcontratistas forma parte del costo de construcción.",
+  "El BOM contiene conjuntos generales y no todos los componentes individuales del vehículo.",
   "Las dimensiones y capacidades de contenedores y racks son supuestos preliminares.",
-  "El layout es conceptual; no sustituye un proyecto arquitectónico, estructural ni de protección civil.",
-  "No hay estudios reales de mecánica de suelos, topografía, impacto ambiental ni restricciones de construcción.",
-  "Los tiempos de ciclo, las esperas y la jornada de 420 min de los VSM son supuestos por validar con mediciones.",
-  "La evaluación financiera no considera inflación, impuestos, depreciación, financiamiento ni tipo de cambio.",
+  "El layout es conceptual y no sustituye un proyecto arquitectónico, estructural o de protección civil.",
+  "No se cuenta con estudios reales de mecánica de suelos, topografía, impacto ambiental o restricciones de construcción.",
+  "Los tiempos de ciclo, las esperas y la jornada de 420 minutos utilizados en los VSM actual y futuro son supuestos y deberán validarse mediante mediciones directas.",
+  "La evaluación financiera no considera inflación, impuestos, depreciación, costo de financiamiento ni variaciones en el tipo de cambio.",
   "El horizonte de evaluación se limita a siete años.",
   "La propuesta está condicionada por el presupuesto, el tiempo disponible, la legislación aplicable y la tecnología existente."];
 /* riesgos y suposiciones (tablas 4 a 11) */
@@ -3156,6 +3167,7 @@ function renderU2(){
   document.getElementById("u2Ent").innerHTML=U2_ENT.map(function(g){return '<div class="ent-g"><h4>'+esc(g[0])+'</h4><div>'+g[1].map(function(t){return '<span class="chip">'+esc(t)+'</span>';}).join("")+'</div></div>';}).join("");
   document.getElementById("entN").textContent=U2_ENT.reduce(function(s,g){return s+g[1].length;},0);
   document.getElementById("u2Lim").innerHTML=U2_LIM.map(function(t){return '<li>'+esc(t)+'</li>';}).join("");
+  document.getElementById("u2Lim4").innerHTML=U2_LIM4.map(function(t){return '<div><h4>'+esc(t[0])+'</h4><p>'+esc(t[1])+'</p></div>';}).join("");
   document.getElementById("limN").textContent=U2_LIM.length;
   document.getElementById("u2Niv").innerHTML=[["20 a 25 · Crítico: se atiende primero","lv-c"],["12 a 16 · Alto: respuesta planeada","lv-a"],
     ["6 a 10 · Moderado: se vigila","lv-m"],["1 a 5 · Bajo: se acepta","lv-b"]].map(function(x){return '<span><i class="'+x[1]+'"></i>'+esc(x[0])+'</span>';}).join("");
