@@ -971,7 +971,13 @@ dialog.wide{width:min(860px,calc(100vw - 32px))}
 .legend i.lg-c.G{background:color-mix(in srgb,var(--good) 28%,var(--surface));color:var(--ink)}
 .legend i.lg-c.S{background:var(--surface-3);color:var(--ink-muted)}.legend i.lg-c.W{background:var(--surface);border:1px solid var(--axis)}
 .dg{min-width:1040px}
-.dg-r{min-width:760px}
+.dg-r{min-width:760px;margin:0 auto}
+.zoom{display:inline-flex;align-items:center;gap:2px;margin-left:auto;border:1px solid var(--line);border-radius:8px;padding:2px;background:var(--surface)}
+.zoom button{min-width:30px;height:28px;border:0;border-radius:6px;background:transparent;color:var(--ink);font:inherit;font-size:16px;font-weight:600;line-height:1;cursor:pointer}
+.zoom button:hover:not(:disabled){background:var(--surface-3)}
+.zoom button:disabled{color:var(--ink-muted);opacity:.45;cursor:default}
+.zoom button:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.zoom .zoom-p{min-width:50px;font-size:12px;font-family:var(--mono)}
 .red-sc{height:640px;overflow:auto;-webkit-overflow-scrolling:touch;border:1px solid var(--line);border-radius:9px;background:var(--surface)}
 .red-sc:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 @media(max-width:560px){.red-sc{height:520px}}
@@ -1538,13 +1544,28 @@ dialog.wide{width:min(860px,calc(100vw - 32px))}
         <span><i class="nd nd-c"></i>En la ruta crítica</span><span><i class="nd nd-o"></i>Del VSM, fuera de la ruta</span><span><i class="nd nd-p"></i>Preparación agregada</span>
       </div>
     </div>
+    <div style="height:12px"></div>
+    <div class="card">
+      <div class="chead"><h3>Ruta crítica de la fabricación de alfombras</h3><span class="tag">14 días de espera</span></div>
+      <p class="csub">A–B–D–E–F–G–H–I–J–K–L: cada actividad depende directamente de la anterior</p>
+      <div class="rut" id="u3RutA"></div>
+      <div class="chead u3-mt"><h3>Actividades en paralelo</h3></div>
+      <p class="csub">No alargan el proceso mientras terminen antes de que las necesite la ruta crítica</p>
+      <div class="u3-tw"><table class="u3t" id="u3Par"></table></div>
+    </div>
   </section>
 
   <!-- 3.4 -->
   <section class="u2s" id="u3Red">
     <div class="dhead"><h2>Red del proyecto</h2><p>Diseño del almacén: las 31 actividades, cada una en su círculo</p></div>
     <div class="card">
-      <div class="chead"><h3>Red de actividades</h3></div>
+      <div class="chead"><h3>Red de actividades</h3>
+        <div class="zoom" role="group" aria-label="Zoom de la red">
+          <button type="button" id="redMenos" aria-label="Alejar">&minus;</button>
+          <button type="button" class="zoom-p" id="redPct" aria-label="Volver al tamaño normal" title="Volver al tamaño normal">100%</button>
+          <button type="button" id="redMas" aria-label="Acercar">+</button>
+        </div>
+      </div>
       <p class="csub">Desliza hacia abajo para recorrerla, de AP-01 a EN-02. IN-01, DI-01, CO-03, DO-01 y QA-02 no inician hasta que terminan todas sus predecesoras: un retraso en la rama más lenta se transmite al resto</p>
       <div class="red-sc" tabindex="0" role="region" aria-label="Red del proyecto, se desplaza hacia abajo"><div class="dg dg-r" id="u3RedG"></div></div>
       <div class="legend">
@@ -1563,23 +1584,13 @@ dialog.wide{width:min(860px,calc(100vw - 32px))}
   <!-- 3.5 -->
   <section class="u2s" id="u3Rut">
     <div class="dhead"><h2>Ruta crítica</h2><p>Un retraso en cualquiera de estas actividades retrasa la entrega</p></div>
-    <div class="u2-2c">
-      <div class="card">
+    <div class="card">
         <div class="chead"><h3>Ruta crítica del proyecto</h3><span class="tag">19 actividades</span></div>
         <p class="csub">Demanda, inventarios, almacenamiento, layout, costos, evaluación financiera, documentación y cierre</p>
         <div class="rut" id="u3RutP"></div>
         <p class="cnota">Después de CO-03 se divide en dos ramas sin holgura, FI-01–FI-02 y DO-01, que se unen en QA-01. La red termina en la semana 10 y el cronograma se planeó a 12: quedan 2 semanas de margen, que se usaron para iniciar más tarde la localización y el VSM. Con esa programación, VS-01 a VS-03, FI-01, FI-02, DO-01, QA-01, QA-02, EN-01 y EN-02 quedan sin holgura dentro de las 12 semanas.</p>
         <p class="cnota">Con holgura: PR-01, PR-02, LO-01 a LO-04, EQ-01, VS-01 a VS-03, AP-02 y DO-02.</p>
       </div>
-      <div class="card">
-        <div class="chead"><h3>Ruta crítica de la fabricación de alfombras</h3><span class="tag">14 días de espera</span></div>
-        <p class="csub">A–B–D–E–F–G–H–I–J–K–L: cada actividad depende directamente de la anterior</p>
-        <div class="rut" id="u3RutA"></div>
-        <div class="chead u3-mt"><h3>Actividades en paralelo</h3></div>
-        <p class="csub">No alargan el proceso mientras terminen antes de que las necesite la ruta crítica</p>
-        <div class="u3-tw"><table class="u3t" id="u3Par"></table></div>
-      </div>
-    </div>
   </section>
 
   <!-- 3.6 -->
@@ -3327,6 +3338,26 @@ function pintarPrec(){
   document.getElementById("u3Prec").innerHTML='<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="Diagrama de precedencia: ruta crítica A, B, D, E, F, G, H, I, J, K, L con 14 días de espera; C, M, N, O y P van en paralelo">'+svg+'</svg>';
   tips(document.getElementById("u3Prec"));
 }
+function zoomRed(){
+  var g=document.getElementById("u3RedG"),sc=g.parentNode,z=100,MIN=60,MAX=240,PASO=20;
+  var menos=document.getElementById("redMenos"),mas=document.getElementById("redMas"),pct=document.getElementById("redPct");
+  function poner(n){
+    n=Math.max(MIN,Math.min(MAX,n));
+    /* conserva en el centro de la vista lo que se estaba viendo */
+    var cx=(sc.scrollLeft+sc.clientWidth/2)/sc.scrollWidth,cy=(sc.scrollTop+sc.clientHeight/2)/sc.scrollHeight;
+    z=n;
+    g.style.width=z+"%";
+    g.style.minWidth=(760*z/100)+"px";
+    sc.scrollLeft=cx*sc.scrollWidth-sc.clientWidth/2;
+    sc.scrollTop=cy*sc.scrollHeight-sc.clientHeight/2;
+    pct.textContent=z+"%";
+    menos.disabled=z<=MIN;
+    mas.disabled=z>=MAX;
+  }
+  menos.onclick=function(){poner(z-PASO);};
+  mas.onclick=function(){poner(z+PASO);};
+  pct.onclick=function(){poner(100);};
+}
 function pintarRed(T){
   /* las 31 actividades como nodos: renglón (de arriba abajo), posición x y nombre corto */
   var R=45, DY=118, Y0=62, N={
@@ -3358,6 +3389,7 @@ function pintarRed(T){
   var H=Y0*2+17*DY;
   document.getElementById("u3RedG").innerHTML='<svg viewBox="0 0 1210 '+H+'" role="img" aria-label="Red del proyecto con las 31 actividades, de AP-01 a EN-02; la ruta crítica está resaltada">'+lin+nod+'</svg>';
   tips(document.getElementById("u3RedG"));
+  zoomRed();
 }
 function renderU3(){
   var T=calcRed(), crit=ACT_ORD.filter(function(c){return T[c].h===0;}), total=ACTS.reduce(function(s,a){return s+U3_COSTO[a[0]];},0), finRed=Math.max.apply(null,ACT_ORD.map(function(c){return T[c].ef;}));
