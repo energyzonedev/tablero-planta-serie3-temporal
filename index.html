@@ -911,6 +911,9 @@ dialog.wide{width:min(860px,calc(100vw - 32px))}
 .u2-excl p.cnota{margin-top:9px;font-size:11.5px;color:var(--ink-muted);max-width:none}
 .exc{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
 .exc .chip{white-space:normal;font-size:12px;padding:4px 9px}
+.u3-rc{margin:2px 0 10px;font-size:13px;color:var(--ink-2)}
+.u3-rc b{color:var(--ink);font-weight:600}
+.u3-rc span{font-family:var(--mono);font-weight:600;color:var(--s1)}
 .u3-band{margin-top:48px;scroll-margin-top:84px}
 .u3-band .u2-und{margin:0 0 22px;padding-bottom:22px;border-bottom:1px solid var(--line)}
 .u3-13{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2fr);gap:12px;align-items:start}
@@ -1525,6 +1528,7 @@ dialog.wide{width:min(860px,calc(100vw - 32px))}
     <div class="card">
       <div class="chead"><h3>Diagrama de precedencia de la fabricación de alfombras</h3></div>
       <p class="csub">Una actividad inicia solo cuando terminan todas sus predecesoras. El número sobre la flecha son los días de espera del VSM actual</p>
+      <p class="u3-rc"><b>Ruta crítica:</b> <span>A–B–D–E–F–G–H–I–J–K–L</span> · 14 días de espera</p>
       <div class="u3-tw"><div class="dg" id="u3Prec"></div></div>
       <div class="legend">
         <span><i class="vl-mat" style="background:var(--s1)"></i>Ruta crítica</span><span><i class="vl-thin"></i>Otra dependencia</span>
