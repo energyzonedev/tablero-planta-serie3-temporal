@@ -788,10 +788,14 @@ dialog.wide{width:min(860px,calc(100vw - 32px))}
 .u2-metas li{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 12px;align-items:baseline;padding:7px 0;border-top:1px solid var(--line)}
 .u2-metas li:first-child{border-top:0}
 .u2-metas li b{font-family:var(--mono);font-weight:600;white-space:nowrap}
-.smart{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px;margin-top:6px}
+@media(min-width:1000px){.smart{grid-template-columns:repeat(3,minmax(0,1fr))!important}}
+.smart{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px;margin-top:6px}
 .smc{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px 14px;display:flex;flex-direction:column;gap:6px}
 .smc .k{font-size:10.5px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--s1)}
 .smc h4{margin:0;font-size:14px;font-weight:600}
+.smc dl{margin:0;display:flex;flex-direction:column;gap:6px;font-size:12.5px;line-height:1.4}
+.smc dt{font-size:10.5px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-muted)}
+.smc dd{margin:0;color:var(--ink)}
 .smc p{margin:0;font-size:12.5px;line-height:1.45;color:var(--ink-2)}
 .smc .smm{margin-top:auto;border-top:1px solid var(--line);padding-top:7px;font-size:11.5px;color:var(--ink-muted);line-height:1.5}
 .smc .smm b{color:var(--ink);font-weight:600}
@@ -1364,6 +1368,7 @@ dialog.wide{width:min(860px,calc(100vw - 32px))}
     <div class="chead u2-sub"><h3>Objetivos SMART</h3></div>
     <p class="csub">Redactados con el criterio de Doran (1981): específicos, medibles, asignados a un responsable, realistas y con plazo en semanas del cronograma</p>
     <div class="smart" id="u2Smart"></div>
+    <details class="obj-c"><summary>Ver objetivos SMART completos</summary><ol class="u2-ol" id="u2SmartC"></ol></details>
     <div style="height:12px"></div>
     <details class="card u2-det">
       <summary>Actividades necesarias para desarrollar el proyecto <span id="u2ActN"></span></summary>
@@ -2988,13 +2993,21 @@ var U2_METAS=[["Pronóstico de demanda para el periodo de operación","7 años"]
   ["Superficie de la instalación","17,020 m²"],["Ubicación que cumpla las condiciones logísticas, técnicas y operativas","Logistik II"],
   ["Layout que facilite el flujo desde la recepción hasta el surtido",""],["Selección de los equipos del almacén","16 tipos de equipo"],
   ["Lead time del CEDIS (VSM de la Unidad 1)","7.09 → 3.28 días"],["Lead time y tiempo de proceso de las alfombras","14 → 4.5 días · 975 → 685 s"]];
+/* medida y plazo del documento; responsables según las actividades del cronograma */
 var U2_SMART=[
-  ["1","Estimación de la demanda","Calcular la demanda anual, mensual y diaria de componentes del BMW 320i con cinco años de históricos (2021-2025) y por lo menos dos métodos de pronóstico, para elegir el modelo que dimensiona el almacén.","Semanas 1 a 3"],
-  ["2","Planeación del inventario","Determinar stock de seguridad, punto de reorden, cantidad por pedido, inventario máximo e inventario promedio de los 22 conjuntos del BOM, clasificados en A, B y C.","Semanas 3 y 4"],
-  ["3","Dimensionamiento","Calcular contenedores, pallets y posiciones de los 22 conjuntos para diseñar una instalación de aproximadamente 17,020 m² con pasillos, áreas operativas y reserva de crecimiento del 15 %.","Semanas 4 y 5"],
-  ["4","Localización y distribución","Evaluar por lo menos dos terrenos con un mínimo de 10 factores ponderados y el centro de gravedad, seleccionar el de mejores condiciones logísticas y diseñar su layout general.","Semanas 4 a 7"],
-  ["5","Viabilidad económica","Estimar inversión inicial, gastos anuales, beneficios, retorno de inversión y periodo de recuperación para comprobar la viabilidad en un horizonte de siete años.","Semanas 8 a 10"],
-  ["6","VSM de la línea de alfombras","Elaborar el VSM actual y el VSM futuro para proponer mejoras que reduzcan el lead time de 14 a 4.5 días y el tiempo de proceso de 975 a 685 segundos por juego.","Semanas 7 a 9"]];
+  ["1","Demanda","Calcular la demanda anual, mensual y diaria de componentes","5 años de históricos y al menos 2 métodos","Semanas 1 a 3","Aldo Gómez"],
+  ["2","Inventario","Determinar stock de seguridad, punto de reorden, cantidad por pedido e inventario máximo y promedio","22 conjuntos en clases A, B y C","Semanas 3 y 4","Aldo Gómez"],
+  ["3","Dimensionamiento","Calcular contenedores, pallets y posiciones para diseñar la instalación","Aproximadamente 17,020 m² con reserva del 15 %","Semanas 4 y 5","Miguel Cornejo y Sebastián Domínguez"],
+  ["4","Localización","Evaluar los terrenos, seleccionar el mejor y diseñar su layout","Al menos 2 terrenos y 10 factores","Semanas 4 a 7","Frida Olvera y Sebastián Domínguez"],
+  ["5","Viabilidad","Estimar inversión, gastos, beneficios, retorno y recuperación","Horizonte de 7 años","Semanas 8 a 10","Daniela Tenorio"],
+  ["6","VSM","Elaborar el VSM actual y futuro y proponer mejoras","Lead time 14 → 4.5 días y proceso 975 → 685 s","Semanas 7 a 9","Aldo Gómez y Miguel Cornejo"]];
+var U2_SMART_C=[
+  ["Estimación de la demanda","Calcular, entre las semanas 1 y 3 del proyecto, la demanda anual, mensual y diaria de componentes del BMW 320i mediante el análisis de cinco años de datos históricos (2021-2025) y la comparación de por lo menos dos métodos cuantitativos de pronóstico, con la finalidad de seleccionar el modelo más adecuado para dimensionar el almacén."],
+  ["Planeación del inventario","Determinar, entre las semanas 3 y 4, los niveles de stock de seguridad, punto de reorden, cantidad por pedido, inventario máximo e inventario promedio de los 22 conjuntos de componentes incluidos en el BOM, clasificándolos en las categorías A, B y C."],
+  ["Dimensionamiento","Calcular, entre las semanas 4 y 5, la cantidad de contenedores, pallets y posiciones de almacenamiento requeridos para los 22 conjuntos de componentes, con el propósito de diseñar una instalación de aproximadamente 17,020 m², incluyendo pasillos, áreas operativas y una reserva de crecimiento del 15 %."],
+  ["Localización y distribución","Evaluar, entre las semanas 4 y 7, por lo menos dos alternativas de localización mediante un mínimo de 10 factores ponderados y el método del centro de gravedad, para seleccionar el terreno que obtenga las mejores condiciones logísticas y diseñar su layout general."],
+  ["Viabilidad económica","Estimar, entre las semanas 8 y 10, la inversión inicial, los gastos anuales de operación, los beneficios económicos, el retorno de inversión y el periodo de recuperación del almacén, con el propósito de comprobar que la propuesta sea viable durante un horizonte de evaluación de siete años."],
+  ["VSM de la línea de alfombras","Elaborar, entre las semanas 7 y 9, el VSM actual y el VSM futuro de la fabricación de alfombras automotrices, con el propósito de proponer actividades de mejora que reduzcan el lead time de 14 a 4.5 días y el tiempo de proceso de 975 a 685 segundos por juego."]];
 var U2_ACT=["Establecer los supuestos, limitaciones y riesgos del proyecto.","Recopilar los históricos de producción del BMW Serie 3 en México.", "Aplicar métodos de pronóstico para estimar la demanda futura.", "Comparar los resultados de regresión lineal y promedio móvil ponderado.", "Seleccionar el pronóstico que mejor represente el comportamiento de los datos.", "Definir las especificaciones generales del BMW 320i.", "Elaborar la lista de materiales o BOM del vehículo.", "Determinar la demanda mensual y diaria de componentes.", "Calcular el takt time correspondiente a la demanda estimada.", "Clasificar los componentes mediante el método ABC.", "Establecer las políticas de inventario para las categorías A, B y C.", "Calcular el stock de seguridad, punto de reorden y cantidad por pedido.", "Calcular el inventario máximo, inventario promedio y rotación anual.", "Convertir los requerimientos de inventario en contenedores, pallets y posiciones.", "Calcular la superficie neta de almacenamiento.", "Determinar el espacio requerido para pasillos y maniobras.", "Calcular las áreas de recepción, inspección, preparación de pedidos, oficinas, servicios y mantenimiento.", "Considerar una reserva de superficie para el crecimiento futuro.", "Analizar las alternativas de localización mediante factores ponderados.", "Aplicar el método del centro de gravedad.", "Seleccionar la ubicación más conveniente para el almacén.", "Elaborar el layout general de la instalación.", "Comparar y seleccionar la maquinaria, los equipos y los materiales necesarios.", "Elaborar el VSM actual y proponer un VSM futuro.", "Estimar los costos de construcción, permisos, equipo y puesta en marcha.", "Calcular los beneficios, gastos operativos, retorno de inversión y periodo de recuperación.", "Integrar los resultados y presentar la propuesta final del diseño del almacén."];
 var U2_ENT=["Pronóstico de la demanda para el horizonte del proyecto","Ficha técnica general del BMW 320i","Lista de materiales o BOM","Clasificación ABC de los componentes",
   "Política y cálculos de inventario","Requerimientos de contenedores, pallets y posiciones","Cálculo de la superficie del almacén","Evaluación de alternativas de localización",
@@ -3130,8 +3143,9 @@ function renderU2(){
   document.getElementById("u2EspC").innerHTML=U2_ESP_C.map(function(t){return '<li>'+esc(t)+'</li>';}).join("");
   document.getElementById("u2Metas").innerHTML=U2_METAS.map(function(m){return '<li><span>'+esc(m[0])+'</span><b>'+esc(m[1])+'</b></li>';}).join("");
   document.getElementById("u2Smart").innerHTML=U2_SMART.map(function(s){
-    return '<div class="smc"><span class="k">SMART '+s[0]+'</span><h4>'+esc(s[1])+'</h4><p>'+esc(s[2])+'</p>'+
-      '<div class="smm"><b>'+esc(s[3])+'</b></div></div>'; }).join("");
+    return '<div class="smc"><span class="k">SMART '+s[0]+'</span><h4>'+esc(s[1])+'</h4><dl>'+
+      [["Qué",s[2]],["Medida",s[3]],["Plazo",s[4]],["Responsable",s[5]]].map(function(f){return '<div><dt>'+f[0]+'</dt><dd>'+esc(f[1])+'</dd></div>';}).join("")+'</dl></div>'; }).join("");
+  document.getElementById("u2SmartC").innerHTML=U2_SMART_C.map(function(t){return '<li><b>'+esc(t[0])+':</b> '+esc(t[1])+'</li>';}).join("");
   document.getElementById("u2Act").innerHTML=U2_ACT.map(function(a){return '<li>'+esc(a)+'</li>';}).join("");
   document.getElementById("u2ActN").textContent="("+U2_ACT.length+")";
   document.getElementById("u2Ent").innerHTML=U2_ENT.map(function(t){return '<li>'+esc(t)+'</li>';}).join("");
