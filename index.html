@@ -529,7 +529,10 @@ dialog.wide{width:min(860px,calc(100vw - 32px))}
 .g-grid .g-k .v{font-size:38px}
 @media(max-width:560px){.g-k,.g-grid .g-k{min-height:0}.g-grid .g-k .v{font-size:28px}}
 .g-k:hover{border-color:var(--axis);box-shadow:0 2px 10px rgba(11,11,11,.07)}
-.g-k .lb{padding-right:20px}
+.g-k{text-align:center;align-items:center;justify-content:center}
+.g-k .sub{margin-top:0;min-height:0}
+.g-k .lb{padding:0 20px}
+.g-k .g-nd{align-self:stretch}
 .g-k::after{content:"\2192";position:absolute;top:12px;right:14px;font-size:14px;font-weight:600;color:var(--ink-muted);transition:color .15s,transform .15s}
 .g-k:hover::after,.g-k:focus-visible::after{color:var(--accent);transform:translateX(2px)}
 .g-k .v{font-size:32px;margin-top:10px}
