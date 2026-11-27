@@ -511,34 +511,56 @@ dialog.wide{width:min(860px,calc(100vw - 32px))}
 
 /* ---------- tablero gerencial ---------- */
 .umenu .um-sep{height:1px;background:var(--line);margin:6px 4px 0}
-.g-kpis .kpi,.g-pt{font:inherit;color:inherit;text-align:left;cursor:pointer;width:100%;
-  transition:border-color .15s,box-shadow .15s}
-.g-kpis .kpi:hover,.g-pt:hover{border-color:var(--axis);box-shadow:0 2px 10px rgba(11,11,11,.07)}
+@media(min-width:561px){.g-ancho .hd{max-width:none;padding:0 32px}}
+#vGer .u2{max-width:none;padding:26px 32px 64px}
+@media(max-width:560px){#vGer .u2{padding:22px 16px 64px}}
+#vGer .u2-hero{display:flex;flex-wrap:wrap;align-items:flex-end;gap:8px 24px}
+#vGer .u2-hero>div{flex:1 1 420px}
+#vGer .u2s{padding-top:28px}
+.g-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px}
+.g-k{font:inherit;color:inherit;text-align:left;cursor:pointer;width:100%;min-height:190px;transition:border-color .15s,box-shadow .15s}
+.g-k:hover{border-color:var(--axis);box-shadow:0 2px 10px rgba(11,11,11,.07)}
+.g-k .v{font-size:27px}
+.g-cmp{display:block;margin-top:8px;font-size:12px;font-weight:600;color:var(--ink-2);line-height:1.35}
+.g-cmp.ok{color:var(--good-ink)} .g-cmp.cr{color:var(--crit-ink)} .g-cmp.wn{color:var(--warn-ink)}
+.g-nd{display:block;margin-top:8px;padding:6px 8px;border-radius:6px;background:var(--surface-2);font-size:11px;color:var(--ink-2);line-height:1.35}
+.g-nd::before{content:"Sin dato \00b7  ";font-weight:700;color:var(--ink)}
 .g-ir{display:block;margin-top:10px;padding-top:8px;border-top:1px solid var(--line);font-size:11.5px;font-weight:600;color:var(--accent)}
 .g-ir::after{content:" \2192"}
-.g-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(232px,1fr));gap:12px}
-.g-pt{min-height:176px}
-.g-pt .v{font-size:24px}
-.g-uh{margin:26px 0 10px}
-.g-uh:first-of-type{margin-top:0}
+.g-mid{display:grid;gap:12px;grid-template-columns:1fr;align-items:start}
+@media(min-width:1280px){.g-mid{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}}
+.g-col{display:grid;gap:12px}
 .g-rec ul{margin:2px 0 0;padding-left:18px;font-size:12.5px;color:var(--ink-2);line-height:1.5}
 .g-rec li{padding:1px 0}
-.g-btn{align-self:flex-start;display:inline-flex;align-items:center;min-height:36px;margin-top:auto;padding:0 13px;
+.g-btn{align-self:flex-start;display:inline-flex;align-items:center;min-height:36px;margin-top:6px;padding:0 13px;
   border:1px solid var(--line);border-radius:999px;background:var(--surface);color:var(--ink-2);font-size:12.5px;font-weight:600;cursor:pointer}
 .g-btn:hover{background:var(--surface-2);color:var(--ink)}
 .g-btn::after{content:"\2192";margin-left:6px}
 .g-sens{display:grid;gap:10px;margin-top:4px}
-.g-sr{display:grid;grid-template-columns:minmax(120px,190px) minmax(0,1fr);gap:4px 12px;align-items:center;font-size:12px;color:var(--ink-2)}
+.g-sr{display:grid;grid-template-columns:minmax(120px,200px) minmax(0,1fr);gap:4px 12px;align-items:center;font-size:12px;color:var(--ink-2)}
 .g-st{position:relative;height:24px;background:var(--surface-2);border-radius:5px}
 .g-st i{position:absolute;inset:0 auto 0 0;border-radius:5px;background:var(--s1)}
 .g-st i.cr{background:var(--crit)}
 .g-st b{position:absolute;top:50%;transform:translateY(-50%);font-family:var(--mono);font-size:11.5px;font-weight:600;color:var(--ink);white-space:nowrap;padding-left:7px}
 .g-st b.in{transform:translate(-100%,-50%);padding:0 8px 0 0;color:#fff}
-.g-ax{display:grid;grid-template-columns:minmax(120px,190px) minmax(0,1fr);gap:12px;font-size:10.5px;color:var(--ink-muted)}
+.g-ax{display:grid;grid-template-columns:minmax(120px,200px) minmax(0,1fr);gap:12px;font-size:10.5px;color:var(--ink-muted)}
 .g-ax div{display:flex;justify-content:space-between;font-family:var(--mono)}
 @media(max-width:560px){.g-sr,.g-ax{grid-template-columns:96px minmax(0,1fr);gap:4px 8px}}
-.alerts .g-ir{grid-column:2;margin-top:2px;padding-top:0;border-top:0;border:0;background:transparent;text-align:left;cursor:pointer;padding-left:0;font-family:inherit}
+.g-al .chead{padding:10px 16px 0}
+.g-al .alerts{border:0;border-radius:0}
+.g-al{padding:0;overflow:hidden}
+.alerts .g-ir{display:inline;margin:0 0 0 6px;padding:0;border:0;background:transparent;text-align:left;cursor:pointer;font-family:inherit;white-space:nowrap}
+.g-al .alerts li{padding:9px 16px}
+@media(min-width:1280px){.g-mid{align-items:stretch}.g-col{grid-template-rows:auto 1fr}}
 .sev.nu{background:var(--surface-2);color:var(--ink-2)}
+.g-ph{display:flex;flex-wrap:wrap;align-items:center;gap:10px 18px;margin-bottom:14px}
+.g-ph .dhead{margin:0;flex:1 1 360px}
+.g-seg{flex-wrap:wrap}
+.g-seg button{min-height:38px;padding:0 14px;font-size:13px}
+.g-seg button b{font-family:var(--mono);font-weight:600;color:var(--ink-muted);margin-left:6px}
+.g-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px}
+.g-uh{margin:22px 0 10px}
+.g-uh:first-child{margin-top:0}
 .g-volver{position:fixed;right:20px;bottom:20px;z-index:45;display:inline-flex;align-items:center;gap:6px;min-height:40px;padding:0 15px;
   border:1px solid var(--axis);border-radius:999px;background:var(--surface);color:var(--ink);font-size:13px;font-weight:600;cursor:pointer;
   box-shadow:0 8px 24px rgba(11,11,11,.14),0 2px 6px rgba(11,11,11,.06)}
@@ -1697,46 +1719,52 @@ dialog.wide{width:min(860px,calc(100vw - 32px))}
 <div id="vGer" hidden>
 <div class="u2">
   <div class="u2-hero">
-    <span class="u2-tag">Tablero gerencial</span>
-    <h1>Decisión sobre el CEDIS BMW</h1>
-    <p>Las cifras que sostienen la decisión, lo que falta validar y dónde ver cada punto a detalle</p>
+    <div>
+      <span class="u2-tag">Tablero gerencial</span>
+      <h1>Decisión sobre el CEDIS BMW</h1>
+      <p>Las cifras que sostienen la decisión, lo que falta validar y dónde ver cada punto a detalle</p>
+    </div>
   </div>
 
   <section class="u2s" id="gDec">
     <div class="dhead"><h2>La decisión</h2><p>Evaluación financiera a 7 años de operación</p></div>
-    <div class="kpis g-kpis" id="gKpis"></div>
+    <div class="g-kpis" id="gKpis"></div>
     <div style="height:12px"></div>
-    <div class="u2-2c">
-      <div class="verdict ok g-rec">
-        <span class="lb">Recomendación</span>
-        <div class="st"><i></i>Continuar con el proyecto ejecutivo</div>
-        <p>La inversión se recupera en 2.65 años de un horizonte de 7. Antes de construir hay que confirmar:</p>
-        <ul>
-          <li>El costo real de mantener inventario (supuesto 1).</li>
-          <li>Cuánto le cuesta a BMW una hora de paro (supuesto 2).</li>
-          <li>Cotizaciones de la obra, del equipo de manejo y del WMS.</li>
-        </ul>
-        <button type="button" class="g-btn" data-ir="u2Rie">Ver riesgos y suposiciones</button>
+    <div class="g-mid">
+      <div class="g-col">
+        <div class="verdict ok g-rec">
+          <span class="lb">Recomendación</span>
+          <div class="st"><i></i>Continuar con el proyecto ejecutivo</div>
+          <p>La inversión se recupera en 2.65 años de un horizonte de 7. Antes de construir hay que confirmar:</p>
+          <ul>
+            <li>El costo real de mantener inventario (supuesto 1).</li>
+            <li>Cuánto le cuesta a BMW una hora de paro (supuesto 2).</li>
+            <li>Cotizaciones de la obra, del equipo de manejo y del WMS.</li>
+          </ul>
+          <button type="button" class="g-btn" data-ir="u2Rie">Ver riesgos y suposiciones</button>
+        </div>
+        <div class="card">
+          <div class="chead"><h3>¿En cuánto tiempo se recupera la inversión?</h3></div>
+          <p class="csub">Años de recuperación si falla cada supuesto, contra el límite de 7 años</p>
+          <div class="g-sens" id="gSens"></div>
+          <div class="g-ax" aria-hidden="true"><span></span><div><span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7 años</span></div></div>
+          <p class="cnota">Si fallan los supuestos 1 y 2 a la vez, la inversión ya no se recupera dentro de los 7 años.</p>
+        </div>
       </div>
-      <div class="card">
-        <div class="chead"><h3>¿En cuánto tiempo se recupera la inversión?</h3></div>
-        <p class="csub">Años de recuperación si falla cada supuesto, contra el horizonte de 7 años</p>
-        <div class="g-sens" id="gSens"></div>
-        <div class="g-ax" aria-hidden="true"><span></span><div><span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7 años</span></div></div>
-        <p class="cnota">Si fallan los supuestos 1 y 2 a la vez, la inversión ya no se recupera dentro de los 7 años.</p>
+      <div class="card g-al">
+        <div class="chead"><h3>Lo que requiere atención</h3><span class="tag">Del más grave al menos grave</span></div>
+        <ul class="alerts" id="gAlertas"></ul>
       </div>
     </div>
   </section>
 
-  <section class="u2s" id="gAte">
-    <div class="dhead"><h2>Lo que requiere atención</h2><p>Riesgos, supuestos y pendientes que pueden cambiar la decisión</p></div>
-    <ul class="alerts" id="gAlertas"></ul>
-  </section>
-
   <section class="u2s" id="gPts">
-    <div class="dhead"><h2>Cada punto del proyecto</h2><p>Un dato clave por apartado; toca una tarjeta para ir al detalle</p></div>
+    <div class="g-ph">
+      <div class="dhead"><h2>Cada punto del proyecto</h2><p>Un dato por apartado; toca una tarjeta para ir al detalle</p></div>
+      <div class="seg g-seg" role="group" aria-label="Elegir unidad" id="gUni"></div>
+    </div>
     <div id="gPuntos"></div>
-    <p class="cnota">Beneficio, ROI y recuperación salen de la evaluación financiera del documento de la Unidad 1; los demás datos, de cada apartado del tablero.</p>
+    <p class="cnota">Beneficio, recuperación y retorno salen de la evaluación financiera del documento de la Unidad 1; los demás datos, de cada apartado del tablero.</p>
   </section>
 </div>
 </div>
@@ -2589,6 +2617,7 @@ function mostrarTab(){
   document.getElementById("vU2").hidden=!(unidad===2||unidad===3);
   document.getElementById("vPend").hidden=!pend;
   document.getElementById("vGer").hidden=unidad!==0;
+  document.body.classList.toggle("g-ancho",unidad===0);
   document.getElementById("footCred").hidden=otra;
   if(pend) document.getElementById("pendT").textContent="Unidad "+unidad;
   if(!otra&&app!=="modelo") setTimeout(pintarMapa,0);
@@ -3487,66 +3516,81 @@ var GER_IR={secDatos:[1,"inicio"],costoT:[1,"inicio"],ubicT:[1,"inicio"],
   secKpi:[1,"modelo","indicadores"],secCal:[1,"modelo","indicadores"],secFlujo:[1,"modelo","indicadores"],
   secMaq:[1,"modelo","indicadores"],secVsm:[1,"modelo","indicadores"],
   u2Vsm:[2],u2Obj:[2],u2Alc:[2],u2Rie:[2],u2Cos:[2],u3Top:[2],u3Act:[2],u3Org:[2],u3Mat:[2],u3Red:[2],u3Rut:[2],u3Opt:[2]};
+/* cls: color de la tarjeta; cc: color de la comparación (ok = va en la dirección buena, cr = en la mala) */
 var GER_KPIS=[
-  {lb:"Inversión inicial",v:"$153.75 M",u:"sin IVA",cls:"nu",sub:"$178.36 M con IVA; no incluye terreno, equipo de manejo ni WMS",ir:"u2Cos",l:"Costo del almacén"},
-  {lb:"Beneficio neto anual",v:"$58 M",u:"al año",cls:"ok",sub:"$85 M de ahorros menos $27 M de gasto de operación",ir:"u2Cos",l:"Gastos de operación"},
-  {lb:"Recuperación",v:"2.65",u:"años",cls:"ok",pill:"horizonte de 7 años",pillCls:"ok",sub:"ROI de 37.7 % anual sobre la inversión",ir:"u2Rie",l:"Riesgos y suposiciones"},
-  {lb:"Ejecución del proyecto",v:"12",u:"semanas",cls:"nu",pill:"19 actividades sin holgura",sub:"31 actividades; costo del proyecto de $31,900",ir:"u3Rut",l:"Ruta crítica"}];
+  {lb:"Inversión inicial",v:"$153.8 M",u:"sin IVA",cls:"nu",c:"$178.4 M con IVA",sub:"No incluye terreno, equipo de manejo ni WMS",ir:"u2Cos",l:"Costo del almacén"},
+  {lb:"Ahorro neto al año",v:"$58 M",cls:"ok",c:"▲ 37.7 % de la inversión cada año",cc:"ok",sub:"$85 M de ahorros menos $27 M de operación",ir:"u2Cos",l:"Gastos de operación"},
+  {lb:"Recuperación de la inversión",v:"2.65",u:"años",cls:"ok",c:"4.35 años antes del límite de 7",cc:"ok",sub:"En el peor supuesto, 6.69 años",ir:"u2Rie",l:"Riesgos y suposiciones"},
+  {lb:"Entrega de alfombras",v:"4.5",u:"días",cls:"ok",c:"▼ 68 % contra 14 días hoy",cc:"ok",sub:"Con 21 mejoras en 9 estaciones",ir:"u2Vsm",l:"Mejoras al VSM futuro"},
+  {lb:"Riesgos críticos",v:"2",u:"de 3",cls:"cr",c:"Robo de carga y demanda distinta",cc:"cr",sub:"Respuesta de robo de carga aún sin cotizar",ir:"u2Rie",l:"Riesgos y suposiciones"},
+  {lb:"Duración del proyecto",v:"12",u:"semanas",cls:"nu",c:"2 semanas de margen: la red termina en la 10",cc:"ok",sub:"19 de 31 actividades sin margen",ir:"u3Rut",l:"Ruta crítica"}];
 var GER_SENS=[["Caso base",2.65,""],["Sin ahorro por paros (S2)",3.58,""],["Obra 50 % más cara (S3)",3.98,""],["Sin ahorro de inventario (S1)",6.69,"cr"]];
 var GER_ALERTAS=[
   ["cr","Crítico · 20","R1. Robo de embarques en el corredor de abasto","Dejaría sin piezas clase A a la línea. Respuesta: custodia y seguro de carga, aún sin cotizar.","u2Rie","Riesgos y suposiciones"],
   ["cr","Crítico · 20","R2. Demanda distinta al pronóstico","La reserva de crecimiento (15 %) absorbe el aumento; si no alcanza, se construye desde el inicio lo que falte.","u2Rie","Riesgos y suposiciones"],
   ["wn","Alto · 16","S1. Ahorro por reducir inventario","Sin el costo real de mantener inventario, la recuperación pasa de 2.65 a 6.69 años.","u2Rie","Riesgos y suposiciones"],
   ["wn","Alto · 15","S2. Ahorro por evitar paros de línea","Falta que BMW confirme el costo por hora de paro; sin él, la recuperación pasa a 3.58 años.","u2Rie","Riesgos y suposiciones"],
-  ["wn","Operación","Cuello de botella en costura y ribeteado","160 s contra un takt de 128 s. Con el kaizen K5 baja a 115 s y la línea queda bajo el takt.","secVsm","VSM actual"],
+  ["wn","Operación","Cuello de botella en costura y ribeteado","Tarda 160 s y el ritmo pide 128 s. Con el kaizen K5 baja a 115 s.","secVsm","VSM actual"],
   ["nu","Moderado · 9","R3. Retraso de los permisos","Gestoría y trámites en paralelo; retrasaría el arranque, no lo que se construye.","u2Rie","Riesgos y suposiciones"],
   ["nu","Moderado · 9","S3. Costo de la obra","Si la obra cuesta 50 % más, la recuperación pasa a 3.98 años.","u2Rie","Riesgos y suposiciones"],
   ["nu","Alcance","Fuera de la inversión","Terreno, equipo de manejo (patines, transpaletas, racks y contenedores) y WMS aún no se cotizan.","u2Alc","Definición del alcance"],
-  ["nu","Calendario","Margen de 2 semanas","La red termina en la semana 10 de 12; 19 de 31 actividades no tienen holgura.","u3Rut","Ruta crítica"]];
+  ["nu","Calendario","Margen de 2 semanas","La red termina en la semana 10 de 12; 19 de 31 actividades no tienen margen.","u3Rut","Ruta crítica"]];
+/* [etiqueta, valor, unidad, comparación, color de la comparación, contexto, destino, nombre del destino, sin dato] */
 var GER_PUNTOS=[
-  ["Unidad 1 · Diseño del CEDIS",[
-    ["Superficie","17,020","m²","185 × 92 m; 65.9 % almacenamiento y pasillos, 13 % de reserva","secDatos","Datos del CEDIS"],
-    ["Costo de construcción","$127.65 M","directo","17,020 m² × $7,500; con indirectos y contingencia, $153.75 M sin IVA","costoT","Costo de la construcción"],
-    ["Ubicación","Logistik II","","Lote 606, Villa de Reyes, S.L.P.; se descartó Eje 120 y Av. Del Aguaje","ubicT","Ubicación del CEDIS"],
-    ["Vehículo de referencia","BMW 320i","","Serie 3 G20 2026: 1,998 cm³, 184 hp, automática de 8 velocidades","secFicha","Características del modelo"],
-    ["Demanda 2027","59,020","autos","Promedio móvil ponderado; la regresión se descartó (R² = 0.0002)","secProd","Producción del Serie 3"],
-    ["Surtido diario","197","autos al día","22 conjuntos por auto; 31,290 contenedores al mes","secPlanta","Capacidad del CEDIS"],
-    ["Takt time","6.40","min","3 turnos de 7 h; inventario ABC de 3, 5 y 10 días","secKpi","Operación diaria"],
-    ["Meta de calidad","4σ","","Máximo 367 autos con defecto al año (1.22 al día)","secCal","Calidad"],
-    ["Cobertura del inventario","3 · 5 · 10","días","Política de las clases A, B y C; la gráfica usa datos de ejemplo","secFlujo","Cobertura del inventario"],
-    ["Maquinaria y equipo","16","categorías","48 alternativas comparadas con 6 criterios; la compra final requiere cotizaciones","secMaq","Maquinaria y equipo"],
-    ["VSM actual de alfombras","14","días","Lead time actual; 3 de 8 estaciones superan el takt de 128 s","secVsm","VSM actual"]]],
-  ["Unidad 2 · Planeación",[
-    ["VSM futuro","4.5","días","Lead time −68 %; proceso de 975 a 685 s con 21 mejoras en 9 kaizen","u2Vsm","Mejoras al VSM futuro"],
-    ["Objetivos","6","SMART","Cada uno con medida, plazo en semanas y responsable","u2Obj","Objetivos y metas"],
-    ["Alcance","14","entregables","16 limitaciones y 7 exclusiones; se diseña el almacén, no se construye","u2Alc","Definición del alcance"],
-    ["Riesgos","2","críticos","Robo de carga y demanda distinta al pronóstico; 2 supuestos en zona alta","u2Rie","Riesgos y suposiciones"],
-    ["Costo del almacén","$153.75 M","sin IVA","Inversión sin IVA; gasto de operación de $27 M al año","u2Cos","Costo del almacén"]]],
-  ["Unidad 3 · Actividades, red y ruta crítica",[
-    ["Actividades","31","en 14 categorías","5 responsables; costo del proyecto de $31,900","u3Act","Definición de actividades"],
-    ["Organización","4","niveles","Coordinación de Daniela Tenorio; cronograma de 12 semanas","u3Org","Organigrama de actividades"],
-    ["Secuencia de alfombras","16","actividades","11 en la ruta crítica (A a L) y 5 en paralelo","u3Mat","Matriz de secuenciación"],
-    ["Red del proyecto","Semana 10","","Termina 2 semanas antes que el cronograma de 12","u3Red","Red del proyecto"],
-    ["Ruta crítica","19","de 31","Demanda, inventarios, almacén, layout, costos, finanzas y cierre","u3Rut","Ruta crítica"],
-    ["Optimización de redes","−1,871","juegos","Inventario en espera de 2,758 a 887 juegos; planearlo cuesta $1,600","u3Opt","Optimización de redes"]]]];
-function gTarjeta(o,cls){
-  return '<button type="button" class="kpi '+(o.cls||'')+(cls?' '+cls:'')+'" data-ir="'+o.ir+'"><span class="stripe"></span>'+
+  ["Unidad 1","Diseño del CEDIS",[
+    ["Superficie del CEDIS","17.0 mil","m²","13 % reservado para crecer","","Nave de 185 × 92 m","secDatos","Datos del CEDIS"],
+    ["Costo de construcción","$127.7 M","directo","+$26.1 M de indirectos y contingencia","","17,020 m² × $7,500 por m²","costoT","Costo de la construcción"],
+    ["Terreno elegido","Logistik II","","Elegido sobre Eje 120 y Av. Del Aguaje","","Lote 606, Villa de Reyes, S.L.P.","ubicT","Ubicación del CEDIS"],
+    ["Auto de referencia","BMW 320i","","Serie 3, modelo 2026","","184 hp; automática de 8 velocidades","secFicha","Características del modelo"],
+    ["Autos al año (2027)","59.0 mil","","Similar a 2026 (59.2 mil)","","Promedio móvil ponderado; la regresión se descartó","secProd","Producción del Serie 3"],
+    ["Autos por surtir al día","197","","4,919 al mes en 25 días","","22 conjuntos por auto; 31.3 mil contenedores al mes","secPlanta","Capacidad del CEDIS"],
+    ["Ritmo de surtido","6.4","min por auto","1,260 min al día ÷ 197 autos","","3 turnos de 7 horas","secKpi","Operación diaria"],
+    ["Autos con defecto permitidos","367","al año","Máximo para la meta de 4 sigma (0.62 %)","","1.22 autos al día de 197","secCal","Calidad",""],
+    ["Días de inventario","3 · 5 · 10","días","Política de las clases A, B y C","","","secFlujo","Cobertura del inventario","la gráfica de cobertura usa datos de ejemplo"],
+    ["Equipo seleccionado","16","equipos","Elegidos entre 48 alternativas","","6 criterios; la compra final requiere cotizaciones","secMaq","Maquinaria y equipo"],
+    ["Entrega de alfombras hoy","14","días","3 de 8 estaciones no alcanzan el ritmo","cr","Cuello de botella: costura, 160 s","secVsm","VSM actual"]]],
+  ["Unidad 2","Planeación",[
+    ["Entrega de alfombras con mejoras","4.5","días","▼ 68 % contra 14 días hoy","ok","Proceso de 975 a 685 s por juego","u2Vsm","Mejoras al VSM futuro"],
+    ["Objetivos medibles","6","","Todos con medida, plazo y responsable","ok","Demanda, inventario, superficie, ubicación, viabilidad y VSM","u2Obj","Objetivos y metas"],
+    ["Entregables","14","","16 limitaciones y 7 exclusiones","","Se diseña el almacén, no se construye","u2Alc","Definición del alcance"],
+    ["Riesgos críticos","2","de 3","Más 2 supuestos en zona alta","cr","Robo de carga y demanda distinta al pronóstico","u2Rie","Riesgos y suposiciones"],
+    ["Gasto de operación","$27 M","al año","32 % del ahorro bruto ($85 M)","","Personal 48 %, mantenimiento 17 %, energía 15 %","u2Cos","Costo del almacén"]]],
+  ["Unidad 3","Actividades, red y ruta crítica",[
+    ["Actividades del proyecto","31","","Repartidas entre 5 responsables","","14 categorías; costo del proyecto $31.9 mil","u3Act","Definición de actividades"],
+    ["Niveles de organización","4","","1 coordinadora y 4 analistas","","Cronograma de 12 semanas","u3Org","Organigrama de actividades"],
+    ["Pasos para fabricar alfombras","16","","11 sin margen y 5 en paralelo","","Del pedido del cliente al embarque","u3Mat","Matriz de secuenciación"],
+    ["Fin de la red","Semana 10","","2 semanas antes del plazo de 12","ok","Inicia en AP-01 y cierra en EN-02","u3Red","Red del proyecto"],
+    ["Actividades sin margen","19","de 31","61 % del proyecto","wn","Si una se retrasa, se retrasa la entrega","u3Rut","Ruta crítica"],
+    ["Juegos en espera","887","juegos","▼ 1,871 contra 2,758 hoy","ok","Planear la reducción cuesta $1,600","u3Opt","Optimización de redes","el ahorro en pesos: falta el precio del juego"]]]];
+var gUni="todas";
+function gTarjeta(o){
+  return '<button type="button" class="kpi g-k '+(o.cls||'nu')+'" data-ir="'+o.ir+'"><span class="stripe"></span>'+
     '<span class="lb">'+esc(o.lb)+'</span>'+
     '<span class="v">'+esc(o.v)+(o.u?'<span class="u">'+esc(o.u)+'</span>':'')+'</span>'+
-    (o.pill?'<span class="pill '+(o.pillCls||'')+'">'+esc(o.pill)+'</span>':'')+
-    '<span class="sub">'+esc(o.sub)+'</span><span class="g-ir">'+esc(o.l)+'</span></button>';
+    (o.c?'<span class="g-cmp '+(o.cc||'')+'">'+esc(o.c)+'</span>':'')+
+    (o.nd?'<span class="g-nd">'+esc(o.nd)+'</span>':'')+
+    (o.sub?'<span class="sub">'+esc(o.sub)+'</span>':'<span class="sub"></span>')+
+    '<span class="g-ir">'+esc(o.l)+'</span></button>';
+}
+function pintarPuntos(){
+  document.querySelectorAll("#gUni button").forEach(function(b){ b.setAttribute("aria-pressed",b.getAttribute("data-g")===gUni); });
+  document.getElementById("gPuntos").innerHTML=GER_PUNTOS.filter(function(g){ return gUni==="todas"||g[0]===gUni; }).map(function(g){
+    return '<div class="chead u2-sub g-uh"><h3>'+esc(g[0]+" · "+g[1])+'</h3></div><div class="g-grid">'+g[2].map(function(p){
+      var cls=p[4]==="cr"?"cr":p[4]==="wn"?"wn":p[4]==="ok"?"ok":"nu";
+      return gTarjeta({lb:p[0],v:p[1],u:p[2],c:p[3],cc:p[4],sub:p[5],ir:p[6],l:p[7],nd:p[8],cls:cls}); }).join("")+'</div>'; }).join("");
 }
 function renderGer(){
-  document.getElementById("gKpis").innerHTML=GER_KPIS.map(function(o){ return gTarjeta(o); }).join("");
+  document.getElementById("gKpis").innerHTML=GER_KPIS.map(gTarjeta).join("");
   document.getElementById("gSens").innerHTML=GER_SENS.map(function(r){
     return '<div class="g-sr"><span>'+esc(r[0])+'</span><div class="g-st"><i class="'+r[2]+'" style="width:'+(r[1]/7*100).toFixed(1)+'%"></i>'+
       '<b'+(r[1]>5.5?' class="in"':'')+' style="left:'+(r[1]/7*100).toFixed(1)+'%">'+n(r[1],2)+' años</b></div></div>'; }).join("");
   document.getElementById("gAlertas").innerHTML=GER_ALERTAS.map(function(a){
     return '<li><span class="sev '+a[0]+'">'+esc(a[1])+'</span><span class="t">'+esc(a[2])+'</span>'+
-      '<span class="d">'+esc(a[3])+'</span><button type="button" class="g-ir" data-ir="'+a[4]+'">'+esc(a[5])+'</button></li>'; }).join("");
-  document.getElementById("gPuntos").innerHTML=GER_PUNTOS.map(function(g){
-    return '<div class="chead u2-sub g-uh"><h3>'+esc(g[0])+'</h3></div><div class="g-grid">'+g[1].map(function(p){
-      return gTarjeta({lb:p[0],v:p[1],u:p[2],sub:p[3],ir:p[4],l:p[5],cls:"nu"},"g-pt"); }).join("")+'</div>'; }).join("");
+      '<span class="d">'+esc(a[3])+'<button type="button" class="g-ir" data-ir="'+a[4]+'">'+esc(a[5])+'</button></span></li>'; }).join("");
+  document.getElementById("gUni").innerHTML='<button type="button" data-g="todas">Todas<b>'+
+    GER_PUNTOS.reduce(function(s,g){return s+g[2].length;},0)+'</b></button>'+
+    GER_PUNTOS.map(function(g){ return '<button type="button" data-g="'+g[0]+'">'+esc(g[0])+'<b>'+g[2].length+'</b></button>'; }).join("");
+  pintarPuntos();
 }
 var gerY=0;
 function irPunto(id){
@@ -4055,6 +4099,7 @@ function bind(){
     var m=/^#u([1-6])$/.exec(location.hash); if(m&&(+m[1]!==unidad||m[1]==="3"))irUnidad(+m[1]);
     if(location.hash==="#gerencia"&&unidad!==0)irUnidad(0); });
   document.getElementById("vGer").addEventListener("click",function(e){
+    var u=e.target.closest("[data-g]"); if(u){ gUni=u.getAttribute("data-g"); pintarPuntos(); return; }
     var b=e.target.closest("[data-ir]"); if(b) irPunto(b.getAttribute("data-ir")); });
   document.getElementById("gVolver").addEventListener("click",volverGer);
 
