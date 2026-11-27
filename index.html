@@ -554,6 +554,17 @@ dialog.wide{width:min(860px,calc(100vw - 32px))}
 @media(max-width:560px){.g-unis button{padding:6px 10px;font-size:13px}.g-unis button span{font-size:11px}}
 .g-otros{margin:22px 0 10px}
 .g-vacio{min-height:220px;margin-top:28px}
+.g-irg{width:100%;text-align:left;background:transparent;border:0;border-top:1px solid var(--line);font-family:inherit;cursor:pointer;padding:8px 0 0;margin-top:12px}
+.g-ext{display:grid;gap:12px;grid-template-columns:1fr;margin-top:12px}
+@media(min-width:980px){.g-ext{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}}
+.g-cc{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:6px;align-items:end;height:190px;border-bottom:1px solid var(--axis);margin-top:12px}
+.g-cb{height:100%;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;min-width:0}
+.g-cb em{font-style:normal;font-family:var(--mono);font-size:10.5px;color:var(--ink);margin-bottom:3px;white-space:nowrap}
+.g-cb i{display:block;width:100%;max-width:36px;border-radius:4px 4px 0 0;background:var(--s1)}
+.g-cb i.pr{background:var(--s2)}
+.g-cx{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:6px;font-size:10.5px;color:var(--ink-2);text-align:center;margin-top:5px;font-family:var(--mono)}
+.g-cx b{color:var(--ink)}
+@media(max-width:560px){.g-cc,.g-cx{gap:2px}.g-cb em{font-size:8px}.g-cx{font-size:8.5px}}
 .g-st2{display:grid;gap:3px}
 .g-st2 .g-st{height:14px}
 .g-st2 .g-st b{font-size:10.5px}
@@ -1739,6 +1750,7 @@ dialog.wide{width:min(860px,calc(100vw - 32px))}
           <ul class="alerts" id="gAlertas"></ul>
         </div>
       </div>
+      <div class="g-ext" id="gExt"></div>
       <div class="chead u2-sub g-otros"><h3>Otros datos de la unidad</h3></div>
       <div class="g-grid" id="gPuntos"></div>
       <p class="cnota" id="gNota"></p>
@@ -3506,8 +3518,14 @@ var GER={
    {lb:"Superficie del CEDIS",v:"17.0 mil",u:"m²",c:"13 % del total queda de reserva para crecer",sub:"Nave de 185 × 92 m",ir:"secDatos",l:"Datos del CEDIS"},
    {lb:"Autos por surtir al día",v:"197",c:"4,919 autos al mes entre 25 días hábiles",sub:"22 conjuntos por auto; 31.3 mil contenedores al mes",ir:"secPlanta",l:"Capacidad del CEDIS"},
    {lb:"Entrega de alfombras hoy",v:"14",u:"días",cls:"cr",c:"3 de 8 estaciones no alcanzan el ritmo",cc:"cr",sub:"La más lenta: costura, 160 s contra 128 s",ir:"secVsm",l:"VSM actual"}],
-  vis:{t:"¿De qué se compone la inversión?",s:"Millones de pesos sin IVA; el IVA suma $24.6 M más",max:160,eje:["0","40","80","120","160 M"],
+  vis:{t:"¿De qué se compone la inversión?",ir:"costoT",l:"Costo de la construcción",s:"Millones de pesos sin IVA; el IVA suma $24.6 M más",max:160,eje:["0","40","80","120","160 M"],
    filas:[["Costo directo",127.65,""],["Indirectos",12.13,""],["Contingencia (10 %)",13.98,""],["Inversión sin IVA",153.75,""]],fmt:function(v){return "$"+n(v,1)+" M";}},
+  ext:[
+   {t:"Demanda anual del Serie 3",ir:"secProd",l:"Producción del Serie 3",s:"Miles de autos por año: reportados de 2021 a 2025 y pronóstico de 2026 a 2032",col:true,
+    nota:"2027 (59.0 mil autos) es la demanda con la que se dimensiona el CEDIS."},
+   {t:"Duración del inventario por clase",ir:"secFlujo",l:"Cobertura del inventario",s:"Días que cubre el inventario de cada clase y cuántos de ellos son de seguridad",max:10,eje:["0","2","4","6","8","10 días"],dos:true,cl:["fu","ac"],
+    filas:[["Clase A · 80 % del valor",3,1],["Clase B · valor intermedio",5,2],["Clase C · menor valor",10,3]],
+    nota:"Azul: días de inventario. Naranja: de esos días, los de stock de seguridad (197, 394 y 591 juegos)."}],
   pen:[
    ["wn","Operación","Cuello de botella en costura y ribeteado","Tarda 160 s y el ritmo pide 128 s; inspección de materiales y base antiderrapante también se pasan.","secVsm","VSM actual"],
    ["nu","Alcance","Fuera de la inversión","Terreno, equipo de manejo (patines, transpaletas, racks y contenedores) y el sistema del almacén aún no se cotizan.","u2Alc","Definición del alcance"],
@@ -3530,7 +3548,7 @@ var GER={
    {lb:"Recuperación en el peor caso",v:"6.69",u:"años",cls:"cr",c:"Al borde del límite de 7 años",cc:"cr",sub:"Si no se confirma el ahorro de inventario (S1)",ir:"u2Rie",l:"Riesgos y suposiciones"},
    {lb:"Inversión con IVA",v:"$178.4 M",c:"+$24.6 M de IVA sobre $153.8 M",sub:"No incluye terreno, equipo de manejo ni sistema del almacén",ir:"u2Cos",l:"Costo del almacén"},
    {lb:"Gasto de operación",v:"$27 M",u:"al año",c:"32 % del ahorro bruto ($85 M)",sub:"Personal, 48 % del gasto",ir:"u2Cos",l:"Costo del almacén"}],
-  vis:{t:"¿En cuánto tiempo se recupera la inversión?",s:"Años de recuperación si falla cada supuesto, contra el límite de 7 años",max:7,eje:["0","1","2","3","4","5","6","7 años"],
+  vis:{t:"¿En cuánto tiempo se recupera la inversión?",ir:"u2Rie",l:"Riesgos y suposiciones",s:"Años de recuperación si falla cada supuesto, contra el límite de 7 años",max:7,eje:["0","1","2","3","4","5","6","7 años"],
    filas:[["Caso base",2.65,""],["Sin ahorro por paros (S2)",3.58,""],["Obra 50 % más cara (S3)",3.98,""],["Sin ahorro de inventario (S1)",6.69,"cr"]],fmt:function(v){return n(v,2)+" años";},
    nota:"Si fallan los supuestos 1 y 2 a la vez, la inversión ya no se recupera dentro de los 7 años."},
   pen:[
@@ -3555,7 +3573,7 @@ var GER={
    {lb:"Espera de las alfombras",v:"4.5",u:"días",cls:"ok",c:"▼ 9.5 días contra 14 hoy",cc:"ok",sub:"La mayor baja: de recepción a inspección",ir:"u3Opt",l:"Optimización de redes"},
    {lb:"Juegos de alfombras en espera",v:"887",cls:"ok",c:"▼ 1,871 contra 2,758 hoy",cc:"ok",nd:"el ahorro en pesos: falta el precio del juego",ir:"u3Opt",l:"Optimización de redes"},
    {lb:"Costo de planear la reducción",v:"$1,600",c:"5 % de los $31.9 mil del proyecto",sub:"Identificar mejoras y diseñar el proceso futuro",ir:"u3Opt",l:"Optimización de redes"}],
-  vis:{t:"¿Dónde se reducen las esperas de las alfombras?",s:"Días de espera de cada tramo de la ruta crítica",max:5,eje:["0","1","2","3","4","5 días"],dos:true,
+  vis:{t:"¿Dónde se reducen las esperas de las alfombras?",ir:"u3Opt",l:"Optimización de redes",s:"Días de espera de cada tramo de la ruta crítica",max:5,eje:["0","1","2","3","4","5 días"],dos:true,
    filas:[["Recepción a inspección",5,2],["Costura a logotipo",2,0.5],["Empaque a embarque",2,0.5],["Corte a base",1.5,0.5],
      ["Inspección a corte",1,0.25],["Base a costura",1,0.25],["Inspección final a empaque",1,0.25],["Logotipo a inspección final",0.5,0.25]],
    nota:"Naranja: espera actual (14 días en total). Azul: con las mejoras (4.5 días)."},
@@ -3586,6 +3604,26 @@ function gBarra(v,max,cls,txt){
   var p=(v/max*100).toFixed(1), dentro=v/max>0.78;
   return '<div class="g-st"><i class="'+cls+'" style="width:'+p+'%"></i><b'+(dentro?' class="in"':'')+' style="left:'+p+'%">'+txt+'</b></div>';
 }
+function gGraf(v){
+  var h='<div class="chead"><h3>'+esc(v.t)+'</h3></div><p class="csub">'+esc(v.s)+'</p>';
+  if(v.col){
+    /* producción reportada y pronóstico, en miles de autos */
+    var d=HIST.map(function(x){return [x.a,x.v,""];}).concat(PMP_PRON.map(function(x){return [x.a,x.v,"pr"];}));
+    return h+'<div class="g-cc">'+d.map(function(x){
+        return '<div class="g-cb"><em>'+n(x[1]/1000,1)+'</em><i class="'+x[2]+'" style="height:'+(x[1]/80000*100).toFixed(1)+'%"></i></div>'; }).join("")+'</div>'+
+      '<div class="g-cx">'+d.map(function(x){ return '<span>'+(x[0]===2027?'<b>'+x[0]+'</b>':x[0])+'</span>'; }).join("")+'</div>'+
+      '<div class="legend"><span><i class="sq" style="background:var(--s1)"></i>Producción reportada</span><span><i class="sq" style="background:var(--s2)"></i>Pronóstico</span></div>'+
+      (v.nota?'<p class="cnota">'+esc(v.nota)+'</p>':'')+(v.ir?'<button type="button" class="g-ir g-irg" data-ir="'+v.ir+'">'+esc(v.l)+'</button>':'');
+  }
+  var ir=v.ir?'<button type="button" class="g-ir g-irg" data-ir="'+v.ir+'">'+esc(v.l)+'</button>':'';
+  var cl=v.cl||["ac","fu"];
+  return h+'<div class="g-sens">'+v.filas.map(function(f){
+      return '<div class="g-sr"><span>'+esc(f[0])+'</span>'+(v.dos
+        ? '<div class="g-st2">'+gBarra(f[1],v.max,cl[0],String(f[1])+" d")+gBarra(f[2],v.max,cl[1],String(f[2])+" d")+'</div>'
+        : gBarra(f[1],v.max,f[2],v.fmt(f[1])))+'</div>'; }).join("")+'</div>'+
+    '<div class="g-ax" aria-hidden="true"><span></span><div>'+v.eje.map(function(e){return '<span>'+e+'</span>';}).join("")+'</div></div>'+
+    (v.nota?'<p class="cnota">'+esc(v.nota)+'</p>':'')+ir;
+}
 function renderGer(){
   document.getElementById("gUni").innerHTML=[1,2,3,4,5,6].map(function(u){ var g=GER[u];
     return '<button type="button" data-g="'+u+'">Unidad '+u+'<span>'+(g?esc(g.n):'Sin contenido')+'</span></button>'; }).join("");
@@ -3600,14 +3638,9 @@ function pintarGer(){
   document.getElementById("gQ").textContent=g.q;
   document.getElementById("gQs").textContent=g.qs;
   document.getElementById("gKpis").innerHTML=g.kpis.map(gTarjeta).join("");
-  var v=g.vis;
-  document.getElementById("gVis").innerHTML='<div class="chead"><h3>'+esc(v.t)+'</h3></div><p class="csub">'+esc(v.s)+'</p><div class="g-sens">'+
-    v.filas.map(function(f){
-      return '<div class="g-sr"><span>'+esc(f[0])+'</span>'+(v.dos
-        ? '<div class="g-st2">'+gBarra(f[1],v.max,"ac",String(f[1])+" d")+gBarra(f[2],v.max,"fu",String(f[2])+" d")+'</div>'
-        : gBarra(f[1],v.max,f[2],v.fmt(f[1])))+'</div>'; }).join("")+'</div>'+
-    '<div class="g-ax" aria-hidden="true"><span></span><div>'+v.eje.map(function(e){return '<span>'+e+'</span>';}).join("")+'</div></div>'+
-    (v.nota?'<p class="cnota">'+esc(v.nota)+'</p>':'');
+  document.getElementById("gVis").innerHTML=gGraf(g.vis);
+  document.getElementById("gExt").innerHTML=(g.ext||[]).map(function(v){ return '<div class="card g-vis">'+gGraf(v)+'</div>'; }).join("");
+  document.getElementById("gExt").hidden=!g.ext;
   var lista=g.pen;
   document.getElementById("gAlertas").innerHTML=lista.map(function(a){
     return '<li><span class="sev '+a[0]+'">'+esc(a[1])+'</span><span class="t">'+esc(a[2])+'</span>'+
