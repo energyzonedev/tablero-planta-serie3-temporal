@@ -3488,8 +3488,8 @@ var GER_IR={secDatos:[1,"inicio"],costoT:[1,"inicio"],ubicT:[1,"inicio"],
   secMaq:[1,"modelo","indicadores"],secVsm:[1,"modelo","indicadores"],
   u2Vsm:[2],u2Obj:[2],u2Alc:[2],u2Rie:[2],u2Cos:[2],u3Top:[2],u3Act:[2],u3Org:[2],u3Mat:[2],u3Red:[2],u3Rut:[2],u3Opt:[2]};
 var GER_KPIS=[
-  {lb:"Inversión inicial",v:"$153.75",u:"millones sin IVA",cls:"nu",sub:"$178.36 M con IVA; no incluye terreno, equipo de manejo ni WMS",ir:"u2Cos",l:"Costo del almacén"},
-  {lb:"Beneficio neto anual",v:"$58",u:"millones",cls:"ok",sub:"$85 M de ahorros menos $27 M de gasto de operación",ir:"u2Cos",l:"Gastos de operación"},
+  {lb:"Inversión inicial",v:"$153.75 M",u:"sin IVA",cls:"nu",sub:"$178.36 M con IVA; no incluye terreno, equipo de manejo ni WMS",ir:"u2Cos",l:"Costo del almacén"},
+  {lb:"Beneficio neto anual",v:"$58 M",u:"al año",cls:"ok",sub:"$85 M de ahorros menos $27 M de gasto de operación",ir:"u2Cos",l:"Gastos de operación"},
   {lb:"Recuperación",v:"2.65",u:"años",cls:"ok",pill:"horizonte de 7 años",pillCls:"ok",sub:"ROI de 37.7 % anual sobre la inversión",ir:"u2Rie",l:"Riesgos y suposiciones"},
   {lb:"Ejecución del proyecto",v:"12",u:"semanas",cls:"nu",pill:"19 actividades sin holgura",sub:"31 actividades; costo del proyecto de $31,900",ir:"u3Rut",l:"Ruta crítica"}];
 var GER_SENS=[["Caso base",2.65,""],["Sin ahorro por paros (S2)",3.58,""],["Obra 50 % más cara (S3)",3.98,""],["Sin ahorro de inventario (S1)",6.69,"cr"]];
@@ -3506,7 +3506,7 @@ var GER_ALERTAS=[
 var GER_PUNTOS=[
   ["Unidad 1 · Diseño del CEDIS",[
     ["Superficie","17,020","m²","185 × 92 m; 65.9 % almacenamiento y pasillos, 13 % de reserva","secDatos","Datos del CEDIS"],
-    ["Costo de construcción","$127.65","millones","17,020 m² × $7,500; con indirectos y contingencia, $153.75 M sin IVA","costoT","Costo de la construcción"],
+    ["Costo de construcción","$127.65 M","directo","17,020 m² × $7,500; con indirectos y contingencia, $153.75 M sin IVA","costoT","Costo de la construcción"],
     ["Ubicación","Logistik II","","Lote 606, Villa de Reyes, S.L.P.; se descartó Eje 120 y Av. Del Aguaje","ubicT","Ubicación del CEDIS"],
     ["Vehículo de referencia","BMW 320i","","Serie 3 G20 2026: 1,998 cm³, 184 hp, automática de 8 velocidades","secFicha","Características del modelo"],
     ["Demanda 2027","59,020","autos","Promedio móvil ponderado; la regresión se descartó (R² = 0.0002)","secProd","Producción del Serie 3"],
@@ -3521,7 +3521,7 @@ var GER_PUNTOS=[
     ["Objetivos","6","SMART","Cada uno con medida, plazo en semanas y responsable","u2Obj","Objetivos y metas"],
     ["Alcance","14","entregables","16 limitaciones y 7 exclusiones; se diseña el almacén, no se construye","u2Alc","Definición del alcance"],
     ["Riesgos","2","críticos","Robo de carga y demanda distinta al pronóstico; 2 supuestos en zona alta","u2Rie","Riesgos y suposiciones"],
-    ["Costo del almacén","$153.75","millones","Inversión sin IVA; gasto de operación de $27 M al año","u2Cos","Costo del almacén"]]],
+    ["Costo del almacén","$153.75 M","sin IVA","Inversión sin IVA; gasto de operación de $27 M al año","u2Cos","Costo del almacén"]]],
   ["Unidad 3 · Actividades, red y ruta crítica",[
     ["Actividades","31","en 14 categorías","5 responsables; costo del proyecto de $31,900","u3Act","Definición de actividades"],
     ["Organización","4","niveles","Coordinación de Daniela Tenorio; cronograma de 12 semanas","u3Org","Organigrama de actividades"],
