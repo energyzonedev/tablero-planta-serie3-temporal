@@ -509,6 +509,43 @@ dialog.wide{width:min(860px,calc(100vw - 32px))}
 .umenu button[aria-current="page"]::after{content:"";width:7px;height:7px;border-radius:50%;background:var(--accent)}
 @media(max-width:560px){.umenu{left:16px;right:16px}.hd{column-gap:12px;flex-wrap:nowrap}.mark{flex:0 1 auto;min-width:0}.mark b{font-size:13px}}
 
+/* ---------- tablero gerencial ---------- */
+.umenu .um-sep{height:1px;background:var(--line);margin:6px 4px 0}
+.g-kpis .kpi,.g-pt{font:inherit;color:inherit;text-align:left;cursor:pointer;width:100%;
+  transition:border-color .15s,box-shadow .15s}
+.g-kpis .kpi:hover,.g-pt:hover{border-color:var(--axis);box-shadow:0 2px 10px rgba(11,11,11,.07)}
+.g-ir{display:block;margin-top:10px;padding-top:8px;border-top:1px solid var(--line);font-size:11.5px;font-weight:600;color:var(--accent)}
+.g-ir::after{content:" \2192"}
+.g-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(232px,1fr));gap:12px}
+.g-pt{min-height:176px}
+.g-pt .v{font-size:24px}
+.g-uh{margin:26px 0 10px}
+.g-uh:first-of-type{margin-top:0}
+.g-rec ul{margin:2px 0 0;padding-left:18px;font-size:12.5px;color:var(--ink-2);line-height:1.5}
+.g-rec li{padding:1px 0}
+.g-btn{align-self:flex-start;display:inline-flex;align-items:center;min-height:36px;margin-top:auto;padding:0 13px;
+  border:1px solid var(--line);border-radius:999px;background:var(--surface);color:var(--ink-2);font-size:12.5px;font-weight:600;cursor:pointer}
+.g-btn:hover{background:var(--surface-2);color:var(--ink)}
+.g-btn::after{content:"\2192";margin-left:6px}
+.g-sens{display:grid;gap:10px;margin-top:4px}
+.g-sr{display:grid;grid-template-columns:minmax(120px,190px) minmax(0,1fr);gap:4px 12px;align-items:center;font-size:12px;color:var(--ink-2)}
+.g-st{position:relative;height:24px;background:var(--surface-2);border-radius:5px}
+.g-st i{position:absolute;inset:0 auto 0 0;border-radius:5px;background:var(--s1)}
+.g-st i.cr{background:var(--crit)}
+.g-st b{position:absolute;top:50%;transform:translateY(-50%);font-family:var(--mono);font-size:11.5px;font-weight:600;color:var(--ink);white-space:nowrap;padding-left:7px}
+.g-st b.in{transform:translate(-100%,-50%);padding:0 8px 0 0;color:#fff}
+.g-ax{display:grid;grid-template-columns:minmax(120px,190px) minmax(0,1fr);gap:12px;font-size:10.5px;color:var(--ink-muted)}
+.g-ax div{display:flex;justify-content:space-between;font-family:var(--mono)}
+@media(max-width:560px){.g-sr,.g-ax{grid-template-columns:96px minmax(0,1fr);gap:4px 8px}}
+.alerts .g-ir{grid-column:2;margin-top:2px;padding-top:0;border-top:0;border:0;background:transparent;text-align:left;cursor:pointer;padding-left:0;font-family:inherit}
+.sev.nu{background:var(--surface-2);color:var(--ink-2)}
+.g-volver{position:fixed;right:20px;bottom:20px;z-index:45;display:inline-flex;align-items:center;gap:6px;min-height:40px;padding:0 15px;
+  border:1px solid var(--axis);border-radius:999px;background:var(--surface);color:var(--ink);font-size:13px;font-weight:600;cursor:pointer;
+  box-shadow:0 8px 24px rgba(11,11,11,.14),0 2px 6px rgba(11,11,11,.06)}
+.g-volver:hover{background:var(--surface-2)}
+.g-volver::before{content:"\2190"}
+@media(max-width:560px){.g-volver{right:16px;bottom:16px}}
+
 /* ---------- unidades por llenar ---------- */
 .pend{max-width:1280px;margin:0 auto;padding:72px 20px 110px}
 .pend h1{font-size:34px;font-weight:300;letter-spacing:-.015em}
@@ -1037,6 +1074,8 @@ dialog.wide{width:min(860px,calc(100vw - 32px))}
         <span class="hb" aria-hidden="true"><i></i><i></i><i></i></span>
       </button>
       <nav class="umenu" id="umenu" aria-label="Unidades" hidden>
+        <button type="button" data-u="0">Tablero gerencial</button>
+        <span class="um-sep" aria-hidden="true"></span>
         <span class="um-t">Unidades</span>
         <button type="button" data-u="1">Unidad 1</button>
         <button type="button" data-u="2">Unidades 2 y 3</button>
@@ -1080,7 +1119,7 @@ dialog.wide{width:min(860px,calc(100vw - 32px))}
     <div class="card dcard"><h3>Uso del almacén</h3><p class="dsub">Desglose de la rebanada azul del reparto</p><div id="pieAlm"></div></div>
   </div>
   <div class="dhead dhead2">
-    <h2>Costo de la construcción</h2>
+    <h2 id="costoT">Costo de la construcción</h2>
     <p>Presupuesto de obra del documento del proyecto; los porcentajes son sobre el costo directo</p>
   </div>
   <div class="dgrid">
@@ -1655,6 +1694,55 @@ dialog.wide{width:min(860px,calc(100vw - 32px))}
 </div>
 </div>
 
+<div id="vGer" hidden>
+<div class="u2">
+  <div class="u2-hero">
+    <span class="u2-tag">Tablero gerencial</span>
+    <h1>Decisión sobre el CEDIS BMW</h1>
+    <p>Las cifras que sostienen la decisión, lo que falta validar y dónde ver cada punto a detalle</p>
+  </div>
+
+  <section class="u2s" id="gDec">
+    <div class="dhead"><h2>La decisión</h2><p>Evaluación financiera a 7 años de operación</p></div>
+    <div class="kpis g-kpis" id="gKpis"></div>
+    <div style="height:12px"></div>
+    <div class="u2-2c">
+      <div class="verdict ok g-rec">
+        <span class="lb">Recomendación</span>
+        <div class="st"><i></i>Continuar con el proyecto ejecutivo</div>
+        <p>La inversión se recupera en 2.65 años de un horizonte de 7. Antes de construir hay que confirmar:</p>
+        <ul>
+          <li>El costo real de mantener inventario (supuesto 1).</li>
+          <li>Cuánto le cuesta a BMW una hora de paro (supuesto 2).</li>
+          <li>Cotizaciones de la obra, del equipo de manejo y del WMS.</li>
+        </ul>
+        <button type="button" class="g-btn" data-ir="u2Rie">Ver riesgos y suposiciones</button>
+      </div>
+      <div class="card">
+        <div class="chead"><h3>¿En cuánto tiempo se recupera la inversión?</h3></div>
+        <p class="csub">Años de recuperación si falla cada supuesto, contra el horizonte de 7 años</p>
+        <div class="g-sens" id="gSens"></div>
+        <div class="g-ax" aria-hidden="true"><span></span><div><span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7 años</span></div></div>
+        <p class="cnota">Si fallan los supuestos 1 y 2 a la vez, la inversión ya no se recupera dentro de los 7 años.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="u2s" id="gAte">
+    <div class="dhead"><h2>Lo que requiere atención</h2><p>Riesgos, supuestos y pendientes que pueden cambiar la decisión</p></div>
+    <ul class="alerts" id="gAlertas"></ul>
+  </section>
+
+  <section class="u2s" id="gPts">
+    <div class="dhead"><h2>Cada punto del proyecto</h2><p>Un dato clave por apartado; toca una tarjeta para ir al detalle</p></div>
+    <div id="gPuntos"></div>
+    <p class="cnota">Beneficio, ROI y recuperación salen de la evaluación financiera del documento de la Unidad 1; los demás datos, de cada apartado del tablero.</p>
+  </section>
+</div>
+</div>
+
+<button type="button" class="g-volver" id="gVolver" hidden>Tablero gerencial</button>
+
 <div id="vPend" hidden>
   <div class="pend">
     <h1 id="pendT">Unidad 3</h1>
@@ -1879,7 +1967,7 @@ var modelo="serie3", fCat=null, fSerie=null;
 var app="inicio", tab="ficha";
 var unidad=1;
 try{ localStorage.removeItem("cedis.unidad"); }catch(e){}
-(function(){ var m=/^#u([1-6])$/.exec(location.hash); if(m)unidad=+m[1]; })();
+(function(){ var m=/^#u([1-6])$/.exec(location.hash); if(m)unidad=+m[1]; if(location.hash==="#gerencia")unidad=0; })();
 try{ var ms=localStorage.getItem("cedis.modelo"); if(ms&&MODELOS.some(function(m){return m.k===ms;}))modelo=ms; }catch(e){}
 function modeloActual(){ return MODELOS.filter(function(m){return m.k===modelo;})[0]||MODELOS[0]; }
 
@@ -2494,18 +2582,19 @@ function aplicarModelo(){
   mostrarTab();
 }
 function mostrarTab(){
-  var otra=unidad>1, pend=unidad>3;
+  var otra=unidad!==1, pend=unidad>3;
   document.getElementById("vInicio").hidden=otra||app!=="inicio";
   document.getElementById("vModelo").hidden=otra||app!=="modelo";
   document.getElementById("subnav").hidden=otra||app!=="modelo";
   document.getElementById("vU2").hidden=!(unidad===2||unidad===3);
   document.getElementById("vPend").hidden=!pend;
+  document.getElementById("vGer").hidden=unidad!==0;
   document.getElementById("footCred").hidden=otra;
   if(pend) document.getElementById("pendT").textContent="Unidad "+unidad;
   if(!otra&&app!=="modelo") setTimeout(pintarMapa,0);
   document.querySelectorAll("#umenu [data-u]").forEach(function(b){
     b.setAttribute("aria-current",+b.getAttribute("data-u")===(unidad===3?2:unidad)?"page":"false"); });
-  document.getElementById("btnMenu").setAttribute("aria-label","Elegir unidad (ahora: "+(unidad===2||unidad===3?"Unidades 2 y 3":"Unidad "+unidad)+")");
+  document.getElementById("btnMenu").setAttribute("aria-label","Elegir unidad (ahora: "+(unidad===0?"Tablero gerencial":unidad===2||unidad===3?"Unidades 2 y 3":"Unidad "+unidad)+")");
   document.getElementById("fichaBand").hidden=tab!=="ficha";
   document.getElementById("dashWrap").hidden=tab==="ficha";
   document.querySelectorAll("#tabs [data-tab]").forEach(function(b){
@@ -2517,11 +2606,12 @@ function irTab(t,ancla){
   var el=ancla?document.getElementById(ancla):null;
   if(el) el.scrollIntoView({block:"start"}); else window.scrollTo(0,0);
 }
-function irInicio(){ app="inicio"; mostrarTab(); window.scrollTo(0,0); }
+function irInicio(){ app="inicio"; document.getElementById("gVolver").hidden=true; mostrarTab(); window.scrollTo(0,0); }
 function irUnidad(u){
   var a3=u===3; if(a3) u=2;  /* las unidades 2 y 3 comparten vista */
   unidad=u; app="inicio";
-  try{ history.replaceState(null,"","#u"+u); }catch(e){}
+  document.getElementById("gVolver").hidden=true;
+  try{ history.replaceState(null,"",u===0?"#gerencia":"#u"+u); }catch(e){}
   mostrarTab(); window.scrollTo(0,0);
   if(a3) document.getElementById("u3Top").scrollIntoView({block:"start"});
 }
@@ -3390,6 +3480,88 @@ function pintarRed(T){
   tips(document.getElementById("u3RedG"));
   zoomRed();
 }
+/* ================= tablero gerencial ================= */
+/* destino de cada tarjeta: unidad, vista de la Unidad 1 y pestaña del modelo */
+var GER_IR={secDatos:[1,"inicio"],costoT:[1,"inicio"],ubicT:[1,"inicio"],
+  secFicha:[1,"modelo","ficha"],secProd:[1,"modelo","indicadores"],secPlanta:[1,"modelo","indicadores"],
+  secKpi:[1,"modelo","indicadores"],secCal:[1,"modelo","indicadores"],secFlujo:[1,"modelo","indicadores"],
+  secMaq:[1,"modelo","indicadores"],secVsm:[1,"modelo","indicadores"],
+  u2Vsm:[2],u2Obj:[2],u2Alc:[2],u2Rie:[2],u2Cos:[2],u3Top:[2],u3Act:[2],u3Org:[2],u3Mat:[2],u3Red:[2],u3Rut:[2],u3Opt:[2]};
+var GER_KPIS=[
+  {lb:"Inversión inicial",v:"$153.75",u:"millones sin IVA",cls:"nu",sub:"$178.36 M con IVA; no incluye terreno, equipo de manejo ni WMS",ir:"u2Cos",l:"Costo del almacén"},
+  {lb:"Beneficio neto anual",v:"$58",u:"millones",cls:"ok",sub:"$85 M de ahorros menos $27 M de gasto de operación",ir:"u2Cos",l:"Gastos de operación"},
+  {lb:"Recuperación",v:"2.65",u:"años",cls:"ok",pill:"horizonte de 7 años",pillCls:"ok",sub:"ROI de 37.7 % anual sobre la inversión",ir:"u2Rie",l:"Riesgos y suposiciones"},
+  {lb:"Ejecución del proyecto",v:"12",u:"semanas",cls:"nu",pill:"19 actividades sin holgura",sub:"31 actividades; costo del proyecto de $31,900",ir:"u3Rut",l:"Ruta crítica"}];
+var GER_SENS=[["Caso base",2.65,""],["Sin ahorro por paros (S2)",3.58,""],["Obra 50 % más cara (S3)",3.98,""],["Sin ahorro de inventario (S1)",6.69,"cr"]];
+var GER_ALERTAS=[
+  ["cr","Crítico · 20","R1. Robo de embarques en el corredor de abasto","Dejaría sin piezas clase A a la línea. Respuesta: custodia y seguro de carga, aún sin cotizar.","u2Rie","Riesgos y suposiciones"],
+  ["cr","Crítico · 20","R2. Demanda distinta al pronóstico","La reserva de crecimiento (15 %) absorbe el aumento; si no alcanza, se construye desde el inicio lo que falte.","u2Rie","Riesgos y suposiciones"],
+  ["wn","Alto · 16","S1. Ahorro por reducir inventario","Sin el costo real de mantener inventario, la recuperación pasa de 2.65 a 6.69 años.","u2Rie","Riesgos y suposiciones"],
+  ["wn","Alto · 15","S2. Ahorro por evitar paros de línea","Falta que BMW confirme el costo por hora de paro; sin él, la recuperación pasa a 3.58 años.","u2Rie","Riesgos y suposiciones"],
+  ["wn","Operación","Cuello de botella en costura y ribeteado","160 s contra un takt de 128 s. Con el kaizen K5 baja a 115 s y la línea queda bajo el takt.","secVsm","VSM actual"],
+  ["nu","Moderado · 9","R3. Retraso de los permisos","Gestoría y trámites en paralelo; retrasaría el arranque, no lo que se construye.","u2Rie","Riesgos y suposiciones"],
+  ["nu","Moderado · 9","S3. Costo de la obra","Si la obra cuesta 50 % más, la recuperación pasa a 3.98 años.","u2Rie","Riesgos y suposiciones"],
+  ["nu","Alcance","Fuera de la inversión","Terreno, equipo de manejo (patines, transpaletas, racks y contenedores) y WMS aún no se cotizan.","u2Alc","Definición del alcance"],
+  ["nu","Calendario","Margen de 2 semanas","La red termina en la semana 10 de 12; 19 de 31 actividades no tienen holgura.","u3Rut","Ruta crítica"]];
+var GER_PUNTOS=[
+  ["Unidad 1 · Diseño del CEDIS",[
+    ["Superficie","17,020","m²","185 × 92 m; 65.9 % almacenamiento y pasillos, 13 % de reserva","secDatos","Datos del CEDIS"],
+    ["Costo de construcción","$127.65","millones","17,020 m² × $7,500; con indirectos y contingencia, $153.75 M sin IVA","costoT","Costo de la construcción"],
+    ["Ubicación","Logistik II","","Lote 606, Villa de Reyes, S.L.P.; se descartó Eje 120 y Av. Del Aguaje","ubicT","Ubicación del CEDIS"],
+    ["Vehículo de referencia","BMW 320i","","Serie 3 G20 2026: 1,998 cm³, 184 hp, automática de 8 velocidades","secFicha","Características del modelo"],
+    ["Demanda 2027","59,020","autos","Promedio móvil ponderado; la regresión se descartó (R² = 0.0002)","secProd","Producción del Serie 3"],
+    ["Surtido diario","197","autos al día","22 conjuntos por auto; 31,290 contenedores al mes","secPlanta","Capacidad del CEDIS"],
+    ["Takt time","6.40","min","3 turnos de 7 h; inventario ABC de 3, 5 y 10 días","secKpi","Operación diaria"],
+    ["Meta de calidad","4σ","","Máximo 367 autos con defecto al año (1.22 al día)","secCal","Calidad"],
+    ["Cobertura del inventario","3 · 5 · 10","días","Política de las clases A, B y C; la gráfica usa datos de ejemplo","secFlujo","Cobertura del inventario"],
+    ["Maquinaria y equipo","16","categorías","48 alternativas comparadas con 6 criterios; la compra final requiere cotizaciones","secMaq","Maquinaria y equipo"],
+    ["VSM actual de alfombras","14","días","Lead time actual; 3 de 8 estaciones superan el takt de 128 s","secVsm","VSM actual"]]],
+  ["Unidad 2 · Planeación",[
+    ["VSM futuro","4.5","días","Lead time −68 %; proceso de 975 a 685 s con 21 mejoras en 9 kaizen","u2Vsm","Mejoras al VSM futuro"],
+    ["Objetivos","6","SMART","Cada uno con medida, plazo en semanas y responsable","u2Obj","Objetivos y metas"],
+    ["Alcance","14","entregables","16 limitaciones y 7 exclusiones; se diseña el almacén, no se construye","u2Alc","Definición del alcance"],
+    ["Riesgos","2","críticos","Robo de carga y demanda distinta al pronóstico; 2 supuestos en zona alta","u2Rie","Riesgos y suposiciones"],
+    ["Costo del almacén","$153.75","millones","Inversión sin IVA; gasto de operación de $27 M al año","u2Cos","Costo del almacén"]]],
+  ["Unidad 3 · Actividades, red y ruta crítica",[
+    ["Actividades","31","en 14 categorías","5 responsables; costo del proyecto de $31,900","u3Act","Definición de actividades"],
+    ["Organización","4","niveles","Coordinación de Daniela Tenorio; cronograma de 12 semanas","u3Org","Organigrama de actividades"],
+    ["Secuencia de alfombras","16","actividades","11 en la ruta crítica (A a L) y 5 en paralelo","u3Mat","Matriz de secuenciación"],
+    ["Red del proyecto","Semana 10","","Termina 2 semanas antes que el cronograma de 12","u3Red","Red del proyecto"],
+    ["Ruta crítica","19","de 31","Demanda, inventarios, almacén, layout, costos, finanzas y cierre","u3Rut","Ruta crítica"],
+    ["Optimización de redes","−1,871","juegos","Inventario en espera de 2,758 a 887 juegos; planearlo cuesta $1,600","u3Opt","Optimización de redes"]]]];
+function gTarjeta(o,cls){
+  return '<button type="button" class="kpi '+(o.cls||'')+(cls?' '+cls:'')+'" data-ir="'+o.ir+'"><span class="stripe"></span>'+
+    '<span class="lb">'+esc(o.lb)+'</span>'+
+    '<span class="v">'+esc(o.v)+(o.u?'<span class="u">'+esc(o.u)+'</span>':'')+'</span>'+
+    (o.pill?'<span class="pill '+(o.pillCls||'')+'">'+esc(o.pill)+'</span>':'')+
+    '<span class="sub">'+esc(o.sub)+'</span><span class="g-ir">'+esc(o.l)+'</span></button>';
+}
+function renderGer(){
+  document.getElementById("gKpis").innerHTML=GER_KPIS.map(function(o){ return gTarjeta(o); }).join("");
+  document.getElementById("gSens").innerHTML=GER_SENS.map(function(r){
+    return '<div class="g-sr"><span>'+esc(r[0])+'</span><div class="g-st"><i class="'+r[2]+'" style="width:'+(r[1]/7*100).toFixed(1)+'%"></i>'+
+      '<b'+(r[1]>5.5?' class="in"':'')+' style="left:'+(r[1]/7*100).toFixed(1)+'%">'+n(r[1],2)+' años</b></div></div>'; }).join("");
+  document.getElementById("gAlertas").innerHTML=GER_ALERTAS.map(function(a){
+    return '<li><span class="sev '+a[0]+'">'+esc(a[1])+'</span><span class="t">'+esc(a[2])+'</span>'+
+      '<span class="d">'+esc(a[3])+'</span><button type="button" class="g-ir" data-ir="'+a[4]+'">'+esc(a[5])+'</button></li>'; }).join("");
+  document.getElementById("gPuntos").innerHTML=GER_PUNTOS.map(function(g){
+    return '<div class="chead u2-sub g-uh"><h3>'+esc(g[0])+'</h3></div><div class="g-grid">'+g[1].map(function(p){
+      return gTarjeta({lb:p[0],v:p[1],u:p[2],sub:p[3],ir:p[4],l:p[5],cls:"nu"},"g-pt"); }).join("")+'</div>'; }).join("");
+}
+var gerY=0;
+function irPunto(id){
+  var d=GER_IR[id], el=document.getElementById(id); if(!d||!el) return;
+  gerY=window.scrollY;
+  unidad=d[0]; app=d[1]||"inicio";
+  try{ history.replaceState(null,"","#u"+unidad); }catch(e){}
+  if(app==="modelo"){ modelo="serie3"; tab=d[2]; renderAll(); }
+  mostrarTab();
+  var y=el.getBoundingClientRect().top+window.scrollY-document.querySelector("header").offsetHeight-14;
+  window.scrollTo(0,Math.max(0,y));
+  document.getElementById("gVolver").hidden=false;
+}
+function volverGer(){ irUnidad(0); window.scrollTo(0,gerY); }
+
 function renderU3(){
   var T=calcRed(), crit=ACT_ORD.filter(function(c){return T[c].h===0;}), total=ACTS.reduce(function(s,a){return s+U3_COSTO[a[0]];},0), finRed=Math.max.apply(null,ACT_ORD.map(function(c){return T[c].ef;}));
   document.getElementById("kpisU3").innerHTML=
@@ -3880,7 +4052,11 @@ function bind(){
   document.getElementById("ganttFil").addEventListener("click",function(e){
     var b=e.target.closest("[data-q]"); if(b){ ganttQuien=b.getAttribute("data-q"); pintarGantt(); } });
   window.addEventListener("hashchange",function(){
-    var m=/^#u([1-6])$/.exec(location.hash); if(m&&(+m[1]!==unidad||m[1]==="3"))irUnidad(+m[1]); });
+    var m=/^#u([1-6])$/.exec(location.hash); if(m&&(+m[1]!==unidad||m[1]==="3"))irUnidad(+m[1]);
+    if(location.hash==="#gerencia"&&unidad!==0)irUnidad(0); });
+  document.getElementById("vGer").addEventListener("click",function(e){
+    var b=e.target.closest("[data-ir]"); if(b) irPunto(b.getAttribute("data-ir")); });
+  document.getElementById("gVolver").addEventListener("click",volverGer);
 
   document.getElementById("btnSubir").addEventListener("click",abrirSubir);
   bindSubir();
@@ -3895,7 +4071,7 @@ function bind(){
 
 demo=generarDemo();
 hidratarImgs();
-renderDatos(); renderMaq(); renderVsmActual(); renderU2();
+renderDatos(); renderMaq(); renderVsmActual(); renderU2(); renderGer();
 bind(); renderAll(); ponerVista("frente"); renderCreditos();
 setSync(false,"Vista sin conexión");
 
