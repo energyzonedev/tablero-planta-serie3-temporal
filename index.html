@@ -527,13 +527,6 @@ dialog.wide{width:min(860px,calc(100vw - 32px))}
 .g-ir::after{content:" \2192"}
 .g-mid{display:grid;gap:12px;grid-template-columns:1fr;align-items:start}
 @media(min-width:1280px){.g-mid{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}}
-.g-col{display:grid;gap:12px}
-.g-rec ul{margin:2px 0 0;padding-left:18px;font-size:12.5px;color:var(--ink-2);line-height:1.5}
-.g-rec li{padding:1px 0}
-.g-btn{align-self:flex-start;display:inline-flex;align-items:center;min-height:36px;margin-top:6px;padding:0 13px;
-  border:1px solid var(--line);border-radius:999px;background:var(--surface);color:var(--ink-2);font-size:12.5px;font-weight:600;cursor:pointer}
-.g-btn:hover{background:var(--surface-2);color:var(--ink)}
-.g-btn::after{content:"\2192";margin-left:6px}
 .g-sens{display:grid;gap:10px;margin-top:4px}
 .g-sr{display:grid;grid-template-columns:minmax(120px,200px) minmax(0,1fr);gap:4px 12px;align-items:center;font-size:12px;color:var(--ink-2)}
 .g-st{position:relative;height:24px;background:var(--surface-2);border-radius:5px}
@@ -551,7 +544,7 @@ dialog.wide{width:min(860px,calc(100vw - 32px))}
 .g-al{padding:0;overflow:hidden}
 .alerts .g-ir{display:inline;margin:0 0 0 6px;padding:0;border:0;background:transparent;text-align:left;cursor:pointer;font-family:inherit;white-space:nowrap}
 .g-al .alerts li{padding:9px 16px}
-@media(min-width:1280px){.g-mid{align-items:stretch}.g-col{grid-template-rows:auto 1fr}}
+@media(min-width:1280px){.g-mid{align-items:stretch}.g-vis{display:flex;flex-direction:column}.g-vis .g-sens{flex:1;align-content:space-evenly}}
 .sev.nu{background:var(--surface-2);color:var(--ink-2)}
 .g-unis{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));width:100%;margin-top:18px}
 .g-unis button{display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:1px;min-height:56px;padding:6px 14px;
@@ -561,15 +554,12 @@ dialog.wide{width:min(860px,calc(100vw - 32px))}
 .g-unis button[aria-pressed="true"] span{color:var(--ink-2)}
 @media(max-width:900px){.g-unis{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media(max-width:560px){.g-unis button{padding:6px 10px;font-size:13px}.g-unis button span{font-size:11px}}
-.g-otros{margin:22px 0 10px}
+
 .g-vacio{min-height:220px;margin-top:28px}
 .g-st2{display:grid;gap:3px}
 .g-st2 .g-st{height:14px}
 .g-st2 .g-st b{font-size:10.5px}
 .g-st i.fu{background:var(--s1)} .g-st i.ac{background:var(--s2)}
-.g-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
-@media(max-width:1100px){.g-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media(max-width:560px){.g-grid{grid-template-columns:1fr}}
 .g-uh{margin:22px 0 10px}
 .g-uh:first-child{margin-top:0}
 .g-volver{position:fixed;right:20px;bottom:20px;z-index:45;display:inline-flex;align-items:center;gap:6px;min-height:40px;padding:0 15px;
@@ -1732,7 +1722,7 @@ dialog.wide{width:min(860px,calc(100vw - 32px))}
   <div class="u2-hero">
     <span class="u2-tag">Tablero gerencial</span>
     <h1>Decisión sobre el CEDIS BMW</h1>
-    <p>Elige la unidad: el tablero muestra la decisión que sostiene, sus cifras, lo que falta validar y dónde ver cada punto</p>
+    <p>Elige la unidad: sus cifras clave, lo que se logró, lo pendiente y dónde ver cada punto a detalle</p>
     <div class="seg g-unis" role="group" aria-label="Elegir unidad" id="gUni"></div>
   </div>
 
@@ -1742,17 +1732,12 @@ dialog.wide{width:min(860px,calc(100vw - 32px))}
       <div class="g-kpis" id="gKpis"></div>
       <div style="height:12px"></div>
       <div class="g-mid">
-        <div class="g-col">
-          <div class="verdict g-rec" id="gRec"></div>
-          <div class="card" id="gVis"></div>
-        </div>
+        <div class="card g-vis" id="gVis"></div>
         <div class="card g-al">
           <div class="chead g-alh"><div class="seg" role="group" aria-label="Elegir lista" id="gAlTab"><button type="button" data-t="log">Lo que se logró</button><button type="button" data-t="pen">Pendientes</button></div><span class="tag" id="gAlTag"></span></div>
           <ul class="alerts" id="gAlertas"></ul>
         </div>
       </div>
-      <div class="chead u2-sub g-otros"><h3>Otros datos de la unidad</h3></div>
-      <div class="g-grid" id="gPuntos"></div>
       <p class="cnota" id="gNota"></p>
     </section>
   </div>
@@ -3518,14 +3503,15 @@ var GER={
    {lb:"Superficie del CEDIS",v:"17.0 mil",u:"m²",c:"13 % del total queda de reserva para crecer",sub:"Nave de 185 × 92 m",ir:"secDatos",l:"Datos del CEDIS"},
    {lb:"Autos por surtir al día",v:"197",c:"4,919 autos al mes entre 25 días hábiles",sub:"22 conjuntos de piezas por auto",ir:"secPlanta",l:"Capacidad del CEDIS"},
    {lb:"Entrega de alfombras hoy",v:"14",u:"días",cls:"cr",c:"3 de 8 estaciones no alcanzan el ritmo",cc:"cr",sub:"La más lenta: costura, 160 s contra 128 s",ir:"secVsm",l:"VSM actual"}],
-  rec:{cls:"ok",st:"Continuar con el proyecto ejecutivo",p:"La inversión de $153.8 M se recupera en 2.65 años con $58 M de ahorro neto al año. Antes de construir:",
-   li:["Pedir cotizaciones formales de la obra y del equipo.","Validar los ahorros con datos reales de BMW.","Asegurar el terreno: Lote 606, Villa de Reyes."],ir:"costoT",l:"Ver el costo de la construcción"},
   vis:{t:"¿De qué se compone la inversión?",s:"Millones de pesos sin IVA; el IVA suma $24.6 M más",max:160,eje:["0","40","80","120","160 M"],
    filas:[["Costo directo",127.65,""],["Indirectos",12.13,""],["Contingencia (10 %)",13.98,""],["Inversión sin IVA",153.75,""]],fmt:function(v){return "$"+n(v,1)+" M";}},
   al:[
    ["ok", "Demanda", "Pronóstico de demanda elegido", "59,020 autos para 2027 con el promedio de los años recientes; se comparó contra la línea de tendencia.", "secProd", "Producción del Serie 3"],
    ["ok", "Producto", "Lista de piezas del 320i", "22 conjuntos por auto y 31,290 contenedores al mes.", "secPlanta", "Capacidad del CEDIS"],
-   ["ok", "Operación", "Ritmo de surtido e inventario", "Un auto cada 6.4 min; 3, 5 y 10 días de inventario según la importancia de la pieza.", "secKpi", "Operación diaria"],
+   ["ok", "Vehículo", "Ficha del auto de referencia", "BMW 320i 2026: motor de 1,998 cm³, 184 hp y transmisión automática de 8 velocidades.", "secFicha", "Características del modelo"],
+   ["ok", "Operación", "Ritmo de surtido", "Un auto cada 6.4 min para cubrir 197 autos al día en 3 turnos de 7 horas.", "secKpi", "Operación diaria"],
+   ["ok", "Inventario", "Política de inventario", "3, 5 y 10 días según la importancia de la pieza (A, B y C).", "secFlujo", "Cobertura del inventario"],
+   ["ok", "Calidad", "Meta de calidad", "Máximo 367 autos con defecto al año (0.62 %), 1.22 al día.", "secCal", "Calidad"],
    ["ok", "Superficie", "Superficie calculada", "17,020 m² en una nave de 185 × 92 m, con 2,204.81 m² de reserva para crecer.", "secDatos", "Datos del CEDIS"],
    ["ok", "Ubicación", "Terreno seleccionado", "Lote 606 en Logistik II, Villa de Reyes, elegido sobre Eje 120 y Av. Del Aguaje.", "ubicT", "Ubicación del CEDIS"],
    ["ok", "Costos", "Presupuesto de la obra", "$153.8 M sin IVA: $127.7 M de costo directo más indirectos y contingencia.", "costoT", "Costo de la construcción"],
@@ -3535,15 +3521,6 @@ var GER={
    ["wn","Operación","Cuello de botella en costura y ribeteado","Tarda 160 s y el ritmo pide 128 s; inspección de materiales y base antiderrapante también se pasan.","secVsm","VSM actual"],
    ["nu","Alcance","Fuera de la inversión","Terreno, equipo de manejo (patines, transpaletas, racks y contenedores) y el sistema del almacén aún no se cotizan.","u2Alc","Definición del alcance"],
    ["nu","Compra","Equipo preseleccionado","16 equipos elegidos entre 48 alternativas; la compra final requiere cotizaciones y pruebas.","secMaq","Maquinaria y equipo"]],
-  pts:[
-   ["Costo de construcción","$127.7 M","directo","+$26.1 M de indirectos y contingencia","","17,020 m² × $7,500 por m²","costoT","Costo de la construcción"],
-   ["Terreno elegido","Logistik II","","Elegido sobre Eje 120 y Av. Del Aguaje","","Lote 606, Villa de Reyes, S.L.P.","ubicT","Ubicación del CEDIS"],
-   ["Auto de referencia","BMW 320i","","Serie 3, modelo 2026","","184 hp; automática de 8 velocidades","secFicha","Características del modelo"],
-   ["Autos al año (2027)","59.0 mil","","Similar a 2026 (59.2 mil)","","Promedio de los años recientes; la línea de tendencia se descartó","secProd","Producción del Serie 3"],
-   ["Ritmo de surtido","6.4","min por auto","Un auto cada 6.4 min para cubrir 197 al día","","3 turnos de 7 horas","secKpi","Operación diaria"],
-   ["Autos con defecto permitidos","367","al año","0.62 % de los 59,020 autos del año","","1.22 autos al día de 197","secCal","Calidad","el cumplimiento real: la gráfica usa datos de ejemplo"],
-   ["Días de inventario","3 · 5 · 10","días","Según la importancia de la pieza (A, B y C)","","","secFlujo","Cobertura del inventario","la gráfica de cobertura usa datos de ejemplo"],
-   ["Equipo seleccionado","16","equipos","Elegidos entre 48 alternativas","","6 criterios; la compra final requiere cotizaciones","secMaq","Maquinaria y equipo"]],
   nota:"Ahorro, recuperación y retorno salen de la evaluación financiera del documento de la Unidad 1; los demás datos, de cada apartado del tablero."},
  "2":{n:"Planeación",q:"¿Se aprueba el plan con sus riesgos?",qs:"Mejoras, objetivos, alcance, riesgos y costo del almacén",
   kpis:[
@@ -3553,8 +3530,6 @@ var GER={
    {lb:"Recuperación en el peor caso",v:"6.69",u:"años",cls:"cr",c:"Al borde del límite de 7 años",cc:"cr",sub:"Si no se confirma el ahorro de inventario (S1)",ir:"u2Rie",l:"Riesgos y suposiciones"},
    {lb:"Inversión con IVA",v:"$178.4 M",c:"+$24.6 M de IVA sobre $153.8 M",sub:"No incluye terreno, equipo de manejo ni sistema del almacén",ir:"u2Cos",l:"Costo del almacén"},
    {lb:"Gasto de operación",v:"$27 M",u:"al año",c:"32 % del ahorro bruto ($85 M)",sub:"Personal, 48 % del gasto",ir:"u2Cos",l:"Costo del almacén"}],
-  rec:{cls:"wn",st:"Aprobar con condiciones",p:"El plan cumple sus 6 objetivos medibles, pero la recuperación depende de supuestos sin confirmar:",
-   li:["El costo real de mantener inventario (S1).","Cuánto le cuesta a BMW una hora de paro (S2).","Cotizar la custodia y el seguro de carga (R1)."],ir:"u2Rie",l:"Ver riesgos y suposiciones"},
   vis:{t:"¿En cuánto tiempo se recupera la inversión?",s:"Años de recuperación si falla cada supuesto, contra el límite de 7 años",max:7,eje:["0","1","2","3","4","5","6","7 años"],
    filas:[["Caso base",2.65,""],["Sin ahorro por paros (S2)",3.58,""],["Obra 50 % más cara (S3)",3.98,""],["Sin ahorro de inventario (S1)",6.69,"cr"]],fmt:function(v){return n(v,2)+" años";},
    nota:"Si fallan los supuestos 1 y 2 a la vez, la inversión ya no se recupera dentro de los 7 años."},
@@ -3575,9 +3550,6 @@ var GER={
    ["nu","Moderado · 9","R3. Retraso de los permisos","Gestoría y trámites en paralelo; retrasaría el arranque, no lo que se construye.","u2Rie","Riesgos y suposiciones"],
    ["nu","Moderado · 9","S3. Costo de la obra","Si la obra cuesta 50 % más, la recuperación pasa a 3.98 años.","u2Rie","Riesgos y suposiciones"],
    ["nu","Alcance","Fuera de la inversión","Terreno, equipo de manejo (patines, transpaletas, racks y contenedores) y el sistema del almacén aún no se cotizan.","u2Alc","Definición del alcance"]],
-  pts:[
-   ["Objetivos medibles","6","","Todos con medida, plazo y responsable","ok","Demanda, inventario, superficie, ubicación, viabilidad y alfombras","u2Obj","Objetivos y metas"],
-   ["Entregables","14","","16 limitaciones y 7 exclusiones","","Se diseña el almacén, no se construye","u2Alc","Definición del alcance"]],
   nota:"La recuperación de 2.65 años y su sensibilidad salen de la evaluación financiera de la Unidad 1 y de la Tabla 9 del documento de las Unidades 2 y 3."},
  "3":{n:"Ejecución",q:"¿Se entrega a tiempo y conviene reducir las esperas?",qs:"Actividades, red, ruta crítica y optimización",
   kpis:[
@@ -3587,8 +3559,6 @@ var GER={
    {lb:"Espera de las alfombras",v:"4.5",u:"días",cls:"ok",c:"▼ 9.5 días contra 14 hoy",cc:"ok",sub:"La mayor baja: de recepción a inspección",ir:"u3Opt",l:"Optimización de redes"},
    {lb:"Juegos de alfombras en espera",v:"887",cls:"ok",c:"▼ 1,871 contra 2,758 hoy",cc:"ok",nd:"el ahorro en pesos: falta el precio del juego",ir:"u3Opt",l:"Optimización de redes"},
    {lb:"Costo de planear la reducción",v:"$1,600",c:"5 % de los $31.9 mil del proyecto",sub:"Identificar mejoras y diseñar el proceso futuro",ir:"u3Opt",l:"Optimización de redes"}],
-  rec:{cls:"ok",st:"Ejecutar en 12 semanas y aplicar la reducción",p:"La red termina en la semana 10 y reducir las esperas cuesta $1,600. Para cumplir:",
-   li:["Vigilar las 19 actividades sin margen.","Cuidar las 5 actividades donde se juntan varias ramas.","Conservar 2 días de materia prima como stock de seguridad."],ir:"u3Rut",l:"Ver la ruta crítica"},
   vis:{t:"¿Dónde se reducen las esperas de las alfombras?",s:"Días de espera de cada tramo de la ruta crítica",max:5,eje:["0","1","2","3","4","5 días"],dos:true,
    filas:[["Recepción a inspección",5,2],["Costura a logotipo",2,0.5],["Empaque a embarque",2,0.5],["Corte a base",1.5,0.5],
      ["Inspección a corte",1,0.25],["Base a costura",1,0.25],["Inspección final a empaque",1,0.25],["Logotipo a inspección final",0.5,0.25]],
@@ -3609,10 +3579,6 @@ var GER={
    ["nu","Recursos","Puede requerir más personal","Inspeccionar en la recepción y preparar los kits antes puede aumentar la mano de obra y el equipo.","u3Opt","Optimización de redes"],
    ["nu","Seguimiento","3 indicadores por definir","Entregas a tiempo, daños y exactitud del inventario se definen con el proveedor y en operación.","u3Opt","Optimización de redes"],
    ["nu","Supuesto","Stock de seguridad de 2 días","Se conservan 2 días de materia prima ante retrasos de las entregas diarias del proveedor (supuesto del equipo).","u3Opt","Optimización de redes"]],
-  pts:[
-   ["Actividades del proyecto","31","","Repartidas entre 5 responsables","","14 categorías de trabajo","u3Act","Definición de actividades"],
-   ["Niveles de organización","4","","1 coordinadora y 4 analistas","","Cronograma de 12 semanas","u3Org","Organigrama de actividades"],
-   ["Pasos para fabricar alfombras","16","","11 sin margen y 5 en paralelo","","Del pedido del cliente al embarque","u3Mat","Matriz de secuenciación"]],
   nota:""}
 };
 var gUni="1", gAlT="log";
@@ -3642,11 +3608,6 @@ function pintarGer(){
   document.getElementById("gQ").textContent=g.q;
   document.getElementById("gQs").textContent=g.qs;
   document.getElementById("gKpis").innerHTML=g.kpis.map(gTarjeta).join("");
-  var r=g.rec, rec=document.getElementById("gRec");
-  rec.className="verdict g-rec "+r.cls;
-  rec.innerHTML='<span class="lb">Recomendación</span><div class="st"><i></i>'+esc(r.st)+'</div><p>'+esc(r.p)+'</p>'+
-    '<ul>'+r.li.map(function(x){return '<li>'+esc(x)+'</li>';}).join("")+'</ul>'+
-    '<button type="button" class="g-btn" data-ir="'+r.ir+'">'+esc(r.l)+'</button>';
   var v=g.vis;
   document.getElementById("gVis").innerHTML='<div class="chead"><h3>'+esc(v.t)+'</h3></div><p class="csub">'+esc(v.s)+'</p><div class="g-sens">'+
     v.filas.map(function(f){
@@ -3662,9 +3623,6 @@ function pintarGer(){
   document.getElementById("gAlertas").innerHTML=lista.map(function(a){
     return '<li><span class="sev '+a[0]+'">'+esc(a[1])+'</span><span class="t">'+esc(a[2])+'</span>'+
       '<span class="d">'+esc(a[3])+'<button type="button" class="g-ir" data-ir="'+a[4]+'">'+esc(a[5])+'</button></span></li>'; }).join("");
-  document.getElementById("gPuntos").innerHTML=g.pts.map(function(p){
-    var cls=p[4]==="cr"?"cr":p[4]==="wn"?"wn":p[4]==="ok"?"ok":"nu";
-    return gTarjeta({lb:p[0],v:p[1],u:p[2],c:p[3],cc:p[4],sub:p[5],ir:p[6],l:p[7],nd:p[8],cls:cls}); }).join("");
   document.getElementById("gNota").textContent=g.nota;
 }
 var gerY=0;
